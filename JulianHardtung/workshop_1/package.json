@@ -1,0 +1,23 @@
+{
+  "name": "workshop_1",
+  "version": "1.0.0",
+  "description": "",
+  "main": "aufgabe1.js",
+  "dependencies": {
+    "chalk": "^1.1.3"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JuHardtung/WBA2SS16DaugsHardtungPack.git"
+  },
+  "author": "Julian Hardtung",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JuHardtung/WBA2SS16DaugsHardtungPack/issues"
+  },
+  "homepage": "https://github.com/JuHardtung/WBA2SS16DaugsHardtungPack#readme"
+}
