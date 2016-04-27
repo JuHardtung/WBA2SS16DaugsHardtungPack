@@ -1,3 +1,3 @@
 var fs = require('fs');
 var chalk = require('chalk');
-fs.readFile("./wolkenkratzer.json", function (e, d) {for (i in pD = JSON.parse(d).wolkenkratzer) {console.log("Name: ", chalk.blue.bold(pD[i].name),"\nStadt: ", pD[i].stadt,"\nHöhe: ", pD[i].hoehe + "m\n","\n--------------------\n");}});
+fs.readFile("./wolkenkratzer.json", function (e, d) {var pD = JSON.parse(d).wolkenkratzer;fs.writeFile("./wolkenkratzer_sortiert.json", JSON.stringify(pD.sort( function (a, b){return (a.hoehe > b.hoehe) ? 1 : ((b.hoehe > a.hoehe) ? -1 : 0)})),function (err) {if (err) {return console.log(err)} else {for (i in pD) console.log("Name: ", chalk.blue.bold(pD[i].name), "\nStadt: ", pD[i].stadt, "\nHöhe: ", pD[i].hoehe + "m\n", "\n",Array(20).join("-"),"\n")}})});
