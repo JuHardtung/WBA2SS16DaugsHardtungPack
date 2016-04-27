@@ -1,0 +1,11 @@
+{
+  "name": "workshop1",
+  "version": "1.0.0",
+  "description": "Aufgabe zum Workshop 1",
+  "main": "app.js",
+  "author": "Tim Pack",
+  "license": "ISC",
+  "dependencies": {
+    "chalk": "^1.1.3"
+  }
+}
