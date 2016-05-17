@@ -1,7 +1,7 @@
 var express = require('express');
 var bodyParser = require('body-parser')
 var app = express();
-app.listen(1335);
+
 
 app.use(express.static('./public'));
 
@@ -11,9 +11,26 @@ app.use(function(req,res,next) {
     next();
 });
 
-app.get('/warenkorb', function(req, res){
+app.get('/warenkorb/:id', function(req, res){
     
-    res.writeHead(200, "OK");
-    res.write('jooooo');
+    if (req.params.id == 42) {
+         res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify({ a: 1 }, null, 3));
+        
+        
+    } else {
+        res.write('User not found.');
+    }
+   
+    
     res.end();
 });
+
+app.post('/kaufen',bodyParser, function(req,res){
+    
+    
+    
+});
+
+
+app.listen(1335);
