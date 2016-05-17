@@ -7,4 +7,4 @@
 |----------------|---------|-------------------------------------------------------------|--------------------|--------------------|
 | /warenkorb     | GET     | Git "jooooo" zurrück                                        | text/plain         | text/plain         |
 | /warenkorb/:id | GET     | Gibt den User mit der entsprechenden Id zurrück             | text/plain         | text/plain         |
-| /users         | POST    | Gibt nur den User aus dem gepostetetn Jsondokument zurrück. | application/json   | ext/plain          |
+| /users         | POST    | Gibt nur den User aus dem gepostetetn Jsondokument zurrück. | application/json   | text/plain          |
