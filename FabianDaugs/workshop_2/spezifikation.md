@@ -5,7 +5,7 @@
 
 | Ressource        | Methode | Semantik                                                         | content-type (req) | content-type(res)|
 |------------------|---------|------------------------------------------------------------------|--------------------|------------------|
-| /warenkorb       | GET     | Gibt Liste von Artikeln zurück                                   | text/plain         | applicaton/JSON  |
+| /warenkorb:id    | GET     | Gibt Liste von Artikeln zurück                                   | text/plain         | applicaton/JSON  |
 | /user/:id        | GET     | Gibt den User mit der entsprechenden Id zurück                   | text/plain         | application/JSON |
 | /users           | POST    | Gibt nur den User aus dem gepostetetn Jsondokument zurück.       | application/json   | text/plain       |
 | /lagerknapp      | GET     | Gibt alle Artikel aus, welche weniger als 5 mal im Lager sind.   | text/plain         | application/JSON |
