@@ -1,8 +1,13 @@
 var express = require('express');
 var bodyParser = require('body-parser');
+var cookieParser = require('cookie-parser');
+var redis = require('redis');
 
 var app = express();
 var jsonParser = bodyParser.json();
+var	client	=	redis.createClient();
+var auth = require('./config/auth');
+app.use(cookieParser());
 
 var lager = [
     {
@@ -68,7 +73,7 @@ app.get('/warenkorb/:id', function (req, res) {
 
 app.get('/lager', function (req, res) {
 
-    if (req.query.anzahl != undefined) {
+    if (req.query.anzahl !== undefined) {
 
         var filteredData = lager.filter(function (value, index, arr) {
             return value.anzahl == req.query.anzahl;
@@ -89,6 +94,42 @@ app.post('/users', jsonParser, function (req, res) {
     res.writeHead(200, "OK");
     res.write(req.body.user);
     res.end();
+});
+
+
+app.route('/login')
+  .get(function(req, res) {
+    var userData = {id:1, firstname: req.query.user, lastname: req.query.passwd};
+
+    auth.createAndStoreToken(userData, 60*60, function(err, token) {
+      if (err) {
+        console.log(err);
+
+        return res.send(400);
+      }
+      res.cookie('connect.sid',token);
+      res.send(200, token);
+      res.end();
+    });
+
+  })
+  .post(function(req, res) {
+    var userData = {id:1, firstname: req.query.user, lastname: req.query.passwd};
+
+    auth.createAndStoreToken(userData, 60*60, function(err, token) {
+      if (err) {
+        console.log(err);
+
+        return res.send(400);
+      }
+
+
+
+    res.cookie('connect.sid',token);
+    res.send(200, token);
+    res.end();
+  });
+
 });
 
 
