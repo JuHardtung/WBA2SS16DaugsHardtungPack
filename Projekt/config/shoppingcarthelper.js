@@ -3,7 +3,7 @@ redisClient = redis.createClient();
 
 /**
  * Returns all items in the shopping cart from user id
- * @param {int} id 
+ * @param {int} id
  * @return {application/json} CartItems
  */
 app.get('/shoppingcart/:id', function (req, res) {
@@ -29,8 +29,8 @@ app.get('/shoppingcart/:id', function (req, res) {
 
 /**
  * Adds an item to the shopping cart from user id
- * @param {int} itemid 
- * @param {int} quantity 
+ * @param {int} itemid
+ * @param {int} quantity
  */
 app.get('/shoppingcart/:id/add', function (req, res) {
     var itemid = req.query.itemid;
@@ -47,7 +47,7 @@ app.get('/shoppingcart/:id/add', function (req, res) {
 
 /**
  * Deletes an item to the shopping cart from user id
- * @param {int} index 
+ * @param {int} index
  */
 app.get('/shoppingcart/:id/delete', function (req, res) {
     var itemindex = req.query.index;

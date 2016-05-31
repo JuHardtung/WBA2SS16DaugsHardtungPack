@@ -46,29 +46,41 @@ app.use(function(req, res, next) {
     next();
 });
 
-app.get('/lager', function(req, res) {
-    authhelper.checksid(req.cookies.connect, function(err, status) {
-        if (status == 1 && req.cookies.connect !== undefined) {
-            if (req.query.anzahl !== undefined) {
 
-                var filteredData = lager.filter(function(value, index, arr) {
-                    return value.anzahl == req.query.anzahl;
-                });
-
-                if (filteredData.length >= 1) {
-                    res.status(200).send(filteredData);
-                } else {
-                    res.status(404).send("Kein Artikel gefunden!").end();
-                }
-            } else {
-                res.json(lager);
-                res.end();
+function isAuthenticated(req, res, next) {
+    if (req.cookies.connect !== undefined) {
+        client.hexists("auths", req.cookies.connect, function(err, exits) {
+            if (err) throw (err);
+            if (exits == 1) {
+                return next();
             }
-        } else {
-            res.status(404).send("Kein Zugriff").end();
-        }
+       });
 
-    });
+     }else{
+      // IF A USER ISN'T LOGGED IN, THEN REDIRECT THEM SOMEWHERE
+       res.redirect('/login');
+     }
+}
+
+
+app.get('/lager', isAuthenticated, function(req, res) {
+
+
+    if (req.query.anzahl !== undefined) {
+
+        var filteredData = lager.filter(function(value, index, arr) {
+            return value.anzahl == req.query.anzahl;
+        });
+
+        if (filteredData.length >= 1) {
+            res.status(200).send(filteredData);
+        } else {
+            res.status(404).send("Kein Artikel gefunden!").end();
+        }
+    } else {
+        res.json(lager);
+        res.end();
+    }
 
 });
 
@@ -90,21 +102,21 @@ app.get('/login/fehler', function(req, res) {
 app.get('/logout', function(req, res) {
     if (req.cookies.connect !== undefined) {
         authhelper.logout(req.cookies.connect, function(err, status) {
-            if(status==1){
-            res.clearCookie('connect');
-            res.status(200);
-            res.send("done");
-            res.end();
-          }else{
-            res.status(501);
-            res.send("Internal Server Error");
-            res.end();
-          }
+            if (status == 1) {
+                res.clearCookie('connect');
+                res.status(200);
+                res.send("done");
+                res.end();
+            } else {
+                res.status(501);
+                res.send("Internal Server Error");
+                res.end();
+            }
         });
-    }else{
-      res.status(200);
-      res.send("Keine aktive Session!");
-      res.end();
+    } else {
+        res.status(200);
+        res.send("Keine aktive Session!");
+        res.end();
     }
 });
 
@@ -150,7 +162,7 @@ app.route('/login')
                 maxAge: 900000,
                 httpOnly: true
             });
-            res.redirect('/lager');
+            res.send("Successfully logged in!");
             res.end();
 
 

@@ -41,7 +41,7 @@ exports.signup = function(user, passwd) {
     client.get("next_user_id", function(err, next) {
         if (err) throw (err);
         client.hmset(["user:" + next, "name", user, "passwd", passwd], function(err, res) {});
-        client.hset("users", req.body.user, next);
+        client.hset("users", user, next);
     });
     client.incr("next_user_id");
 };
