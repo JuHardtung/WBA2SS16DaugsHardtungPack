@@ -2,12 +2,14 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var redis = require('redis');
+var expressSession = require('express-session');
 
 var app = express();
 var jsonParser = bodyParser.json();
 var	client	=	redis.createClient();
 var auth = require('./config/auth');
 app.use(cookieParser());
+app.use(bodyParser());
 
 var lager = [
     {
@@ -33,6 +35,7 @@ var lager = [
         ];
 
 app.use(bodyParser.json());
+app.use(expressSession({secret:'somesecrettokenhere'}));
 
 app.use(express.static('./public'));
 
@@ -99,22 +102,20 @@ app.post('/users', jsonParser, function (req, res) {
 
 app.route('/login')
   .get(function(req, res) {
-    var userData = {id:1, firstname: req.query.user, lastname: req.query.passwd};
-
-    auth.createAndStoreToken(userData, 60*60, function(err, token) {
-      if (err) {
-        console.log(err);
-
-        return res.send(400);
-      }
-      res.cookie('connect.sid',token);
-      res.send(200, token);
-      res.end();
-    });
+    var html = '<form action="/login" method="post">' +
+             'Your name: <input type="text" name="user"><br>' +
+             'Your Password: <input type="text" name="passwd"><br>' +
+             '<button type="submit">Submit</button>' +
+             '</form>';
+    //if (req.session!==undefined) {
+    //html += '<br>Your username from your session is: ' + req.session.userName;
+  //}
+  console.log('Cookies: ', req.cookies);
+  res.send(html);
 
   })
   .post(function(req, res) {
-    var userData = {id:1, firstname: req.query.user, lastname: req.query.passwd};
+    var userData = {id:1, firstname: req.body.user, lastname: req.body.passwd};
 
     auth.createAndStoreToken(userData, 60*60, function(err, token) {
       if (err) {
@@ -125,8 +126,9 @@ app.route('/login')
 
 
 
-    res.cookie('connect.sid',token);
-    res.send(200, token);
+    res.cookie('connect.sid',token,{userName :"Fapsi"});
+    res.redirect('/login');
+    //res.send(200, token);
     res.end();
   });
 
