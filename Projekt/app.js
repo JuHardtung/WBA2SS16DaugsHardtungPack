@@ -9,6 +9,7 @@ var client = redis.createClient(),
     multi;
 //var auth = require('./config/auth');
 var authhelper = require('./config/authhelper');
+var warenkorbhelper = require('./config/shoppingcarthelper');
 app.use(cookieParser());
 app.use(bodyParser());
 
@@ -43,31 +44,6 @@ app.use(function(err, req, res, next) {
 app.use(function(req, res, next) {
     console.log('Time: %d ' + ' Request-Pfad: ' + req.path, Date.now());
     next();
-});
-
-
-app.get('/warenkorb', function(req, res) {
-
-    res.writeHead(200, "OK");
-    res.write('Dies ist der Warenkorb.');
-    res.end();
-});
-
-app.get('/warenkorb/:id', function(req, res) {
-
-    if (req.params.id == 42) {
-        res.setHeader('Content-Type', 'application/json');
-        res.send(JSON.stringify({
-            a: 1
-        }, null, 3));
-
-
-    } else {
-        res.write('User not found.');
-    }
-
-
-    res.end();
 });
 
 app.get('/lager', function(req, res) {
