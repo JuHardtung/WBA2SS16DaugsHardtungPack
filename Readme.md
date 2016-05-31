@@ -5,7 +5,8 @@
 |------------------|---------|------------------------------------------------------------------|--------------------|------------------|
 | /warenkorb:id    | GET     | Gibt Liste von Artikeln zurück                                   | text/plain         | applicaton/JSON  |
 | /user:id         | GET     | Gibt den User mit der entsprechenden Id zurück                   | text/plain         | application/JSON |
-| /users           | POST    | Gibt nur den User aus dem gepostetetn Jsondokument zurück.       | application/json   | text/plain       |
+| /login           | GET     | Hier kann der User seine Logindaten eingeben                     | text/plain         | text/plain       |
+| /auth            | POST    | Überprüft dei logindaten des Users                               | application/x-www-form-urlencoded         | text/plain       |
 | /lagerknapp      | GET     | Gibt alle Artikel aus, welche weniger als 5 mal im Lager sind.   | text/plain         | application/JSON |
 | /bewertung:id    | POST    | Bewertung eines bestimmten Artikels (anhand id) abgeben          | application/JSON   | text/plain       |
 | /bewertung:id    | GET     | Bewertung eines bestimmten Artikels (anhand id) abfragen         | text/plain         | text/plain       |
