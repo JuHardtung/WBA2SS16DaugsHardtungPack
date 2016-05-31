@@ -2,7 +2,6 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var redis = require('redis');
-var expressSession = require('express-session');
 
 var app = express();
 var jsonParser = bodyParser.json();
@@ -35,7 +34,7 @@ var lager = [
         ];
 
 app.use(bodyParser.json());
-app.use(expressSession({secret:'somesecrettokenhere'}));
+
 
 app.use(express.static('./public'));
 
@@ -104,12 +103,12 @@ app.route('/login')
   .get(function(req, res) {
     var html = '<form action="/login" method="post">' +
              'Your name: <input type="text" name="user"><br>' +
-             'Your Password: <input type="text" name="passwd"><br>' +
+             'Your Password: <input type="password" name="passwd"><br>' +
              '<button type="submit">Submit</button>' +
              '</form>';
-    //if (req.session!==undefined) {
-    //html += '<br>Your username from your session is: ' + req.session.userName;
-  //}
+    if (req.cookies.connect!==undefined) {
+    html += '<br>Your username from your session is: ' + req.cookies.connect;
+  }
   console.log('Cookies: ', req.cookies);
   res.send(html);
 
@@ -126,7 +125,7 @@ app.route('/login')
 
 
 
-    res.cookie('connect.sid',token,{userName :"Fapsi"});
+    res.cookie('connect.sid',token,{ maxAge: 900000, httpOnly: true, userName: "Fapsi" });
     res.redirect('/login');
     //res.send(200, token);
     res.end();
