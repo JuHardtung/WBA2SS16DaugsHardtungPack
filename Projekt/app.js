@@ -9,7 +9,7 @@ var client = redis.createClient(),
     multi;
 //var auth = require('./config/auth');
 var authhelper = require('./config/authhelper');
-var warenkorbhelper = require('./config/shoppingcarthelper');
+//var warenkorbhelper = require('./config/shoppingcarthelper');
 app.use(cookieParser());
 app.use(bodyParser());
 
