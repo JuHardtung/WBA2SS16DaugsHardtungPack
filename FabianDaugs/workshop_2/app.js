@@ -135,19 +135,21 @@ app.get('/logout', function(req, res) {
 
 app.route('/signup')
     .get(function(req, res) {
-        var html = '<form action="/signup" method="post">' +
-            'Your name: <input type="text" name="user"><br>' +
-            'Your Password: <input type="password" name="passwd"><br>' +
-            '<button type="submit">Submit</button>' +
-            '</form>';
-        //res.writeHead(200, "OK");
-        res.send(html);
-        //res.end();
+      var html = '<form action="/signup" method="post">' +
+          'Your name: <input type="text" name="user"><br>' +
+          'Your Password: <input type="password" name="passwd"><br>' +
+          '<button type="submit">Submit</button>' +
+          '</form>';
+
+      //res.writeHead(200, "OK");
+      res.send(html);
+      //res.end();
     })
     .post(function(req, res) {
-        authhelper.signup(req.bod.user, req.body.passwd);
+        //authhelper.signup(req.body.user, req.body.passwd);
         res.send(200);
         res.end();
+        console.log(req.body.user);
 
     });
 
@@ -181,6 +183,28 @@ app.route('/login')
         });
 
     });
+
+    app.route('/lala')
+        .get(function(req, res) {
+            var html = '<form action="/l" method="post">' +
+                'Your name: <input type="text" name="user"><br>' +
+                'Your Password: <input type="password" name="passwd"><br>' +
+                '<button type="submit">Submit</button>' +
+                '</form>';
+
+            //res.writeHead(200, "OK");
+            res.send(html);
+            //res.end();
+
+        })
+        .post(function(req, res) {
+            res.send(req.body.user);
+            res.end();
+
+
+
+
+        });
 
 
 

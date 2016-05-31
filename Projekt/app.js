@@ -121,7 +121,7 @@ app.route('/signup')
         //res.end();
     })
     .post(function(req, res) {
-        authhelper.signup(req.bod.user, req.body.passwd);
+        authhelper.signup(req.body.user, req.body.passwd);
         res.send(200);
         res.end();
 
