@@ -2,6 +2,7 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var redis = require('redis');
+var httpStatus = require('http-status-codes');
 
 var app = express();
 var jsonParser = bodyParser.json();
@@ -36,12 +37,12 @@ app.use(bodyParser.json());
 
 app.use(express.static('./public'));
 
-app.use(function(err, req, res, next) {
+app.use(function (err, req, res, next) {
     console.error(err.stack);
     res.end(err.status + ' ' + err.messages);
 });
 
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
     console.log('Time: %d ' + ' Request-Pfad: ' + req.path, Date.now());
     next();
 });
@@ -49,26 +50,26 @@ app.use(function(req, res, next) {
 
 function isAuthenticated(req, res, next) {
     if (req.cookies.connect !== undefined) {
-        client.hexists("auths", req.cookies.connect, function(err, exits) {
+        client.hexists("auths", req.cookies.connect, function (err, exits) {
             if (err) throw (err);
             if (exits == 1) {
                 return next();
             }
-       });
+        });
 
-     }else{
-      // IF A USER ISN'T LOGGED IN, THEN REDIRECT THEM SOMEWHERE
-       res.redirect('/login');
-     }
+    } else {
+        // IF A USER ISN'T LOGGED IN, THEN REDIRECT THEM SOMEWHERE
+        res.redirect('/login');
+    }
 }
 
 
-app.get('/lager', isAuthenticated, function(req, res) {
+app.get('/lager', isAuthenticated, function (req, res) {
 
 
     if (req.query.anzahl !== undefined) {
 
-        var filteredData = lager.filter(function(value, index, arr) {
+        var filteredData = lager.filter(function (value, index, arr) {
             return value.anzahl == req.query.anzahl;
         });
 
@@ -84,14 +85,14 @@ app.get('/lager', isAuthenticated, function(req, res) {
 
 });
 
-app.post('/users', jsonParser, function(req, res) {
+app.post('/users', jsonParser, function (req, res) {
     console.log(req.body);
     res.writeHead(200, "OK");
     res.write(req.body.user);
     res.end();
 });
 
-app.get('/login/fehler', function(req, res) {
+app.get('/login/fehler', function (req, res) {
     var html = '<p>Anmeldung fehlgeschlagen!</p>';
     //res.writeHead(200, "OK");
     res.status(200);
@@ -99,9 +100,9 @@ app.get('/login/fehler', function(req, res) {
     res.end();
 });
 
-app.get('/logout', function(req, res) {
+app.get('/logout', function (req, res) {
     if (req.cookies.connect !== undefined) {
-        authhelper.logout(req.cookies.connect, function(err, status) {
+        authhelper.logout(req.cookies.connect, function (err, status) {
             if (status == 1) {
                 res.clearCookie('connect');
                 res.status(200);
@@ -122,7 +123,7 @@ app.get('/logout', function(req, res) {
 
 
 app.route('/signup')
-    .get(function(req, res) {
+    .get(function (req, res) {
         var html = '<form action="/signup" method="post">' +
             'Your name: <input type="text" name="user"><br>' +
             'Your Password: <input type="password" name="passwd"><br>' +
@@ -132,7 +133,7 @@ app.route('/signup')
         res.send(html);
         //res.end();
     })
-    .post(function(req, res) {
+    .post(function (req, res) {
         authhelper.signup(req.body.user, req.body.passwd);
         res.send(200);
         res.end();
@@ -140,7 +141,7 @@ app.route('/signup')
     });
 
 app.route('/login')
-    .get(function(req, res) {
+    .get(function (req, res) {
         var html = '<form action="/login" method="post">' +
             'Your name: <input type="text" name="user"><br>' +
             'Your Password: <input type="password" name="passwd"><br>' +
@@ -152,8 +153,8 @@ app.route('/login')
         //res.end();
 
     })
-    .post(function(req, res) {
-        authhelper.login(req.body.user, req.body.passwd, function(err, status, token) {
+    .post(function (req, res) {
+        authhelper.login(req.body.user, req.body.passwd, function (err, status, token) {
             if (err) {
                 res.redirect('/login/fehler');
                 return res.end();
