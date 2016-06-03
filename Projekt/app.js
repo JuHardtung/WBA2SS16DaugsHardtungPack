@@ -104,6 +104,33 @@ function errorInDatabase(res, err) {
 
 }
 
+//überprüfe, ob Inhalt eines Artikels valide ist
+function isValidArticle(article) {
+
+    console.log("Hier bin ich noch");
+    if (article === undefined) {
+        return false;
+    }
+    if (article.id === undefined) {
+        return false;
+    }
+    if (article.name === undefined) {
+        return false;
+    }
+    if (article.beschreibung === undefined) {
+        return false;
+    }
+    if (article.preis === undefined) {
+        return false;
+    }
+    if (article.lageranzahl === undefined) {
+        return false;
+    }
+    return true;
+
+
+}
+
 
 
 function isAuthenticated(req, res, next) {
@@ -147,6 +174,32 @@ app.get('/getArticleById', function (req, res) {
                 res.status(httpStatus.NOT_FOUND);
             } else {
                 res.status(httpStatus.OK).json(_article);
+            }
+        }
+    });
+});
+
+//füge neuen Artikeln zur Datenbank hinzu (JSON im body angeben)
+app.post('/addArticle', jsonParser, function (req, res) {
+    client.llen('ARTICLE', function (err, reply) {
+        if (!errorInDatabase(res, err)) {
+            var _id;
+            if (reply === null) {
+                _id = 0;
+            } else {
+                _id = reply;
+            }
+            var newArticle = req.body;
+
+            if (isValidArticle(newArticle) === true) {
+                client.rpush('ARTICLE', JSON.stringify(newArticle), function (err, reply) {
+                    if (!errorInDatabase(res, err)) {
+                        if (reply !== _id) {
+                            console.log("Neuen Artikel mit ID " + _id + "erstellt.");
+                            res.status(httpStatus.OK).json(newArticle);
+                        }
+                    }
+                });
             }
         }
     });
