@@ -12,30 +12,76 @@ var client = redis.createClient(),
 var authhelper = require('./config/authhelper');
 //var warenkorbhelper = require('./config/shoppingcarthelper');
 app.use(cookieParser());
-app.use(bodyParser());
-
-var lager = [{
-    artikel: "Ball",
-    anzahl: 11,
-    preis: 9.99
-}, {
-    artikel: "Zahnbürste",
-    anzahl: 45,
-    preis: 2.50
-}, {
-    artikel: "Schreibtisch",
-    anzahl: 2,
-    preis: 79.99
-}, {
-    artikel: "Schreibtischlampe",
-    anzahl: 19,
-    preis: 14.99
-}];
+//app.use(bodyParser());
 
 app.use(bodyParser.json());
-
-
 app.use(express.static('./public'));
+
+
+//Datenbank säubern
+function cleanDB() {
+    client.del(['ARTICLE', 'USER'], function (err, reply) {
+        console.log("Datenbank wurde geleert! " + reply);
+    });
+}
+
+//Datenbank initialisieren, damit jeder mit den gleichen Daten arbeiten kann
+//########################################################
+//### rufe am Anfang http://localhost:3000/resetDB auf ###
+//########################################################
+
+function initDB() {
+    var article0 = {
+        "id": 0,
+        "name": "Ball",
+        "beschreibung": "Das ist ein runder und ganz toller Ball!",
+        "preis": 9.99,
+        "lageranzahl": 45
+    };
+    var article1 = {
+        "id": 1,
+        "name": "Auto",
+        "beschreibung": "Das ist ein rotes Spielzeugauto!",
+        "preis": 14.99,
+        "lageranzahl": 14
+    };
+    var article2 = {
+        "id": 2,
+        "name": "Hammer",
+        "beschreibung": "Das ist ein toller Hammer!",
+        "preis": 19.99,
+        "lageranzahl": 3
+    };
+
+    var paramsArticle = ['ARTICLE', JSON.stringify(article0), JSON.stringify(article1), JSON.stringify(article2)];
+
+    client.rpush(paramsArticle, function (err, reply) {
+        console.log("Artikel hinzugefügt! Reply: " + reply);
+    });
+
+
+    //Kann wieder aktiviert werden, falls User in der Datenbank benötigt werden
+
+    /* var user0 = {
+         "id": 0,
+         "Vorname": "Max",
+         "Nachname": "Mustermann",
+         "e-mail": "m.mustermann@muster.de",
+         "passwort": "musterpwd123"
+     };
+     client.rpush(USER, Json.stringify(user0), function (err, reply) {
+
+         console.log("Benutzer hinzugefügt! Reply: " + reply);
+     });*/
+
+}
+
+//Aufrufen um die Datenbank zu säubern und mit den Standartdaten zu befüllen
+app.get('/resetDB', jsonParser, function (req, res) {
+    cleanDB();
+    initDB();
+});
+
 
 app.use(function (err, req, res, next) {
     console.error(err.stack);
@@ -46,6 +92,18 @@ app.use(function (req, res, next) {
     console.log('Time: %d ' + ' Request-Pfad: ' + req.path, Date.now());
     next();
 });
+
+//Kann benutzt werden, um einen Error der Datenbank abzufragen
+function errorInDatabase(res, err) {
+    if (err != null) {
+        res.status(httpStatus.INTERNAL_SERVER_ERROR);
+        return true;
+    } else {
+        return false;
+    }
+
+}
+
 
 
 function isAuthenticated(req, res, next) {
@@ -62,6 +120,39 @@ function isAuthenticated(req, res, next) {
         res.redirect('/login');
     }
 }
+//Filtert alle Artikel in der Datenbank nach einer bestimmten ID
+function getArticelById(articleList, id) {
+    var result;
+    articleList.forEach(function (entry) {
+        _json = JSON.parse(entry);
+        if (parseInt(_json.id) == id) {
+            result = JSON.stringify(_json);
+
+        }
+    });
+    return result;
+}
+
+//erreichbar über http://localhost:3000/getArticleById?articleId=
+app.get('/getArticleById', function (req, res) {
+
+    var _articleId = parseInt(req.query.articleId);
+
+    client.lrange('ARTICLE', 0, -1, function (err, reply) {
+        if (!errorInDatabase(res, err)) {
+            console.log("Bekomme Artikel mit der ID " + _articleId);
+
+            var _article = getArticelById(reply, _articleId);
+            if (_article === null) {
+                res.status(httpStatus.NOT_FOUND);
+            } else {
+                res.status(httpStatus.OK).json(_article);
+            }
+        }
+    });
+});
+
+
 
 
 app.get('/lager', isAuthenticated, function (req, res) {
