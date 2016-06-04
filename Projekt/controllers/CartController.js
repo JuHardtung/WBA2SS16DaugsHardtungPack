@@ -1,5 +1,5 @@
 var redis = require('redis');
-var client = redis.createClient();
+var redisClient = redis.createClient();
 
 
 module.exports = {
@@ -9,10 +9,10 @@ module.exports = {
      * @param {int} id
      * @return {application/json} CartItems
      */
-    cartGet: function (req, res) {
+    getCart: function (req, res, next) {
         if (checkshoppingcartId()) {
             redisClient.lrange("shoppingcart:" + req.params.id, 0, -1, function (err, obj) {
-                if (obj = "[]") {
+                if (obj == "[]") {
                     res.status(500);
                     res.write('Cart empty!');
                     res.end();
@@ -26,6 +26,7 @@ module.exports = {
         } else {
             res.write('User not found.');
             res.end();
+
         }
     },
 
@@ -35,7 +36,7 @@ module.exports = {
      * @param {int} itemid
      * @param {int} quantity
      */
-    addItem: function (req, res) {
+    addItem: function (req, res, next) {
         var itemid = req.query.itemid;
         var quantity = req.query.quantity;
         if (checkshoppingcartId()) {
@@ -52,12 +53,12 @@ module.exports = {
      * Deletes an item to the shopping cart from user id
      * @param {int} index
      */
-    deleteItem: function (req, res) {
+    deleteItem: function (req, res, next) {
         var itemindex = req.query.index;
         if (checkshoppingcartId()) {
 
             redisClient.lindex("shoppingcart:" + req.params.id, itemindex, function (err, obj) {
-                if (obj != null) {
+                if (obj !== null) {
                     res.status(200);
                     redisClient.lrem("shoppingcart:" + req.params.id, 0, obj);
                     res.write('Item deleted.');

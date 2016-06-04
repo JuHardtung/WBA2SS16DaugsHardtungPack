@@ -26,13 +26,13 @@ router.route('/login')
 
 
 //Shopping Cart
-router.route('/shoppingcart/:id')
+router.route('/cart/:id')
     .get(CartController.getCart);
 
-router.route('/shoppingcart/:id/add')
+router.route('/cart/:id/add')
     .get(CartController.addItem);
 
-router.route('/shoppingcart/:id/delete')
+router.route('/cart/:id/delete')
     .get(CartController.deleteItem);
 
 
