@@ -11,7 +11,7 @@ Der Key ist "user:id"
 
 Gibt alle Parameter eines Users aus.
 
-`HGETALL user:1000 username`
+`HGETALL user:1000 name`
 
 Gibt nur den Benutzernamen eines Users aus.
 ###Userliste
