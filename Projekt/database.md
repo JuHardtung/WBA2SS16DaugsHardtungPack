@@ -1,7 +1,7 @@
 #Datenbankstruktur
 
 
-##User anlegen
+##User
 ###Einzelne User
 `HMSET user:1000 username musteruser password P1pp0`
 
