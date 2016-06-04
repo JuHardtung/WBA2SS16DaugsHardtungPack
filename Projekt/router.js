@@ -19,6 +19,10 @@ router.route('/signup')
     .get(AuthController.signupGet)
     .post(AuthController.signup);
 
+router.route('/login')
+    .get(AuthController.loginGet)
+    .post(AuthController.login);
+
 
 
 //Shopping Cart
