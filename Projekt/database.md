@@ -28,7 +28,7 @@ Gibt die Liste aller User aus mit username und ID
 
 `HSET auths token 1000`
 
-Enthält alle Session mit den jeweiligen Usern. "token" ist dabei die SessionID
+Enthält alle Sessions mit den jeweiligen Usern. "token" ist dabei die SessionID
 
 `HSET user:1000 auth token`
 
