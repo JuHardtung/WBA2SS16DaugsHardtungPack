@@ -4,6 +4,7 @@ var Response  = require('./helper/ResponseHelper.js');
 
 var ArticlesController    = require('./controllers/ArticlesController');
 var AuthController   = require('./controllers/AuthController');
+var CartController   = require('./controllers/CartController');
 
 router.route('/*')
   .trace(function(req, res, next) {
@@ -18,6 +19,17 @@ router.route('/signup')
     .get(AuthController.signupGet)
     .post(AuthController.signup);
 
+
+
+//Shopping Cart
+router.route('/shoppingcart/:id')
+    .get(CartController.getCart);
+
+router.route('/shoppingcart/:id/add')
+    .get(CartController.addItem);
+
+router.route('/shoppingcart/:id/delete')
+    .get(CartController.deleteItem);
 
 
 // Finally export the router
