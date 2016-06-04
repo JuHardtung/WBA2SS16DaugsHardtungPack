@@ -5,7 +5,7 @@ var Response = require('./helper/ResponseHelper.js');
 var ArticleController = require('./controllers/ArticlesController');
 var AuthController = require('./controllers/AuthController');
 var CartController = require('./controllers/CartController');
-var CartController = require('./controllers/UserController');
+var UserController = require('./controllers/UserController');
 
 router.route('/*')
     .trace(function(req, res, next) {
@@ -53,7 +53,7 @@ router.route('/user/delete')
 router.route('/article/all')
     .get(ArticleController.getArticles);
 
-router.route('/article/id')
+router.route('/article/:id')
     .get(ArticleController.getArticleById);
 
 router.route('/article/add')

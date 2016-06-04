@@ -3,14 +3,14 @@ var redisClient = redis.createClient();
 
 //Kann benutzt werden, um einen Error der Datenbank abzufragen
 function errorInDatabase(res, err) {
-    if (err != null) {
+    if (err !== null) {
         res.status(httpStatus.INTERNAL_SERVER_ERROR);
         return true;
     } else {
         return false;
     }
 
-};
+}
 
 //überprüfe, ob Inhalt eines Artikels valide ist
 function isValidArticle(article) {
@@ -33,7 +33,7 @@ function isValidArticle(article) {
         return false;
     }
     return true;
-};
+}
 
 //Filtert alle Artikel in der Datenbank nach einer bestimmten ID
 function getArticelById(articleList, id) {
@@ -46,7 +46,7 @@ function getArticelById(articleList, id) {
         }
     });
     return result;
-};
+}
 
 module.exports = {
 
