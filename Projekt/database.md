@@ -3,7 +3,7 @@
 
 ##User
 ###Einzelne User
-`HMSET user:1000 username musteruser password P1pp0`
+`HMSET user:1000 name musteruser passwd P1pp0`
 
 Der Key ist "user:id"
 
