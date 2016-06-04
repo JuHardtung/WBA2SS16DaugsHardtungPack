@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 var Response = require('./helper/ResponseHelper.js');
 
-var ArticlesController = require('./controllers/ArticlesController');
+var ArticleController = require('./controllers/ArticlesController');
 var AuthController = require('./controllers/AuthController');
 var CartController = require('./controllers/CartController');
 var CartController = require('./controllers/UserController');
