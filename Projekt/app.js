@@ -59,20 +59,26 @@ function initDB() {
         console.log("Artikel hinzugefügt! Reply: " + reply);
     });
 
+    var user0 = {
+        "id": 0,
+        "vorname": "Max",
+        "nachname": "Mustermann",
+        "email": "m.mustermann@muster.de",
+        "passwort": "musterpwd123"
+    };
 
-    //Kann wieder aktiviert werden, falls User in der Datenbank benötigt werden
+    var user1 = {
+        "id": 1,
+        "vorname": "Karl",
+        "nachname": "Karlsson",
+        "email": "k.karlsson@gmx.de",
+        "passwort": "karlpasswort"
+    };
 
-    /* var user0 = {
-         "id": 0,
-         "Vorname": "Max",
-         "Nachname": "Mustermann",
-         "e-mail": "m.mustermann@muster.de",
-         "passwort": "musterpwd123"
-     };
-     client.rpush(USER, Json.stringify(user0), function (err, reply) {
+    client.rpush('USER', JSON.stringify(user0), JSON.stringify(user1), function (err, reply) {
 
-         console.log("Benutzer hinzugefügt! Reply: " + reply);
-     });*/
+        console.log("Benutzer hinzugefügt! Reply: " + reply);
+    });
 
 }
 
@@ -126,11 +132,30 @@ function isValidArticle(article) {
         return false;
     }
     return true;
-
-
 }
 
-
+//überprüfe, ob Inhalt eines User valide ist
+function isValidUser(user) {
+    if (user === undefined) {
+        return false;
+    }
+    if (user.id === undefined) {
+        return false;
+    }
+    if (user.vorname === undefined) {
+        return false;
+    }
+    if (user.nachname === undefined) {
+        return false;
+    }
+    if (user.email === undefined) {
+        return false;
+    }
+    if (user.passwort === undefined) {
+        return false;
+    }
+    return true;
+}
 
 function isAuthenticated(req, res, next) {
     if (req.cookies.connect !== undefined) {
@@ -146,6 +171,7 @@ function isAuthenticated(req, res, next) {
         res.redirect('/login');
     }
 }
+
 //Filtert alle Artikel in der Datenbank nach einer bestimmten ID
 function getArticelById(articleList, id) {
     var result;
@@ -159,7 +185,25 @@ function getArticelById(articleList, id) {
     return result;
 }
 
+//Filtert alle User in der Datenbank nach einer bestimmten ID
+function getUserById(userList, id) {
+    var result;
+    userList.forEach(function (entry) {
+        _json = JSON.parse(entry);
+        if (parseInt(_json.id) == id) {
+            result = JSON.stringify(_json);
 
+        }
+    });
+    return result;
+}
+
+
+/*#####################################################################################
+####                        	                                                   ####
+####                                    ARTIKEL                                    #### 
+####                                                                               #### 
+#######################################################################################*/
 //gibt alle vorhandenen Artikel aus
 app.get('/article/all', function (req, res) {
     client.lrange('ARTICLE', 0, -1, function (err, reply) {
@@ -239,6 +283,102 @@ app.get('/article/delete', function (req, res) {
     });
     res.end();
 });
+
+
+/*#####################################################################################
+####                        	                                                   ####
+####                                    USER                                       #### 
+####                                                                               #### 
+#######################################################################################*/
+
+//gibt alle vorhandenen User aus
+app.get('/user/all', function (req, res) {
+    client.lrange('USER', 0, -1, function (err, reply) {
+        if (!errorInDatabase(res, err)) {
+            console.log("Bekomme alle User!");
+            if (reply === null) {
+                res.status(httpStatus.NOT_FOUND);
+            } else {
+                res.status(httpStatus.OK).json(reply);
+            }
+        }
+    });
+});
+
+//gibt User mit bestimmter ID zurück
+//erreichbar über http://localhost:3000/user/id?userId=
+app.get('/user/id', function (req, res) {
+
+    var _userId = parseInt(req.query.userId);
+
+    client.lrange('USER', 0, -1, function (err, reply) {
+        if (!errorInDatabase(res, err)) {
+            console.log("Bekomme User mit der ID " + _userId);
+
+            var _user = getUserById(reply, _userId);
+            if (_user === null) {
+                res.status(httpStatus.NOT_FOUND);
+            } else {
+                res.status(httpStatus.OK).json(_user);
+            }
+        }
+    });
+});
+
+//füge neue USER zur Datenbank hinzu (JSON im body angeben)
+app.post('/user/add', jsonParser, function (req, res) {
+    client.llen('USER', function (err, reply) {
+        if (!errorInDatabase(res, err)) {
+            var _id;
+            if (reply === null) {
+                _id = 0;
+            } else {
+                _id = reply;
+            }
+            var newUSER = req.body;
+
+            if (isValidUser(newUSER) === true) {
+                client.rpush('USER', JSON.stringify(newUSER), function (err, reply) {
+                    if (!errorInDatabase(res, err)) {
+                        if (reply !== _id) {
+                            console.log("Neuen User mit ID " + _id + " erstellt.");
+                            res.status(httpStatus.OK).json(newUSER);
+                        }
+                    }
+                });
+            }
+        }
+    });
+});
+
+//entferne User mit angegebener ID
+app.get('/user/delete', function (req, res) {
+    var _userId = parseInt(req.query.userId);
+    console.log(_userId);
+
+    client.lrange('USER', 0, -1, function (err, reply) {
+        if (!errorInDatabase(res, err)) {
+            console.log("Lösche User mit der ID: " + _userId);
+
+            var _user = getUserById(reply, _userId);
+            if (_user === null) {
+                res.status(httpStatus.NOT_FOUND);
+            } else {
+                client.lrem('USER', 1, _user);
+            }
+        }
+    });
+    res.end();
+});
+
+
+/*#####################################################################################
+####                        	                                                   ####
+####                                    PLATZHALTER                                #### 
+####                                                                               #### 
+#######################################################################################*/
+
+
 
 
 app.get('/lager', isAuthenticated, function (req, res) {
