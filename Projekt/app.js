@@ -102,7 +102,7 @@ app.use(function (req, res, next) {
 
 //Kann benutzt werden, um einen Error der Datenbank abzufragen
 function errorInDatabase(res, err) {
-    if (err != null) {
+    if (err !== null) {
         res.status(httpStatus.INTERNAL_SERVER_ERROR);
         return true;
     } else {
