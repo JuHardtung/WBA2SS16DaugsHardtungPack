@@ -80,6 +80,7 @@ function initDB() {
 app.get('/resetDB', jsonParser, function (req, res) {
     cleanDB();
     initDB();
+    res.status(httpStatus.OK).end();
 });
 
 
@@ -106,8 +107,6 @@ function errorInDatabase(res, err) {
 
 //überprüfe, ob Inhalt eines Artikels valide ist
 function isValidArticle(article) {
-
-    console.log("Hier bin ich noch");
     if (article === undefined) {
         return false;
     }
@@ -160,8 +159,24 @@ function getArticelById(articleList, id) {
     return result;
 }
 
-//erreichbar über http://localhost:3000/getArticleById?articleId=
-app.get('/getArticleById', function (req, res) {
+
+//gibt alle vorhandenen Artikel aus
+app.get('/article/all', function (req, res) {
+    client.lrange('ARTICLE', 0, -1, function (err, reply) {
+        if (!errorInDatabase(res, err)) {
+            console.log("Bekomme alle Artikel!");
+            if (reply === null) {
+                res.status(httpStatus.NOT_FOUND);
+            } else {
+                res.status(httpStatus.OK).json(reply);
+            }
+        }
+    });
+});
+
+//gibt Artikel mit bestimmter ID zurück
+//erreichbar über http://localhost:3000/article/id?articleId=
+app.get('/article/id', function (req, res) {
 
     var _articleId = parseInt(req.query.articleId);
 
@@ -179,8 +194,8 @@ app.get('/getArticleById', function (req, res) {
     });
 });
 
-//füge neuen Artikeln zur Datenbank hinzu (JSON im body angeben)
-app.post('/addArticle', jsonParser, function (req, res) {
+//füge neue Artikel zur Datenbank hinzu (JSON im body angeben)
+app.post('/article/add', jsonParser, function (req, res) {
     client.llen('ARTICLE', function (err, reply) {
         if (!errorInDatabase(res, err)) {
             var _id;
@@ -195,7 +210,7 @@ app.post('/addArticle', jsonParser, function (req, res) {
                 client.rpush('ARTICLE', JSON.stringify(newArticle), function (err, reply) {
                     if (!errorInDatabase(res, err)) {
                         if (reply !== _id) {
-                            console.log("Neuen Artikel mit ID " + _id + "erstellt.");
+                            console.log("Neuen Artikel mit ID " + _id + " erstellt.");
                             res.status(httpStatus.OK).json(newArticle);
                         }
                     }
@@ -205,7 +220,25 @@ app.post('/addArticle', jsonParser, function (req, res) {
     });
 });
 
+//entferne Artikel mit angegebener ID
+app.get('/article/delete', function (req, res) {
+    var _articleId = parseInt(req.query.articleId);
+    console.log(_articleId);
 
+    client.lrange('ARTICLE', 0, -1, function (err, reply) {
+        if (!errorInDatabase(res, err)) {
+            console.log("Lösche Artikel mit der ID: " + _articleId);
+
+            var _article = getArticelById(reply, _articleId);
+            if (_article === null) {
+                res.status(httpStatus.NOT_FOUND);
+            } else {
+                client.lrem('ARTICLE', 1, _article);
+            }
+        }
+    });
+    res.end();
+});
 
 
 app.get('/lager', isAuthenticated, function (req, res) {
