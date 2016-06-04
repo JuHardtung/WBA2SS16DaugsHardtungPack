@@ -1,18 +1,18 @@
-var express 	= require('express');
-var router 		= express.Router();
-var Response  = require('./helper/ResponseHelper.js');
+var express = require('express');
+var router = express.Router();
+var Response = require('./helper/ResponseHelper.js');
 
-var ArticlesController    = require('./controllers/ArticlesController');
-var AuthController   = require('./controllers/AuthController');
-var CartController   = require('./controllers/CartController');
+var ArticlesController = require('./controllers/ArticlesController');
+var AuthController = require('./controllers/AuthController');
+var CartController = require('./controllers/CartController');
 
 router.route('/*')
-  .trace(function(req, res, next) {
-    res.send(Response.successfull(200, req.body, null, null));
-  })
-  .options(function(req, res, next) {
-    res.send(Response.successfull(100));
-  });
+    .trace(function (req, res, next) {
+        res.send(Response.successfull(200, req.body, null, null));
+    })
+    .options(function (req, res, next) {
+        res.send(Response.successfull(100));
+    });
 
 // Articles
 router.route('/signup')
@@ -34,6 +34,20 @@ router.route('/cart/:id/add')
 
 router.route('/cart/:id/delete')
     .get(CartController.deleteItem);
+
+
+//Articles
+router.route('/article/all')
+    .get(ArticleController.getArticles);
+
+router.route('/article/id')
+    .get(ArticleController.getArticleById);
+
+router.route('/article/add')
+    .post(ArticleController.addArticle);
+
+router.route('/article/delete')
+    .get(ArticleController.delArticle);
 
 
 // Finally export the router
