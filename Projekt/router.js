@@ -49,5 +49,19 @@ router.route('/user/add')
 router.route('/user/delete')
     .get(UserController.delete);
 
+//Articles
+router.route('/article/all')
+    .get(ArticleController.getArticles);
+
+router.route('/article/id')
+    .get(ArticleController.getArticleById);
+
+router.route('/article/add')
+    .post(ArticleController.addArticle);
+
+router.route('/article/delete')
+    .get(ArticleController.delArticle);
+
+
 // Finally export the router
 module.exports = router;
