@@ -86,8 +86,8 @@ app.use(function (req, res, next) {
 // START WEBSERVER
 // =========================================================
 app.listen(__port);
-
-process.on('uncaughtException', function(err) {
+console.log("Server started on Port: "+__port);
+/*process.on('uncaughtException', function(err) {
   if(err.code === "EADDRINUSE") {
     console.log("It seems that the PORT "+__port+" is already in use by another application.");
     process.exit(0);
@@ -141,11 +141,11 @@ var subscribeMsg = function(sub, m){
   })
   .then(function(){ console.log('sub.subscribed') });
 };
-*/
-server.listen(3000, function(){
-  console.log("Server horcht auf port: 10000");
-});
 
+server.listen(__port, function(){
+  console.log("Server horcht auf port: "+ __port);
+});
+*/
 /*
 subscribeMsg(sub, 'subscribe etwas');
 publishMsg(pub, 'publish etwas');

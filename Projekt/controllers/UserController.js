@@ -1,6 +1,7 @@
 var redis = require('redis');
 var client = redis.createClient();
 var Response = require('../helper/ResponseHelper');
+var httpStatus = require('http-status-codes');
 
 
 function errorInDatabase(res, err) {
