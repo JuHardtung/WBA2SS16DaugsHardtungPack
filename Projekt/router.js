@@ -44,7 +44,7 @@ router.route('/user/:id')
     .get(UserController.getUser);
 
 router.route('/user/add')
-    .get(UserController.add);
+    .post(UserController.add);
 
 router.route('/user/delete')
     .get(UserController.delete);

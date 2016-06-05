@@ -1,6 +1,9 @@
 var redis = require('redis');
 var redisClient = redis.createClient();
 
+function checkshoppingcartId() {
+    return true;
+}
 
 module.exports = {
 
@@ -39,6 +42,7 @@ module.exports = {
     addItem: function (req, res, next) {
         var itemid = req.query.itemid;
         var quantity = req.query.quantity;
+        console.log(quantity);
         if (checkshoppingcartId()) {
             redisClient.rpush("shoppingcart:" + req.params.id, itemid + ":" + quantity);
             res.write('Item added.');
