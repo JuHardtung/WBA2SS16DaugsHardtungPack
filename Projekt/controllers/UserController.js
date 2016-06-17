@@ -51,7 +51,6 @@ function getUserById(userList, id) {
 
 module.exports = {
 
-
     getAll: function(req, res, next) {
         client.lrange('USER', 0, -1, function(err, reply) {
             if (!errorInDatabase(res, err)) {
@@ -59,11 +58,12 @@ module.exports = {
                 if (reply === null) {
                     res.status(httpStatus.NOT_FOUND);
                 } else {
-                    res.status(httpStatus.OK).json(reply);
+                    res.status(httpStatus.OK).end(reply+ "");
                 }
             }
         });
     },
+    
     getUser: function(req, res, next) {
 
         var _userId = parseInt(req.query.userId);

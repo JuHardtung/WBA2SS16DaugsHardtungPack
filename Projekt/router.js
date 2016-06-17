@@ -1,11 +1,15 @@
 var express = require('express');
 var router = express.Router();
 var Response = require('./helper/ResponseHelper.js');
+var bodyParser = require('body-parser');
+
+var jsonParser = bodyParser.json();
 
 var ArticleController = require('./controllers/ArticlesController');
 var AuthController = require('./controllers/AuthController');
 var CartController = require('./controllers/CartController');
 var UserController = require('./controllers/UserController');
+var OtherController = require('./controllers/OtherController');
 
 router.route('/*')
     .trace(function(req, res, next) {
@@ -14,6 +18,10 @@ router.route('/*')
     .options(function(req, res, next) {
         res.send(Response.successfull(100));
     });
+
+// Other
+router.route('/resetdb')
+    .get(OtherController.resetDB);
 
 // Articles
 router.route('/signup')
@@ -37,7 +45,7 @@ router.route('/cart/:id/delete')
     .get(CartController.deleteItem);
 
 //User
-router.route('/user/all')
+router.route('/users')
     .get(UserController.getAll);
 
 router.route('/user/:id')
