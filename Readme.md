@@ -19,5 +19,5 @@
 | /cart/{id}       | POST  | Artikel dem Warenkorb hinzufügen                              | application/JSON   | application/JSON |
 | /cart/{id}       | Patch | Artikel aus dem Warenkorb entfernen                           | text/plain         | text/plain       |
 | /cart/{id}       | DELETE| Warenkorb entfernen                                           | text/plain         | text/plain       |
-| /bewertung/:id   | POST  | Bewertung eines bestimmten Artikels (anhand id) abgeben       | application/JSON   | text/plain       |
-| /bewertung/:id   | GET   | Bewertung eines bestimmten Artikels (anhand id) abfragen      | text/plain         | text/plain       |
+| /bewertung/{id}  | POST  | Bewertung eines bestimmten Artikels (anhand id) abgeben       | application/JSON   | text/plain       |
+| /bewertung/{id}  | GET   | Bewertung eines bestimmten Artikels (anhand id) abfragen      | text/plain         | text/plain       |
