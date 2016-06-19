@@ -38,7 +38,7 @@ router.route('/login')
 router.route('/cart/:id')
     .get(CartController.getCart)
     .post(CartController.addItem)
-    .delete(CartController.deleteItem);
+    .patch(CartController.deleteItem);
 
 //User
 router.route('/user')

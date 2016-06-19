@@ -42,7 +42,12 @@ module.exports = {
     addItem: function (req, res, next) {
         var itemid = req.query.itemid;
         var quantity = req.query.quantity;
-        console.log(quantity);
+
+        if(itemid===undefined||quantity===undefined){
+          res.status(400);
+          res.write('Set itemid and Quantity!');
+          res.end();
+        }else{
         if (checkshoppingcartId()) {
             redisClient.rpush("shoppingcart:" + req.params.id, itemid + ":" + quantity);
             res.write('Item added.');
@@ -51,6 +56,7 @@ module.exports = {
             res.write('User not found.');
             res.end();
         }
+      }
     },
 
     /**
@@ -67,7 +73,7 @@ module.exports = {
                     redisClient.lrem("shoppingcart:" + req.params.id, 0, obj);
                     res.write('Item deleted.');
                 } else {
-                    res.status(500);
+                    res.status(400);
                     res.write('Item not found.');
                 }
                 res.end();
