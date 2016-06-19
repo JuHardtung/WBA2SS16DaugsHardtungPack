@@ -5,6 +5,10 @@ function checkshoppingcartId() {
     return true;
 }
 
+function checkValidItem() {
+    return true;
+}
+
 module.exports = {
 
     /**
@@ -40,15 +44,19 @@ module.exports = {
      * @param {int} quantity
      */
     addItem: function (req, res, next) {
-        var itemid = req.query.itemid;
-        var quantity = req.query.quantity;
-        console.log(quantity);
+        var json = req.body;
+        json.quantity = parseInt(json.quantity);
+        if (!isNaN(parseInt(json.quantity)) && checkValidItem(json.itemid)){
         if (checkshoppingcartId()) {
-            redisClient.rpush("shoppingcart:" + req.params.id, itemid + ":" + quantity);
+            redisClient.rpush("shoppingcart:" + req.params.id, json);
             res.write('Item added.');
             res.end();
         } else {
             res.write('User not found.');
+            res.end();
+        } 
+        } else {
+            res.write('JSON Format Error');
             res.end();
         }
     },
