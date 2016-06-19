@@ -36,39 +36,27 @@ router.route('/login')
 
 //Shopping Cart
 router.route('/cart/:id')
-    .get(CartController.getCart);
-
-router.route('/cart/:id/add')
-    .get(CartController.addItem);
-
-router.route('/cart/:id/delete')
-    .get(CartController.deleteItem);
+    .get(CartController.getCart)
+    .post(CartController.addItem)
+    .delete(CartController.deleteItem);
 
 //User
-router.route('/users')
-    .get(UserController.getAll);
-
-router.route('/user/:id')
-    .get(UserController.getUser);
-
-router.route('/user/add')
+router.route('/user')
+    .get(UserController.getAll)
     .post(UserController.add);
 
-router.route('/user/delete')
-    .get(UserController.delete);
+router.route('/user/:id')
+    .get(UserController.getUser)
+    .delete(UserController.delete);
 
 //Articles
-router.route('/article/all')
+router.route('/article/')
     .get(ArticleController.getArticles);
 
 router.route('/article/:id')
-    .get(ArticleController.getArticleById);
-
-router.route('/article/add')
-    .post(ArticleController.addArticle);
-
-router.route('/article/delete')
-    .get(ArticleController.delArticle);
+    .get(ArticleController.getArticleById)
+    .post(ArticleController.addArticle)
+    .delete(ArticleController.delArticle);
 
 
 // Finally export the router
