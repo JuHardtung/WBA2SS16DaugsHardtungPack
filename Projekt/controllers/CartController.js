@@ -87,5 +87,19 @@ module.exports = {
             res.write('User not found.');
             res.end();
         }
-    }
+    },
+
+    deleteCart: function(req, res, next ){
+        redisClient.del("shoppingcart:" + req.params.id , function (err, obj) {
+            if (err) {
+              res.status(404);
+              res.write('Cart not found.');
+            }else{
+              res.status(200);
+              res.write('Cart deleted.');
+            }
+            res.end();
+
+    });
+  }
 };
