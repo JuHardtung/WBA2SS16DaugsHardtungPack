@@ -49,7 +49,7 @@ module.exports = {
         json.quantity = parseInt(json.quantity);
         if (!isNaN(parseInt(json.quantity)) && checkValidItem(json.itemid)){
         if (checkshoppingcartId()) {
-            redisClient.rpush("shoppingcart:" + req.params.id, json);
+            redisClient.rpush("shoppingcart:" + req.params.id, JSON.stringify(json));
             res.write('Item added.');
             res.end();
         } else {
