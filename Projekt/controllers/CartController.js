@@ -26,7 +26,7 @@ module.exports = {
                 } else {
                     res.status(200);
                     res.setHeader('Content-Type', 'application/json');
-                    res.send(obj);
+                    res.send('{ "cart":['+obj.toString()+']}');
                     res.end();
                 }
             });
@@ -49,6 +49,7 @@ module.exports = {
         json.quantity = parseInt(json.quantity);
         if (!isNaN(parseInt(json.quantity)) && checkValidItem(json.itemid)){
         if (checkshoppingcartId()) {
+            console.log(JSON.stringify(json));
             redisClient.rpush("shoppingcart:" + req.params.id, JSON.stringify(json));
             res.write('Item added.');
             res.end();
