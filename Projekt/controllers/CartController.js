@@ -60,7 +60,7 @@ module.exports = {
             res.write('JSON Format Error');
             res.end();
         }
-      }
+
     },
 
     /**
