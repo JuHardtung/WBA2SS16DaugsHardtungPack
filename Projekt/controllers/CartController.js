@@ -42,7 +42,9 @@ module.exports = {
                         var cart;
 
                         for (var j in obj) {
-                            if(j==0){
+                            if(j==0&&obj.length==1){
+                              cart =obj[j];
+                            }else if(j==0){
                               cart =obj[j] + ", ";
                             }else if (j < obj.length - 1) {
                                 cart = cart + obj[j] + ", ";
@@ -53,7 +55,7 @@ module.exports = {
 
                         res.status(200);
                         res.setHeader('Content-Type', 'application/json');
-                        res.send('{ "cart":[' + cart + ']}');
+                        res.send('[' + cart + ']');
                         res.end();
                     });
 

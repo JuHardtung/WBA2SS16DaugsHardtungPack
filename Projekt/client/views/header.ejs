@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/sass/styles.css">
+  <title><% if(typeof title !== 'undefined') { %><%= title %><% } %></title>
+</head>
+<body>
+
+<!-- Dropdown Structure -->
+<ul id="nav-dropdown-user" class="dropdown-content">
+  <% if (typeof id !== 'undefined') { %>
+  <li><a href="/retailers/<%= id %>/orders">Bestellungen</a></li>
+    <li><a href="/retailers/<%= id %>/profil">Profil</a></li>
+    <li><a href="/retailers/logout">Abmelden</a></li>
+  <% } else { %>
+    <li><a href="/retailers/login">Anmelden</a></li>
+    <li><a href="/retailers/register">Registrieren</a></li>
+  <% } %>
+</ul>
+
+<nav>
+  <div class="nav-wrapper">
+    <div class="container">
+      <a href="/" class="brand-logo"><i class="mdi-action-shopping-cart"></i></a>
+      <a href="#" data-activates="mobile-demo" class="button-collapse"><i class="mdi-navigation-menu"></i></a>
+      <ul class="right hide-on-med-and-down">
+        <li class="search-form-wrapper">
+          <form method="POST" action="/articles/search" class="search-form"><div class="input-field">
+            <input class="input" name="search" id="search" type="search">
+            <label for="search"><i class="mdi-action-search"></i></label>
+            <i class="mdi-navigation-close"></i>
+          </div></form>
+        </li>
+        <li><a href="/offers">Angebote</a></li>
+        <li><a href="/articles">Artikel</a></li>
+        <li>
+          <a class="dropdown-button" href="#" data-activates="nav-dropdown-user">Händler
+          <i class="mdi-navigation-arrow-drop-down right"></i></a>
+        </li>
+      </ul>
+      <ul class="side-nav" id="mobile-demo">
+        <li><a href="/articles/offers">Angebote</a></li>
+        <li><a href="/articles">Artikel</a></li>
+        <li>
+          <ul>
+           <% if (typeof id !== 'undefined') { %>
+            <li><a href="/retailers/logout">Abmelden</a></li>
+            <% } else { %>
+            <li><a href="/retailers/login">Anmelden</a></li>
+            <li><a href="/retailers/register">Registrieren</a></li>
+          <% } %>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div class="container">
+  <% if (typeof message !== 'undefined') {%>
+    <div class="card-panel green-text text-darken-2"><%= message %></div>
+  <% } %>
+
+  <% if (typeof validation !== 'undefined') { %>
+    <div class="card-panel">
+      <ul>
+      <% for(var i = 0; i < validation.length; i++) { %>
+        <li class="red-text text-darken-2"><%= validation[i].message %></li>
+      <% } %>
+      </ul>
+    </div>
+  <% } %>
+</div>

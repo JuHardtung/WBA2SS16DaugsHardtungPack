@@ -1,0 +1,24 @@
+<%- include ../header %>
+
+  <div class="container">
+
+  <% if (articles.length > 0) { %>
+    <ul class="mat-staggered-list">
+      <% for(var i = 0; i < articles.length; i++) { %>
+        <li>
+          <div class="card-panel" id="article-<%= articles[i].id %>">
+            <h4><%= articles[i].name %><small style="float: right;">#<%= articles[i].id %></small></h4>
+            <p class="flow-text"><%= articles[i].description %></p>
+            <strong><%= articles[i].price %>,- €</strong>
+            <a href="/articles/<%= articles[i].id %>" style="float: right">Ansehen <i class="mdi-action-add-shopping-cart"></i></a>
+            <br>
+          </div>
+        </li>
+      <% } %>
+    </ul>
+  <% } else { %>
+    Es sind zur Zeit leider keine Artikel verfügbar.
+  <% } %>
+  </div>
+
+<%- include ../footer %>

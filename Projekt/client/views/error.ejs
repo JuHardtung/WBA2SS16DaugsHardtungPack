@@ -1,0 +1,18 @@
+<%- include header %>
+
+  <section class="container">
+    <h3>Es ist ein Fehler aufgetreten <i class="mdi-alert-error"></i></h3>
+
+    Code:
+    <% if (typeof code !== 'undefined') { %>
+      <%= code %>
+    <% } %>
+    <br>
+
+    Message:
+    <% if (typeof message !== 'undefined') { %>
+      <%= message %>
+    <% } %>
+  </section>
+
+<%- include footer %>
