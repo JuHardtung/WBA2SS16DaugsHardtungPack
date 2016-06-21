@@ -33,9 +33,9 @@ module.exports = {
                     console.log(jsonObj.cart);
 
                     for (var item in jsonObj.cart) {
-                       redisClient.get("article:"+item.itemid, function( err, obj){
-                           console.log(obj);
 
+                       redisClient.get("article:"+jsonObj.cart[item].id, function( err, obj){
+                          console.log(obj);
                        });
                     }
                     res.send('{ "cart":[' + obj.toString() + ']}');
