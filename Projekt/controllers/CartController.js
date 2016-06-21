@@ -1,5 +1,7 @@
 var redis = require('redis');
 var redisClient = redis.createClient();
+var expressValidator = require('express-validator');
+var util = require('util');
 
 function checkshoppingcartId() {
     return true;
@@ -44,12 +46,19 @@ module.exports = {
      * @param {int} quantity
      */
     addItem: function (req, res, next) {
+        req.checkBody('id', 'Invalid ArticleID').notEmpty().isInt();
+        req.checkBody('quantity', 'Invalid quantity').notEmpty().isInt();
+        var errors = req.validationErrors();
+        if (errors) {
+          res.status(400).send('There have been validation errors: ' + util.inspect(errors));
+          return;
+        }
+
 
         var json = req.body;
         json.quantity = parseInt(json.quantity);
         if (!isNaN(parseInt(json.quantity)) && checkValidItem(json.itemid)){
         if (checkshoppingcartId()) {
-            console.log(JSON.stringify(json));
             redisClient.rpush("shoppingcart:" + req.params.id, JSON.stringify(json));
             res.write('Item added.');
             res.end();
