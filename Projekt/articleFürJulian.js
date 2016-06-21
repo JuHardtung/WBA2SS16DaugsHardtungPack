@@ -32,3 +32,15 @@ redisClient.lrange("articles", 0, -1, function(err, obj) {
       });
     }
   });
+
+
+  client.lrange('ARTICLE', 0, -1, function (err, reply) {
+      if (!errorInDatabase(res, err)) {
+          console.log("Bekomme alle Artikel!");
+          if (reply === null) {
+              res.status(httpStatus.NOT_FOUND);
+          } else {
+              res.status(httpStatus.OK).json(reply);
+          }
+      }
+  });

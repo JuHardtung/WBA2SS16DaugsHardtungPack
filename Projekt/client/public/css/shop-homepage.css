@@ -22,7 +22,7 @@ body {
 }
 
 .caption {
-    height: 130px;
+    height: 20%;
     overflow: hidden;
 }
 
@@ -54,6 +54,13 @@ body {
   overflow:hidden;
 }
 
+.btn.sharp {
+    border-radius: 0;
+}
+
+.ctrl{
+  margin:10px;
+}
 footer {
     margin: 50px 0;
 }

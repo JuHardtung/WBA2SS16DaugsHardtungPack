@@ -77,6 +77,7 @@ module.exports = {
      * @param {int} quantity
      */
     addItem: function(req, res, next) {
+        console.log(req) ;
         req.checkBody('id', 'Invalid ArticleID').notEmpty().isInt();
         req.checkBody('quantity', 'Invalid quantity').notEmpty().isInt();
         var errors = req.validationErrors();
