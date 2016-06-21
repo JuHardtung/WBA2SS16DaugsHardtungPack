@@ -12,10 +12,10 @@ var UserController = require('./controllers/UserController');
 var OtherController = require('./controllers/OtherController');
 
 router.route('/*')
-    .trace(function(req, res, next) {
+    .trace(function (req, res, next) {
         res.send(Response.successfull(200, req.body, null, null));
     })
-    .options(function(req, res, next) {
+    .options(function (req, res, next) {
         res.send(Response.successfull(100));
     });
 
@@ -52,11 +52,11 @@ router.route('/user/:id')
 
 //Articles
 router.route('/article/')
-    .get(ArticleController.getArticles);
+    .get(ArticleController.getArticles)
+    .post(ArticleController.addArticle);
 
 router.route('/article/:id')
     .get(ArticleController.getArticleById)
-    .post(ArticleController.addArticle)
     .delete(ArticleController.delArticle);
 
 
