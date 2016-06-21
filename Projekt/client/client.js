@@ -37,7 +37,7 @@ app.use(session({
   },
   resave: false,
   saveUninitialized: true,
-  secret: 'karsten loves taccos!'
+  secret: 'julian ist blöd'
 }));
 
 // ROUTES
@@ -72,7 +72,7 @@ app.use(function (req, res, next) {
     // Catch 404s
     else {
       res.status(404);
-      res.render('error', { code: 404, message: 'Page not found' });
+      res.render('404');
     }
 });
 
