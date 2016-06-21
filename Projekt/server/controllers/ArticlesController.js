@@ -40,7 +40,7 @@ module.exports = {
     //gibt alle vorhandenen Artikel aus
     getArticles: function (req, res, next) {
 
-        redisClient.lrange("ARTICLE", 0, -1, function (err, obj) {
+        redisClient.lrange("articles", 0, -1, function (err, obj) {
             if (obj.length === 0) {
                 res.status(500);
                 res.write('list empty!');
@@ -102,7 +102,7 @@ module.exports = {
     },
 
     //füge neue Artikel zur Datenbank hinzu (JSON im body angeben)
-    //TODO Artikelid muss bis jetzt noch mit im Body angegeben werden, 
+    //TODO Artikelid muss bis jetzt noch mit im Body angegeben werden,
     //damit die id mit in den Artikelinfos gespeichert wird
     addArticle: function (req, res, next) {
         redisClient.lrange('ARTICLE', 0, -1, function (err, reply) {
