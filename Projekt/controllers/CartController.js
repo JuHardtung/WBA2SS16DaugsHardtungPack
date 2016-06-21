@@ -1,7 +1,7 @@
 var redis = require('redis');
 var redisClient = redis.createClient();
 
-function checkshoppingcartId() {
+function checkCartId() {
     return true;
 }
 
@@ -17,16 +17,26 @@ module.exports = {
      * @return {application/json} CartItems
      */
     getCart: function (req, res, next) {
-        if (checkshoppingcartId()) {
-            redisClient.lrange("shoppingcart:" + req.params.id, 0, -1, function (err, obj) {
-                if (obj == "[]") {
+        if (checkCartId()) {
+            redisClient.lrange("cart:" + req.params.id, 0, -1, function (err, obj) {
+                if (obj.length == 0) {
                     res.status(500);
                     res.write('Cart empty!');
                     res.end();
                 } else {
                     res.status(200);
                     res.setHeader('Content-Type', 'application/json');
-                    res.send('{ "cart":['+obj.toString()+']}');
+
+                    jsonObj = JSON.parse('{ "cart":[' + obj.toString() + ']}');
+                    console.log(jsonObj.cart);
+                    
+                    for (var item in jsonObj.cart) {
+                       redisClient.get("article":item.itemid, function( err, obj){
+                           console.log(obj);
+                           
+                       });
+                    }
+                    res.send('{ "cart":[' + obj.toString() + ']}');
                     res.end();
                 }
             });
@@ -47,16 +57,16 @@ module.exports = {
 
         var json = req.body;
         json.quantity = parseInt(json.quantity);
-        if (!isNaN(parseInt(json.quantity)) && checkValidItem(json.itemid)){
-        if (checkshoppingcartId()) {
-            console.log(JSON.stringify(json));
-            redisClient.rpush("shoppingcart:" + req.params.id, JSON.stringify(json));
-            res.write('Item added.');
-            res.end();
-        } else {
-            res.write('User not found.');
-            res.end();
-        }
+        if (!isNaN(parseInt(json.quantity)) && checkValidItem(json.itemid)) {
+            if (checkCartId()) {
+                console.log(JSON.stringify(json));
+                redisClient.rpush("cart:" + req.params.id, JSON.stringify(json));
+                res.write('Item added.');
+                res.end();
+            } else {
+                res.write('User not found.');
+                res.end();
+            }
         } else {
             res.write('JSON Format Error');
             res.end();
@@ -70,12 +80,12 @@ module.exports = {
      */
     deleteItem: function (req, res, next) {
         var itemindex = req.query.index;
-        if (checkshoppingcartId()) {
+        if (checkCartId()) {
 
-            redisClient.lindex("shoppingcart:" + req.params.id, itemindex, function (err, obj) {
+            redisClient.lindex("cart:" + req.params.id, itemindex, function (err, obj) {
                 if (obj !== null) {
                     res.status(200);
-                    redisClient.lrem("shoppingcart:" + req.params.id, 0, obj);
+                    redisClient.lrem("cart:" + req.params.id, 0, obj);
                     res.write('Item deleted.');
                 } else {
                     res.status(400);
@@ -89,17 +99,17 @@ module.exports = {
         }
     },
 
-    deleteCart: function(req, res, next ){
-        redisClient.del("shoppingcart:" + req.params.id , function (err, obj) {
+    deleteCart: function (req, res, next) {
+        redisClient.del("cart:" + req.params.id, function (err, obj) {
             if (err) {
-              res.status(404);
-              res.write('Cart not found.');
-            }else{
-              res.status(200);
-              res.write('Cart deleted.');
+                res.status(404);
+                res.write('Cart not found.');
+            } else {
+                res.status(200);
+                res.write('Cart deleted.');
             }
             res.end();
 
-    });
-  }
+        });
+    }
 };
