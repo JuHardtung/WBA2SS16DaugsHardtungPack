@@ -40,6 +40,8 @@ router.route('/cart/:id')
     .post(CartController.addItem)
     .patch(CartController.deleteItem)
     .delete(CartController.deleteCart);
+router.route('/cart/:id/checkout')
+    .get(CartController.checkoutCart);
 
 //User
 router.route('/user')
