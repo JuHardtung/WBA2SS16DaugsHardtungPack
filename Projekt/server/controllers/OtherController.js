@@ -25,23 +25,23 @@ function initDB() {
     var article1 = {
         "id": 1,
         "name": "Ball",
-        "beschreibung": "Das ist ein runder und ganz toller Ball!",
-        "preis": 9.99,
-        "lageranzahl": 45
+        "description": "Das ist ein runder und ganz toller Ball!",
+        "price": 9.99,
+        "storage": 45
     };
     var article2 = {
         "id": 2,
         "name": "Auto",
-        "beschreibung": "Das ist ein rotes Spielzeugauto!",
-        "preis": 14.99,
-        "lageranzahl": 14
+        "description": "Das ist ein rotes Spielzeugauto!",
+        "price": 14.99,
+        "storage": 14
     };
     var article3 = {
         "id": 3,
         "name": "Hammer",
-        "beschreibung": "Das ist ein toller Hammer!",
-        "preis": 19.99,
-        "lageranzahl": 3
+        "description": "Das ist ein toller Hammer!",
+        "price": 19.99,
+        "storage": 3
     };
 
 
@@ -63,18 +63,18 @@ function initDB() {
     //User 1, 2
     var user1 = {
         "id": 1,
-        "vorname": "Max",
-        "nachname": "Mustermann",
+        "forname": "Max",
+        "surname": "Mustermann",
         "email": "m.mustermann@muster.de",
-        "passwort": "musterpwd123"
+        "password": "musterpwd123"
     };
 
     var user2 = {
         "id": 2,
-        "vorname": "Karl",
-        "nachname": "Karlsson",
+        "forname": "Karl",
+        "surname": "Karlsson",
         "email": "k.karlsson@gmx.de",
-        "passwort": "karlpasswort"
+        "password": "karlpasswort"
     };
 
     redisClient.rpush([USERS, '1', '2'], function (err, reply) {
@@ -96,10 +96,10 @@ function initDB() {
     var cart1 = [
         {
             "id": 1,
-            "quantity": 5
+            "qty": 5
         }, {
             "id": 3,
-            "quantity": 7
+            "qty": 7
 
         }
     ]
