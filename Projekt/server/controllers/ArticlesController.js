@@ -12,13 +12,13 @@ function isValidArticle(article) {
     if (article.name === undefined) {
         return false;
     }
-    if (article.beschreibung === undefined) {
+    if (article.description === undefined) {
         return false;
     }
-    if (article.preis === undefined) {
+    if (article.price === undefined) {
         return false;
     }
-    if (article.lageranzahl === undefined) {
+    if (article.storage === undefined) {
         return false;
     }
     return true;
@@ -85,7 +85,7 @@ module.exports = {
 
         var _id = parseInt(req.query.articleId);
 
-        redisClient.lrange('ARTICLE', 0, -1, function (err, reply) {
+        redisClient.lrange('articles', 0, -1, function (err, reply) {
             console.log("Bekomme Artikel mit der ID " + _id);
 
             var _articleID = articleIDexists(reply, _id);
@@ -105,7 +105,7 @@ module.exports = {
     //TODO Artikelid muss bis jetzt noch mit im Body angegeben werden,
     //damit die id mit in den Artikelinfos gespeichert wird
     addArticle: function (req, res, next) {
-        redisClient.lrange('ARTICLE', 0, -1, function (err, reply) {
+        redisClient.lrange('articles', 0, -1, function (err, reply) {
             var _id;
             var laenge = reply.length;
             if (laenge == 0) {
@@ -116,7 +116,7 @@ module.exports = {
             var newArticle = req.body;
 
             if (isValidArticle(newArticle) === true) {
-                redisClient.rpush('ARTICLE', _id, function (err, reply) {
+                redisClient.rpush('articles', _id, function (err, reply) {
                     var article = "article:" + _id;
                     redisClient.set(article, JSON.stringify(newArticle), function (err, reply) {
                         console.log("Neuen Artikel mit ID " + _id + " erstellt.");
@@ -133,7 +133,7 @@ module.exports = {
 
         var _id = parseInt(req.query.articleId);
 
-        redisClient.lrange('ARTICLE', 0, -1, function (err, reply) {
+        redisClient.lrange('articles', 0, -1, function (err, reply) {
             console.log("Lösche Artikel mit der ID " + _id);
 
             var _articleID = articleIDexists(reply, _id);
@@ -143,7 +143,7 @@ module.exports = {
                 res.end();
             } else {
                 _articleById = 'article:' + _articleID;
-                redisClient.lrem('ARTICLE', 0, _articleID, function (err) {
+                redisClient.lrem('articles', 0, _articleID, function (err) {
                     if (err) {
                         throw err;
                     }
