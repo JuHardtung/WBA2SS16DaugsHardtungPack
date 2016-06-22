@@ -1,6 +1,9 @@
 var redis = require('redis');
 var redisClient = redis.createClient();
 
+var ARTICLES = 'articles'; //die DB-Liste mit den IDs aller Artikel
+//Artikel einzeln als key unter article:*id* gespeichert (Inhalt in JSON-Format)
+
 //überprüfe, ob Inhalt eines Artikels valide ist
 function isValidArticle(article) {
     if (article === undefined) {
@@ -25,7 +28,7 @@ function isValidArticle(article) {
 }
 
 //überprüfe, ob ein Artikel mit bestimmter ID existiert
-function articleIDexists(articleList, id) {
+function articleIdExists(articleList, id) {
     var result = null;
     articleList.forEach(function (entry) {
         if (entry == id) {
@@ -40,11 +43,9 @@ module.exports = {
     //gibt alle vorhandenen Artikel aus
     getArticles: function (req, res, next) {
 
-        redisClient.lrange("articles", 0, -1, function (err, obj) {
+        redisClient.lrange(ARTICLES, 0, -1, function (err, obj) {
             if (obj.length === 0) {
-                res.status(500);
-                res.write('list empty!');
-                res.end();
+                res.status(500).write("ArtikelListe ist leer").end();
             } else {
                 console.log(obj[1] + obj);
 
@@ -85,15 +86,15 @@ module.exports = {
 
         var _id = parseInt(req.query.articleId);
 
-        redisClient.lrange('ARTICLE', 0, -1, function (err, reply) {
+        redisClient.lrange(ARTICLES, 0, -1, function (err, reply) {
             console.log("Bekomme Artikel mit der ID " + _id);
 
-            var _articleID = articleIDexists(reply, _id);
+            var _articleID = articleIdExists(reply, _id);
             if (_articleID === null) {
                 res.status(404);
                 res.end();
             } else {
-                _articleById = 'article:' + _articleID;
+                var _articleById = 'article:' + _articleID;
                 redisClient.get(_articleById, function (err, reply) {
                     res.status(200).json(reply);
                 });
@@ -102,10 +103,10 @@ module.exports = {
     },
 
     //füge neue Artikel zur Datenbank hinzu (JSON im body angeben)
-    //TODO Artikelid muss bis jetzt noch mit im Body angegeben werden,
+    //TODO ArtikelID muss bis jetzt noch mit im Body angegeben werden,
     //damit die id mit in den Artikelinfos gespeichert wird
     addArticle: function (req, res, next) {
-        redisClient.lrange('ARTICLE', 0, -1, function (err, reply) {
+        redisClient.lrange(ARTICLES, 0, -1, function (err, reply) {
             var _id;
             var laenge = reply.length;
             if (laenge == 0) {
@@ -116,7 +117,7 @@ module.exports = {
             var newArticle = req.body;
 
             if (isValidArticle(newArticle) === true) {
-                redisClient.rpush('ARTICLE', _id, function (err, reply) {
+                redisClient.rpush(ARTICLES, _id, function (err, reply) {
                     var article = "article:" + _id;
                     redisClient.set(article, JSON.stringify(newArticle), function (err, reply) {
                         console.log("Neuen Artikel mit ID " + _id + " erstellt.");
@@ -133,17 +134,17 @@ module.exports = {
 
         var _id = parseInt(req.query.articleId);
 
-        redisClient.lrange('ARTICLE', 0, -1, function (err, reply) {
+        redisClient.lrange(ARTICLES, 0, -1, function (err, reply) {
             console.log("Lösche Artikel mit der ID " + _id);
 
-            var _articleID = articleIDexists(reply, _id);
+            var _articleID = articleIdExists(reply, _id);
             if (_articleID === null) {
                 res.status(404);
                 res.write("Artikel existiert nicht");
                 res.end();
             } else {
-                _articleById = 'article:' + _articleID;
-                redisClient.lrem('ARTICLE', 0, _articleID, function (err) {
+                var _articleById = 'article:' + _articleID;
+                redisClient.lrem(ARTICLES, 0, _articleID, function (err) {
                     if (err) {
                         throw err;
                     }

@@ -1,13 +1,21 @@
 var redis = require('redis');
 var redisClient = redis.createClient();
 
+var ARTICLES = 'articles'; //die DB-Liste mit den IDs aller Artikel
+//Artikel einzeln als key unter article:*id* gespeichert (Inhalt in JSON-Format)
+
+var USERS = 'users'; //die DBlListe mit den IDs aller User
+//User einzeln als key unter user:*id* gespeichert (Inhalt in JSON-Format)
 
 
-
-//Datenbank säubern
+//Datenbank säubern (nur zur eigenen Hilfe und NICHT für den späteren Gebrauch)
 function cleanDB() {
-    redisClient.del(['ARTICLE', 'USER'], function (err, reply) {
-        console.log("Datenbank wurde geleert! " + reply);
+    redisClient.flushall(function (err, reply) {
+        if (err) {
+            console.log("Fehler beim Leeren der Datenbank aufgetreten");
+        } else {
+            console.log("Datenbank wurde geleert!");
+        }
     });
 }
 //Datenbank Grunddaten erstellen
@@ -35,12 +43,19 @@ function initDB() {
     };
 
 
-    redisClient.rpush(['ARTICLE', '1', '2', '3'], function (err, reply) {
-        console.log(reply);
+    redisClient.rpush([ARTICLES, '1', '2', '3'], function (err, reply) {
+        if (err) {
+            console.log("Fehler beim Erstellen der ArticleList aufgetreten");
+        }
     });
 
     redisClient.mset("article:1", JSON.stringify(article1), "article:2", JSON.stringify(article2), "article:3", JSON.stringify(article3), function (err, reply) {
-        console.log("Artikel hinzugefügt! Reply: " + reply);
+        if (err) {
+            console.log("Ein Fehler beim Erstellen der einzelnen Artikel aufgetreten");
+        } else {
+            console.log("Artikel hinzugefügt! Reply: " + reply);
+
+        }
     });
 
     var user1 = {
@@ -59,12 +74,18 @@ function initDB() {
         "passwort": "karlpasswort"
     };
 
-    redisClient.rpush(['USER', '1', '2'], function (err, reply) {
-        console.log(reply);
+    redisClient.rpush([USERS, '1', '2'], function (err, reply) {
+        if (err) {
+            console.log("Fehler beim Erstellen der UserList aufgetreten");
+        }
     });
 
     redisClient.mset("user:1", JSON.stringify(user1), "user:2", JSON.stringify(user2), function (err, reply) {
-        console.log("User hinzugefügt! Reply: " + reply);
+        if (err) {
+            console.log("Ein Fehler beim Erstellen der einzelnen User aufgetreten");
+        } else {
+            console.log("User hinzugefügt! Reply: " + reply);
+        }
     });
 
 }
@@ -75,6 +96,6 @@ module.exports = {
     resetDB: function (req, res) {
         cleanDB();
         initDB();
-        res.status(httpStatus.OK).end();
+        res.status(200).end();
     }
 };
