@@ -20,26 +20,28 @@ function cleanDB() {
 }
 //Datenbank Grunddaten erstellen
 function initDB() {
+
+    //Artikel 1, 2, 3
     var article1 = {
         "id": 1,
         "name": "Ball",
-        "beschreibung": "Das ist ein runder und ganz toller Ball!",
-        "preis": 9.99,
-        "lageranzahl": 45
+        "description": "Das ist ein runder und ganz toller Ball!",
+        "price": 9.99,
+        "storage": 45
     };
     var article2 = {
         "id": 2,
         "name": "Auto",
-        "beschreibung": "Das ist ein rotes Spielzeugauto!",
-        "preis": 14.99,
-        "lageranzahl": 14
+        "description": "Das ist ein rotes Spielzeugauto!",
+        "price": 14.99,
+        "storage": 14
     };
     var article3 = {
         "id": 3,
         "name": "Hammer",
-        "beschreibung": "Das ist ein toller Hammer!",
-        "preis": 19.99,
-        "lageranzahl": 3
+        "description": "Das ist ein toller Hammer!",
+        "price": 19.99,
+        "storage": 3
     };
 
 
@@ -58,20 +60,21 @@ function initDB() {
         }
     });
 
+    //User 1, 2
     var user1 = {
         "id": 1,
-        "vorname": "Max",
-        "nachname": "Mustermann",
+        "forname": "Max",
+        "surname": "Mustermann",
         "email": "m.mustermann@muster.de",
-        "passwort": "musterpwd123"
+        "password": "musterpwd123"
     };
 
     var user2 = {
         "id": 2,
-        "vorname": "Karl",
-        "nachname": "Karlsson",
+        "forname": "Karl",
+        "surname": "Karlsson",
         "email": "k.karlsson@gmx.de",
-        "passwort": "karlpasswort"
+        "password": "karlpasswort"
     };
 
     redisClient.rpush([USERS, '1', '2'], function (err, reply) {
@@ -85,6 +88,26 @@ function initDB() {
             console.log("Ein Fehler beim Erstellen der einzelnen User aufgetreten");
         } else {
             console.log("User hinzugefügt! Reply: " + reply);
+        }
+    });
+
+
+    //Warenkorb für User 1
+    var cart1 = [
+        {
+            "id": 1,
+            "qty": 5
+        }, {
+            "id": 3,
+            "qty": 7
+
+        }
+    ]
+    redisClient.mset("cart:1", JSON.stringify(cart1), function (err, reply) {
+        if (err) {
+            console.log("Es ist ein Fehler beim Erstellen des Warenkorbes aufgetreten!");
+        } else {
+            console.log("Warenkorb für User 1 erstellt: Reply: " + reply);
         }
     });
 

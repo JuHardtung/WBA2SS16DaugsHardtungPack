@@ -1,33 +1,16 @@
 var redis = require('redis');
 var redisClient = redis.createClient();
+var expressValidator = require('express-validator');
 
 var ARTICLES = 'articles'; //die DB-Liste mit den IDs aller Artikel
 //Artikel einzeln als key unter article:*id* gespeichert (Inhalt in JSON-Format)
 
-//überprüfe, ob Inhalt eines Artikels valide ist
-function isValidArticle(article) {
-    if (article === undefined) {
-        return false;
-    }
-    if (article.id === undefined) {
-        return false;
-    }
-    if (article.name === undefined) {
-        return false;
-    }
-    if (article.description === undefined) {
-        return false;
-    }
-    if (article.price === undefined) {
-        return false;
-    }
-    if (article.storage === undefined) {
-        return false;
-    }
-    return true;
-}
-
-//überprüfe, ob ein Artikel mit bestimmter ID existiert
+/*
+ * check if article with given ID exists
+ * @param {array} articleList
+ * @param {int} id
+ * @return {int} existing id 
+ */
 function articleIdExists(articleList, id) {
     var result = null;
     articleList.forEach(function (entry) {
@@ -40,14 +23,18 @@ function articleIdExists(articleList, id) {
 
 module.exports = {
 
-    //gibt alle vorhandenen Artikel aus
+    /**
+     * return all articles from database
+     * @return {application/json} Article
+     */
     getArticles: function (req, res, next) {
 
         redisClient.lrange(ARTICLES, 0, -1, function (err, obj) {
             if (obj.length === 0) {
-                res.status(500).write("ArtikelListe ist leer").end();
+                res.status(500);
+                res.write("ArtikelListe ist leer");
+                res.end();
             } else {
-                console.log(obj[1] + obj);
 
                 var articles = [];
                 for (var item in obj) {
@@ -56,6 +43,11 @@ module.exports = {
                 }
 
                 redisClient.mget(articles, function (err, obj) {
+                    if (err) {
+                        res.status(500);
+                        res.write("Fehler beim Bekommen von Artikeln");
+                        res.end;
+                    }
                     var list;
 
                     for (var j in obj) {
@@ -79,46 +71,82 @@ module.exports = {
         });
     },
 
-
-    //gibt Artikel mit bestimmter ID zurück
-    //erreichbar über http://localhost:3000/article/id?articleId=
+    /**
+     * return article with given id
+     * @param {int} id
+     * @return {application/json} Article
+     */
     getArticleById: function (req, res, next) {
 
         var _id = parseInt(req.query.articleId);
 
         redisClient.lrange(ARTICLES, 0, -1, function (err, reply) {
             console.log("Bekomme Artikel mit der ID " + _id);
+            if (err) {
+                console.log(err);
+                res.status(500);
+                res.end();
+            }
 
             var _articleID = articleIdExists(reply, _id);
             if (_articleID === null) {
+                console.log("Es existiert kein Artikel mit ID: " + _id);
                 res.status(404);
                 res.end();
             } else {
                 var _articleById = 'article:' + _articleID;
                 redisClient.get(_articleById, function (err, reply) {
+                    if (err) {
+                        console.log(err);
+                        res.status(500);
+                        res.end();
+                    }
                     res.status(200).json(reply);
                 });
             }
         });
     },
 
-    //füge neue Artikel zur Datenbank hinzu (JSON im body angeben)
+    /**
+     * add a new article to database (in JSON-format)
+     * @param {int} id
+     * @param {string} name
+     * @param {string} description
+     * @param {float} price
+     * @param {int} storage
+     */
     //TODO ArtikelID muss bis jetzt noch mit im Body angegeben werden,
     //damit die id mit in den Artikelinfos gespeichert wird
     addArticle: function (req, res, next) {
-        redisClient.lrange(ARTICLES, 0, -1, function (err, reply) {
+        req.checkBody('id', 'Invalid ArticleID').notEmpty().isInt();
+        req.checkBody('name', 'Invalid ArticleName').notEmpty();
+        req.checkBody('description', 'Invalid ArticleDescription').notEmpty();
+        req.checkBody('price', 'Invalid ArticlePrice').notEmpty().isFloat();
+        req.checkBody('storage', 'Invalid ArticleStorage').notEmpty().isInt();
+        var errors = req.validationErrors();
+        if (errors) {
+            console.log(errors);
+            res.status(400).write('There have been validation errors!');
+            res.end();
+        } else {
 
-            var _id;
-            var laenge = reply.length;
-            if (laenge == 0) {
-                _id = 1;
-            } else {
-                _id = parseInt(laenge) + 1;
-            }
-            var newArticle = req.body;
+            redisClient.lrange(ARTICLES, 0, -1, function (err, reply) {
 
-            if (isValidArticle(newArticle) === true) {
+                var _id;
+                var laenge = reply.length;
+                if (laenge == 0) {
+                    _id = 1;
+                } else {
+                    _id = parseInt(laenge) + 1;
+                }
+                var newArticle = req.body;
+
                 redisClient.rpush(ARTICLES, _id, function (err, reply) {
+                    if (err) {
+                        console.log(err);
+                        res.status(500);
+                        res.end();
+                    }
 
                     var article = "article:" + _id;
                     redisClient.set(article, JSON.stringify(newArticle), function (err, reply) {
@@ -127,18 +155,24 @@ module.exports = {
                         res.end();
                     });
                 });
-            }
-        });
+            });
+        }
     },
 
-    //entferne Artikel mit angegebener ID
+    /** 
+     * delete an article with given id from database
+     * @param {int} id
+     */
     delArticle: function (req, res, next) {
 
         var _id = parseInt(req.query.articleId);
 
         redisClient.lrange(ARTICLES, 0, -1, function (err, reply) {
             console.log("Lösche Artikel mit der ID " + _id);
-
+            if (err) {
+                res.status(500);
+                res.end();
+            }
             var _articleID = articleIdExists(reply, _id);
             if (_articleID === null) {
                 res.status(404);
@@ -148,10 +182,15 @@ module.exports = {
                 var _articleById = 'article:' + _articleID;
                 redisClient.lrem(ARTICLES, 0, _articleID, function (err) {
                     if (err) {
-                        throw err;
+                        res.status(500);
+                        res.end();
                     }
                 });
                 redisClient.del(_articleById, function (err, reply) {
+                    if (err) {
+                        res.status(500);
+                        res.end();
+                    }
                     res.status(200).json(reply);
                 });
             }
