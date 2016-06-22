@@ -11,7 +11,7 @@ module.exports = {
 
 
         var options = {
-            uri: 'http://127.0.0.1:3000/cart/1',
+            uri: 'http://127.0.0.1:3000/cart/'+req.session.userId,
             headers: {
                 'User-Agent': 'Request-Promise'
             },

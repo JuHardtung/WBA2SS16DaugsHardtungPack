@@ -3,6 +3,7 @@ var router    = express.Router();
 
 var CartController = require("./controllers/CartController.js");
 var ArticleController = require("./controllers/ArticleController.js");
+var UserController = require("./controllers/UserController.js");
 
 
 
@@ -14,6 +15,13 @@ router.route('/cart/1')
 
 router.route('/')
     .get(ArticleController.getAll);
+
+router.route('/login')
+        .post(UserController.post);
+
+
+router.route('/logout')
+        .get(UserController.logout);
 
 //
 // Finally export the router

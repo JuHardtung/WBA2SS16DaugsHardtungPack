@@ -6,6 +6,7 @@ var Validator    = require('express-validator');
 var Response     = require('./helper/ResponseHelper');
 var http         = require('http');
 
+
 global.__coreDir = __dirname+"/";
 global.__port    = 3000;
 

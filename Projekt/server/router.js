@@ -19,17 +19,16 @@ router.route('/*')
         res.send(Response.successfull(100));
     });
 
+
 // Other
 router.route('/resetdb')
     .get(OtherController.resetDB);
 
 // Articles
 router.route('/signup')
-    .get(AuthController.signupGet)
     .post(AuthController.signup);
 
 router.route('/login')
-    .get(AuthController.loginGet)
     .post(AuthController.login);
 
 
@@ -61,6 +60,11 @@ router.route('/article/:id')
     .get(ArticleController.getArticleById)
     .delete(ArticleController.delArticle);
 
+router.route('/signup')
+    .post(AuthController.signup);
+
+router.route('/login')
+    .post(AuthController.login);
 
 // Finally export the router
 module.exports = router;
