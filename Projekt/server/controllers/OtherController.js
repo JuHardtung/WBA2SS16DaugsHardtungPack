@@ -20,6 +20,8 @@ function cleanDB() {
 }
 //Datenbank Grunddaten erstellen
 function initDB() {
+
+    //Artikel 1, 2, 3
     var article1 = {
         "id": 1,
         "name": "Ball",
@@ -58,6 +60,7 @@ function initDB() {
         }
     });
 
+    //User 1, 2
     var user1 = {
         "id": 1,
         "vorname": "Max",
@@ -85,6 +88,26 @@ function initDB() {
             console.log("Ein Fehler beim Erstellen der einzelnen User aufgetreten");
         } else {
             console.log("User hinzugefügt! Reply: " + reply);
+        }
+    });
+
+
+    //Warenkorb für User 1
+    var cart1 = [
+        {
+            "id": 1,
+            "quantity": 5
+        }, {
+            "id": 3,
+            "quantity": 7
+
+        }
+    ]
+    redisClient.mset("cart:1", JSON.stringify(cart1), function (err, reply) {
+        if (err) {
+            console.log("Es ist ein Fehler beim Erstellen des Warenkorbes aufgetreten!");
+        } else {
+            console.log("Warenkorb für User 1 erstellt: Reply: " + reply);
         }
     });
 
