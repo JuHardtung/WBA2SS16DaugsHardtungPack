@@ -15,13 +15,13 @@ function isValidArticle(article) {
     if (article.name === undefined) {
         return false;
     }
-    if (article.beschreibung === undefined) {
+    if (article.description === undefined) {
         return false;
     }
-    if (article.preis === undefined) {
+    if (article.price === undefined) {
         return false;
     }
-    if (article.lageranzahl === undefined) {
+    if (article.storage === undefined) {
         return false;
     }
     return true;
@@ -107,6 +107,7 @@ module.exports = {
     //damit die id mit in den Artikelinfos gespeichert wird
     addArticle: function (req, res, next) {
         redisClient.lrange(ARTICLES, 0, -1, function (err, reply) {
+
             var _id;
             var laenge = reply.length;
             if (laenge == 0) {
@@ -118,6 +119,7 @@ module.exports = {
 
             if (isValidArticle(newArticle) === true) {
                 redisClient.rpush(ARTICLES, _id, function (err, reply) {
+
                     var article = "article:" + _id;
                     redisClient.set(article, JSON.stringify(newArticle), function (err, reply) {
                         console.log("Neuen Artikel mit ID " + _id + " erstellt.");
