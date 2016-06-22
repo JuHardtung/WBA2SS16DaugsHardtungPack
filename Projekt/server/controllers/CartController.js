@@ -4,26 +4,15 @@ var expressValidator = require('express-validator');
 var util = require('util');
 
 
-//BRAUCHEN WIR DIE ÜBERHAUPT?
-function checkCartId() {
-    return true;
-}
-
-function checkValidItem() {
-    return true;
-}
-
-
 module.exports = {
 
     /**
      * Returns all items in the shopping cart from user id
-     * @param {int} id
-     * @return {application/json} CartItems
+     * @param [int] id
+     * @return [application/json] all articles in cart as json
      */
     getCart: function (req, res, next) {
 
-        if (checkCartId()) {
             redisClient.lrange("cart:" + req.params.id, 0, -1, function (err, obj) {
                 if (err) {
                     res.status(500);
@@ -67,18 +56,13 @@ module.exports = {
                     });
                 }
             });
-        } else {
-            res.write('User not found.');
-            res.end();
-
-        }
     },
 
 
     /**
      * "Buys" the items in the cart
-     *
-     *
+     * decreases storage and saves in db
+     * TODO: FIX IF CART IS EMPTY
      */
     checkoutCart: function (req, res, next) {
         req.checkParams('id', 'Invalid UrlParam').notEmpty().isInt();
@@ -139,13 +123,12 @@ module.exports = {
 
     /**
      * Adds an item to the shopping cart from user id
-     * @param {int} itemid
-     * @param {int} qty
+     * @param json with id and qty
+     * @sample {"id":1,"qty":2}
      */
     addItem: function (req, res, next) {
         req.checkBody('id', 'Invalid ArticleID').notEmpty().isInt();
         req.checkBody('qty', 'Invalid qty').notEmpty().isInt();
-        req.checkBody('qty', 'Invalid quantity').notEmpty().isInt();
         var errors = req.validationErrors();
         if (errors) {
             res.status(400).send('There have been validation errors: ' + util.inspect(errors));
@@ -154,17 +137,11 @@ module.exports = {
 
         var json = req.body;
         json.qty = parseInt(json.qty);
-
-        if (!isNaN(parseInt(json.qty)) && checkValidItem(json.itemid)) {
-            if (checkCartId()) {
+        if (!isNaN(parseInt(json.qty))) {
                 console.log(JSON.stringify(json));
                 redisClient.rpush("cart:" + req.params.id, JSON.stringify(json));
                 res.write('Item added.');
                 res.end();
-            } else {
-                res.write('User not found.');
-                res.end();
-            }
 
         } else {
             res.write('JSON Format Error');
@@ -174,12 +151,11 @@ module.exports = {
     },
 
     /**
-     * Deletes an item to the shopping cart from user id
-     * @param {int} index
+     * Deletes an item to the shopping cart with user id
+     * @param [int] index
      */
     deleteItem: function (req, res, next) {
         var itemindex = req.query.index;
-        if (checkCartId()) {
 
             redisClient.lindex("cart:" + req.params.id, itemindex, function (err, obj) {
 
@@ -196,12 +172,13 @@ module.exports = {
                 }
                 res.end();
             });
-        } else {
-            res.write('User not found.');
-            res.end();
-        }
     },
 
+    
+    /**
+     * Deletes a cart with user id
+     * @param [int] index
+     */
     deleteCart: function (req, res, next) {
         redisClient.del("cart:" + req.params.id, function (err, obj) {
             if (err) {
