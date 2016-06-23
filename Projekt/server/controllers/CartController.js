@@ -74,8 +74,7 @@ module.exports = {
         }
         redisClient.lrange("cart:" + req.params.id, 0, -1, function (err, obj) {
             if (obj.length === 0) {
-                res.status(500);
-                res.write('Cart empty!');
+                return res.status(500).send('{"Errormsg":"Cart Empty.","Errcode": 500}');
             } else {
 
                 jsonObj = JSON.parse('{ "cart":[' + obj.toString() + ']}');

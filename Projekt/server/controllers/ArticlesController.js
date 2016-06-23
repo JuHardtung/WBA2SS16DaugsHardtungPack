@@ -78,7 +78,7 @@ module.exports = {
      */
     getArticleById: function(req, res, next) {
 
-        var _id = parseInt(req.query.articleId);
+        var _id = parseInt(req.params.id);
 
         redisClient.lrange(ARTICLES, 0, -1, function(err, reply) {
             console.log("Bekomme Artikel mit der ID " + _id);
@@ -101,7 +101,7 @@ module.exports = {
                         res.status(500);
                         res.end();
                     }
-                    res.status(200).json(reply);
+                    res.status(200).json(JSON.parse(reply));
                 });
             }
         });
