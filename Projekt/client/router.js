@@ -16,6 +16,9 @@ router.route('/cart/1')
 router.route('/')
     .get(ArticleController.getAll);
 
+router.route('/article')
+    .get(ArticleController.getArticle);
+
 router.route('/login')
         .post(UserController.post);
 
