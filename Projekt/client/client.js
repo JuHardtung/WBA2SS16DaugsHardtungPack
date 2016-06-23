@@ -70,8 +70,11 @@ app.use(function (req, res, next) {
     }
     // Catch 404s
     else {
+        var data={
+          session:req.session
+        };
         res.status(404);
-        res.render('404');
+        res.render('404',data);
     }
 });
 

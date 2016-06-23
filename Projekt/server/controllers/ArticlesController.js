@@ -9,7 +9,7 @@ var ARTICLES = 'articles'; //die DB-Liste mit den IDs aller Artikel
  * check if article with given ID exists
  * @param {array} articleList
  * @param {int} id
- * @return {int} existing id 
+ * @return {int} existing id
  */
 function articleIdExists(articleList, id) {
     var result = null;
@@ -159,7 +159,7 @@ module.exports = {
         }
     },
 
-    /** 
+    /**
      * delete an article with given id from database
      * @param {int} id
      */

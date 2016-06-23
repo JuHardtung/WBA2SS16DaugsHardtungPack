@@ -16,7 +16,7 @@ module.exports = {
             redisClient.lrange("cart:" + req.params.id, 0, -1, function (err, obj) {
                 if (err) {
                     res.status(500);
-                    res.end;
+                    res.end();
                 }
                 if (obj.length === 0) {
                     res.status(500);
@@ -174,7 +174,7 @@ module.exports = {
             });
     },
 
-    
+
     /**
      * Deletes a cart with user id
      * @param [int] index
