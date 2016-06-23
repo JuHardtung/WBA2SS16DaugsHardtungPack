@@ -35,7 +35,6 @@ body {
 }
 
 .ratings {
-    padding-top: 50px;
     padding-right: 10px;
     padding-left: 10px;
     color: #d17581;
@@ -106,41 +105,3 @@ footer {
     color: #fff;
     background-color:#59b5fa;
 }
-.product{
-	border: 1px solid #dddddd;
-	height: 100%;
-    width: 100%;
-}
-
-#bild > img{
-    overflow:hidden;
-	max-width: 300px;
-}
-
-.product-rating{
-	font-size: 20px;
-	margin-bottom: 25px;
-}
-
-.product-title{
-	font-size: 20px;
-}
-
-.product-desc{
-	font-size: 14px;
-}
-
-.product-price{
-	font-size: 22px;
-}
-
-.product-stock{
-	color: #74DF00;
-	font-size: 20px;
-	margin-top: 10px;
-}
-
-.product-info{
-		margin-top: 50px;
-}
-

@@ -16,11 +16,12 @@ router.route('/cart/1')
 router.route('/')
     .get(ArticleController.getAll);
 
-router.route('/article')
-    .get(ArticleController.getArticle);
-
 router.route('/login')
-        .post(UserController.post);
+        .post(UserController.login);
+
+router.route('/signup')
+        .get(UserController.signup)
+        .post(UserController.signuppost);
 
 
 router.route('/logout')

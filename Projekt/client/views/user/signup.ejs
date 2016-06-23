@@ -1,0 +1,154 @@
+<%- include ../head %>
+
+    <div class="container">
+        <div class="row">
+
+                <h2 class="form-signin-heading">Account erstellen</h2>
+                <label for="user" class="sr-only">Benutzername</label>
+                <input id="user" class="form-control" placeholder="Benutzername" required="" autofocus="" type="email" name="userName">
+                <label for="email" class="sr-only">Email addresse</label>
+                <input id="email" class="form-control" placeholder="Email address" required="" autofocus="" type="email" name="mail">
+                <label for="password" class="sr-only">Passwort</label>
+                <input id="password" class="form-control" placeholder="Passwort" required="" type="password" name="password">
+                <button id="signup" class="btn btn-lg btn-primary btn-block" type="submit">Anmelden</button>
+
+        </div>
+    </div>
+
+
+    <style>
+
+
+        .form-signin {
+            max-width: 330px;
+            padding: 15px;
+            margin: 5% auto;
+
+        }
+
+        .form-signin .form-signin-heading,
+        .form-signin .checkbox {
+            margin-bottom: 10px;
+        }
+
+        .form-signin .form-control {
+            position: relative;
+            height: auto;
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+            padding: 10px;
+            font-size: 16px;
+        }
+
+        .form-signin .form-control:focus {
+            z-index: 2;
+        }
+
+        .form-signin input[type="email"] {
+            margin-bottom: -1px;
+            border-bottom-right-radius: 0;
+            border-bottom-left-radius: 0;
+        }
+
+        .form-signin input[type="password"] {
+            margin-bottom: 10px;
+            border-top-left-radius: 0;
+            border-top-right-radius: 0;
+        }
+
+        @media (min-width: 767px) {
+          input, button{
+            margin-top: 2%;
+          }
+        }
+
+        p.user{
+          margin-top: 1%;
+          color: red;
+        }
+
+        p.email{
+          margin-top: 1%;
+          color: red;
+        }
+
+        p.signup{
+          margin-top: 1%;
+          color: green;
+        }
+
+    </style>
+
+
+    <%- include ../foot %>
+
+    <script>
+    $(document).ready(function(){
+    $('#user').change(function(){
+      $('#user').removeAttr('style');
+      if($('p.user').length){
+      $('p.user').remove();
+      }
+    });
+
+    $('#password').change(function(){
+      $('#password').removeAttr('style');
+    });
+
+    $('#email').change(function(){
+      var emailReg = new RegExp(/^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i);
+      var valid = emailReg.test($("#email").val());
+      if(!valid){
+        if(!$('p.email').length){
+          $('#email').css("border","2px solid red");
+          $('#email').css("box-shadow","0 0 3px red");
+        $('#email').after('<p class="email">Bitte geben sie eine glütige Emailadresse ein!</p>');
+        }
+      }else{
+        if($('p.email').length){
+        $('p.email').remove();
+        $('#email').removeAttr('style');
+        }
+      }
+
+    });
+
+
+    $("#signup").click(function(){
+    var email = $("#email").val();
+    var password = $("#password").val();
+    var user = $("#user").val();
+    // Checking for blank fields.
+
+    if( email ==''){
+      $('#email').css("border","2px solid red");
+      $('#email').css("box-shadow","0 0 3px red");
+    }
+    if(password ==''){
+      $('#password').css("border","2px solid red");
+      $('#password').css("box-shadow","0 0 3px red");
+    }
+    if(user ==''){
+      $('#user').css("border","2px solid red");
+      $('#user').css("box-shadow","0 0 3px red");
+    }
+    if( email ==''||password ==''||user ==''){
+
+    }else {
+    $.post("/signup",{ mail: email, password:password, userName:user},
+    function(data) {
+    if(data=='username taken') {
+      $('#user').css("border","2px solid red");
+      $('#user').css("box-shadow","0 0 3px red");
+      if(!$('p.user').length){
+      $('#user').after('<p class="user">Benutzername bereits vergeben!</p>');
+      }
+    } else{
+      $('#signup').after('<p class="signup">Erfolgreich angemeldet!</p>');
+    }
+    });
+    }
+    });
+    });
+    </script>
