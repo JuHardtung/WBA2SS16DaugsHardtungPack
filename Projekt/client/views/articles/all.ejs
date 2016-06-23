@@ -53,9 +53,11 @@
                                             <%= articles[i].description %>
                                         </p>
                                     </div>
+                                    <% if (session.userName) { %>
                                     <div class="ctrl">
                                         <button class="btn btn-warning btn-sm sharp add" id="<%= articles[i].id %>">Add to Cart</button>
                                     </div>
+                                    <% } %>
                                     <div class="ratings">
                                         <p class="pull-right">15 reviews</p>
                                         <p>

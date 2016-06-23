@@ -7,6 +7,7 @@ var Response     = require('./helper/ResponseHelper');
 var http         = require('http');
 
 
+
 global.__coreDir = __dirname+"/";
 global.__port    = 3000;
 
@@ -62,6 +63,7 @@ app.use('/', routes);
 app.use(function (err, req, res, next) {
   if(err) {
     res.status(err.code || 500);
+    console.log(err);
     res.send(err);
   }
   else {
