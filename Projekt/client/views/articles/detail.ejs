@@ -40,15 +40,20 @@
                             <%= article.description %>
                         </div>
                         <div class="ratings">
-                            <p class="pull-right">15 reviews</p>
-                            <p>
-                                <span class="glyphicon glyphicon-star"></span>
-                                <span class="glyphicon glyphicon-star"></span>
-                                <span class="glyphicon glyphicon-star"></span>
-                                <span class="glyphicon glyphicon-star"></span>
-                                <span class="glyphicon glyphicon-star"></span>
-                            </p>
-                        </div>
+                                        <p id="reviewbox_<%= article.id %>" class="pull-right">15 reviews</p>
+                                        <p id="starbox_<%= article.id %>">
+                                            <script type="text/javascript">
+                                                 var rnd = Math.floor(Math.random() * 5)+1;
+                                                var htmlElements = "";
+                                                for (var i = 0; i < rnd; i++) {
+                                                    htmlElements += '<span class="glyphicon glyphicon-star"></span>';
+                                                }
+                                                var container = document.getElementById("starbox_<%= article.id %>");
+                                                document.getElementById("reviewbox_<%= article.id %>").innerHTML = Math.floor(Math.random() * 100)+1+" Bewertungen";
+                                                container.innerHTML = htmlElements;
+                                            </script>
+                                        </p>
+                                    </div>
                         <hr>
                         <div class="product-price">
                             <%= article.price %>,- €

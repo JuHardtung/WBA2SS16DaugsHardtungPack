@@ -31,11 +31,11 @@
 
 
                                         $.getJSON("http://api.flickr.com/services/feeds/photos_public.gne?jsoncallback=?", {
-                                                tags: keyword,
-                                                tagmode: "any",
-                                                format: "json"
-                                            },
-                                            function(data) {
+                                                tags: keyword
+                                                , tagmode: "any"
+                                                , format: "json"
+                                            }
+                                            , function (data) {
                                                 var rnd = Math.floor(Math.random() * data.items.length);
                                                 var image_src = data.items[rnd].media.m.replace("_m", "_b");
 
@@ -57,13 +57,18 @@
                                         <button class="btn btn-warning btn-sm sharp add" id="<%= articles[i].id %>">Add to Cart</button>
                                     </div>
                                     <div class="ratings">
-                                        <p class="pull-right">15 reviews</p>
-                                        <p>
-                                            <span class="glyphicon glyphicon-star"></span>
-                                            <span class="glyphicon glyphicon-star"></span>
-                                            <span class="glyphicon glyphicon-star"></span>
-                                            <span class="glyphicon glyphicon-star"></span>
-                                            <span class="glyphicon glyphicon-star"></span>
+                                        <p id="reviewbox_<%= articles[i].id %>" class="pull-right">15 reviews</p>
+                                        <p id="starbox_<%= articles[i].id %>">
+                                            <script type="text/javascript">
+                                                 var rnd = Math.floor(Math.random() * 5)+1;
+                                                var htmlElements = "";
+                                                for (var i = 0; i < rnd; i++) {
+                                                    htmlElements += '<span class="glyphicon glyphicon-star"></span>';
+                                                }
+                                                var container = document.getElementById("starbox_<%= articles[i].id %>");
+                                                document.getElementById("reviewbox_<%= articles[i].id %>").innerHTML = Math.floor(Math.random() * 100)+1+" Bewertungen";
+                                                container.innerHTML = htmlElements;
+                                            </script>
                                         </p>
                                     </div>
                                 </div>
