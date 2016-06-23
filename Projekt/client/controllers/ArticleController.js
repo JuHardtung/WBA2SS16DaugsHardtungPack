@@ -53,6 +53,7 @@ module.exports = {
         };
         rp(options)
             .then(function (response) {
+                    console.log(response);
                 var data = {
                      title: 'Artikel',
                     article: response
