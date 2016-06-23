@@ -19,8 +19,8 @@ module.exports = {
                     res.end();
                 }
                 if (obj.length === 0) {
-                    res.status(500);
-                    res.write('Cart empty!');
+                    res.status(200);
+                    res.write('{ "cart":[]}');
                     res.end();
                 } else {
 
