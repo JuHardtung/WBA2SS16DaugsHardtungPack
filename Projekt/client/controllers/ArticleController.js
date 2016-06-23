@@ -40,5 +40,39 @@ module.exports = {
             });
 
 
+    },
+
+    getArticle: function (req, res, next) {
+
+        var options = {
+            uri: 'http://127.0.0.1:3000/article/' + req.query.id,
+            headers: {
+                'User-Agent': 'Request-Promise'
+            },
+            json: true // Automatically parses the JSON string in the response
+        };
+        rp(options)
+            .then(function (response) {
+                    console.log(response);
+                var data = {
+                     title: 'Artikel',
+                     article: response,
+                     session: req.session
+                };
+
+                res.render('articles/detail', data);
+
+            })
+            .catch(function (err) {
+                var data = {
+                    message: "Artikel konnte nicht angezeigt werden!",
+                    code: res.statusCode,
+                    validation: res.validation
+                };
+                res.render('error', err);
+                console.log(err);
+            });
+
+
     }
 };
