@@ -7,11 +7,10 @@ var rp = require('request-promise');
 module.exports = {
 
 
-    getCart: function(req, res, next) {
-
+    getCart: function (req, res, next) {
 
         var options = {
-            uri: 'http://127.0.0.1:3000/cart/'+req.session.userId,
+            uri: 'http://127.0.0.1:3000/cart/' + req.session.userId,
             headers: {
                 'User-Agent': 'Request-Promise'
             },
@@ -19,7 +18,7 @@ module.exports = {
         };
 
         rp(options)
-            .then(function(response) {
+            .then(function (response) {
                 var data = {
                     title: 'Warenkorb',
                     articles: response,
@@ -29,7 +28,7 @@ module.exports = {
                 res.render('articles/cart', data);
 
             })
-            .catch(function(err) {
+            .catch(function (err) {
                 var data = {
                     message: "Artikel konnten nicht angezeigt werden!",
                     code: res.statusCode,
@@ -42,22 +41,31 @@ module.exports = {
 
     },
 
-    addItem: function(req, res, next) {
-        console.log(req.body);
+    addItem: function (req, res, next) {
+
+        console.log("ID IS: " + req.body.id);
+        console.log("QTY IS: " + req.body.quantity);
+
+        var artid = req.body.id;
+        //TODO quantity immer 1... muss noch vom input mit id="quantity" bekommen werden
+        var quantity = req.body.quantity;
+
+
         var options = {
-            uri: 'http://127.0.0.1:3000/cart/1',
+            uri: 'http://127.0.0.1:3000/cart/' + req.session.userId,
             method: 'POST',
             headers: {
                 'User-Agent': 'Request-Promise'
             },
             body: {
-              some: req.body
+                "id": artid,
+                "qty": quantity
             },
             json: true // Automatically parses the JSON string in the response
         };
 
         rp(options)
-            .then(function(response) {
+            .then(function (response) {
                 var data = {
                     title: 'Warenkorb',
                     articles: response,
@@ -67,15 +75,15 @@ module.exports = {
                 res.render('articles/cart', data);
 
             })
-            .catch(function(err) {
-                var data = {
-                    message: "Artikel konnten nicht angezeigt werden!",
-                    code: res.statusCode,
-                    validation: res.validation
-                };
-                res.render('error', err);
-                console.log(err);
-            });
+            /*  .catch(function (err) {
+                  var data = {
+                      message: "Artikel konnten nicht angezeigt werden!",
+                      code: res.statusCode,
+                      validation: res.validation
+                  };
+                  res.render('error', err);
+                  console.log(err);
+              });*/
 
 
     }

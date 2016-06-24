@@ -16,11 +16,6 @@ global.__port = 3001;
 // =========================================================
 var app = express();
 
-app.use('/', function (req, res, next) {
-    console.log('%d - Method: ' + req.method + ":" + req.path, Date.now());
-    next();
-})
-
 app.set('port', __port);
 app.disable('x-powered-by');
 

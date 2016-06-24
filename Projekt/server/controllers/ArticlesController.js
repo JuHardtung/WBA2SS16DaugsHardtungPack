@@ -13,7 +13,7 @@ var ARTICLES = 'articles'; //die DB-Liste mit den IDs aller Artikel
  */
 function articleIdExists(articleList, id) {
     var result = null;
-    articleList.forEach(function(entry) {
+    articleList.forEach(function (entry) {
         if (entry == id) {
             result = entry;
         }
@@ -27,9 +27,9 @@ module.exports = {
      * return all articles from database
      * @return {application/json} Article
      */
-    getArticles: function(req, res, next) {
+    getArticles: function (req, res, next) {
 
-        redisClient.lrange(ARTICLES, 0, -1, function(err, obj) {
+        redisClient.lrange(ARTICLES, 0, -1, function (err, obj) {
             if (obj.length === 0) {
                 res.status(500);
                 res.write("ArtikelListe ist leer");
@@ -39,10 +39,9 @@ module.exports = {
                 var articles = [];
                 for (var item in obj) {
                     articles[item] = "article:" + obj[item];
-                    console.log(articles[item]);
                 }
 
-                redisClient.mget(articles, function(err, obj) {
+                redisClient.mget(articles, function (err, obj) {
                     if (err) {
                         res.status(500);
                         res.write("Fehler beim Bekommen von Artikeln");
@@ -76,11 +75,11 @@ module.exports = {
      * @param {int} id
      * @return {application/json} Article
      */
-    getArticleById: function(req, res, next) {
+    getArticleById: function (req, res, next) {
 
         var _id = parseInt(req.params.id);
 
-        redisClient.lrange(ARTICLES, 0, -1, function(err, reply) {
+        redisClient.lrange(ARTICLES, 0, -1, function (err, reply) {
             console.log("Bekomme Artikel mit der ID " + _id);
             if (err) {
                 console.log(err);
@@ -95,7 +94,7 @@ module.exports = {
                 res.end();
             } else {
                 var _articleById = 'article:' + _articleID;
-                redisClient.get(_articleById, function(err, reply) {
+                redisClient.get(_articleById, function (err, reply) {
                     if (err) {
                         console.log(err);
                         res.status(500);
@@ -117,7 +116,7 @@ module.exports = {
      */
     //TODO ArtikelID muss bis jetzt noch mit im Body angegeben werden,
     //damit die id mit in den Artikelinfos gespeichert wird
-    addArticle: function(req, res, next) {
+    addArticle: function (req, res, next) {
         console.log("afaf");
         req.checkBody('id', 'Invalid ArticleID').notEmpty().isInt();
         req.checkBody('name', 'Invalid ArticleName').notEmpty();
@@ -131,13 +130,13 @@ module.exports = {
             res.end();
         } else {
 
-            redisClient.get("next_article_id", function(err, next) {
-                if(err){
-                  console.log(err);
+            redisClient.get("next_article_id", function (err, next) {
+                if (err) {
+                    console.log(err);
                 }
                 var newArticle = req.body;
 
-                redisClient.rpush(ARTICLES, next, function(err, reply) {
+                redisClient.rpush(ARTICLES, next, function (err, reply) {
                     if (err) {
                         console.log(err);
                         res.status(500);
@@ -145,13 +144,13 @@ module.exports = {
                     }
 
                     var article = "article:" + next;
-                    redisClient.set(article, JSON.stringify(newArticle), function(err, reply) {
+                    redisClient.set(article, JSON.stringify(newArticle), function (err, reply) {
                         console.log("Neuen Artikel mit ID " + next + " erstellt.");
                         res.status(200).json(newArticle);
                         res.end();
                     });
                 });
-            redisClient.incr("next_article_id");
+                redisClient.incr("next_article_id");
             });
         }
     },
@@ -160,11 +159,11 @@ module.exports = {
      * delete an article with given id from database
      * @param {int} id
      */
-    delArticle: function(req, res, next) {
+    delArticle: function (req, res, next) {
 
         var _id = parseInt(req.params.id);
 
-        redisClient.lrange(ARTICLES, 0, -1, function(err, reply) {
+        redisClient.lrange(ARTICLES, 0, -1, function (err, reply) {
             console.log("Lösche Artikel mit der ID " + _id);
             if (err) {
                 res.status(500);
@@ -177,13 +176,13 @@ module.exports = {
                 res.end();
             } else {
                 var _articleById = 'article:' + _articleID;
-                redisClient.lrem(ARTICLES, 0, _articleID, function(err) {
+                redisClient.lrem(ARTICLES, 0, _articleID, function (err) {
                     if (err) {
                         res.status(500);
                         res.end();
                     }
                 });
-                redisClient.del(_articleById, function(err, reply) {
+                redisClient.del(_articleById, function (err, reply) {
                     if (err) {
                         res.status(500);
                         res.end();
