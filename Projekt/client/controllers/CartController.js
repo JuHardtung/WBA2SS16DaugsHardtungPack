@@ -42,10 +42,11 @@ module.exports = {
     },
 
 
-    addItem: function(req, res, next) {
+    addItem: function (req, res, next) {
         var id = req.body.id;
         var qty = req.body.qty;
         var options = {
+
             uri: 'http://127.0.0.1:3000/cart/'+req.session.userId,
             method: 'POST',
             headers: {
@@ -61,6 +62,7 @@ module.exports = {
                 "qty": qty
             },
             json: true // Automatically parses the JSON string in the response
+
         };
 
         rp(options)
@@ -74,7 +76,7 @@ module.exports = {
                 res.send("OK");
 
             })
-            .catch(function(err) {
+            .catch(function (err) {
                 res.send("Fail");
             });
 
