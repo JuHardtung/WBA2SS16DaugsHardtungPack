@@ -13,38 +13,34 @@ module.exports = {
      */
     getCart: function (req, res, next) {
 
-        redisClient.lrange("cart:" + req.params.id, 0, -1, function (err, obj) {
+        redisClient.HGETALL("cart:" + req.params.id , function (err, obj) {
+
             if (err) {
                 res.status(500);
                 res.end();
             }
-            if (obj.length === 0) {
+            if (obj === null) {
                 res.status(200);
                 res.write('{ "cart":[]}');
                 res.end();
             } else {
-
-                jsonObj = JSON.parse('{ "cart":[' + obj.toString() + ']}');
-
+                var i = 0;
                 var articles = [];
-                for (var item in jsonObj.cart) {
-                    articles[item] = "article:" + jsonObj.cart[item].id;
-                }
-
                 var qty = [];
-                for (var nr in jsonObj.cart) {
-                    qty[nr] = jsonObj.cart[nr].qty;
+                for (var item in obj) {
+                    articles[i] = "article:" + item;
+                    qty[i]=obj[item];
+                    i++;
                 }
-
-                redisClient.mget(articles, function (err, obj) {
+                 redisClient.mget(articles, function (err, obj) {
                     if (err) {
                         res.status(500);
 
                     }
-                    var cart;
+                   var cart;
                     for (var j in obj) {
                         var article = JSON.parse(obj[j]);
-                        article.qty=qty[nr];
+                        article.qty=qty[j];
                         article=JSON.stringify(article);
                         if (j == 0 && obj.length == 1) {
                             cart = article;
@@ -80,24 +76,29 @@ module.exports = {
             res.status(400).send('There have been validation errors: ' + util.inspect(errors));
             return;
         }
-        redisClient.lrange("cart:" + req.params.id, 0, -1, function (err, obj) {
-            if (obj.length === 0) {
+        redisClient.hgetall("cart:" + req.params.id, function (err, obj) {
+            if (obj === null) {
                 return res.status(500).send('{"Errormsg":"Cart Empty.","Errcode": 500}');
             } else {
 
-                jsonObj = JSON.parse('{ "cart":[' + obj.toString() + ']}');
-                var articlesCart = [];
-                for (var item in jsonObj.cart) {
-                    var id = jsonObj.cart[item].id;
-                    articlesCart.push('article:' + id);
-                }
+              var i = 0;
+              var articles = [];
+              var quantity = [];
+              for (var item in obj) {
+                  articles[i] = "article:" + item;
+                  quantity[i]=obj[item];
+                  i++;
+              }
 
 
-                redisClient.mget(articlesCart, function (err, reply) {
+                redisClient.mget(articles, function (err, reply) {
+                    var ids = [];
                     for (var item in reply) {
-                        var id = jsonObj.cart[item].id;
-                        var qty = jsonObj.cart[item].qty;
+
+                        var qty = quantity[item];
+                        console.log(reply+" "+qty);
                         jsonArticle = JSON.parse(reply[item]);
+                        var id = jsonArticle.id;
                         if (qty > jsonArticle.storage) {
                             res.status(500);
                             return res.send('{"Errormsg":"Menge hoeher als vorhanden bei: ' + jsonArticle.name + '","Errcode": 500}');
@@ -105,6 +106,7 @@ module.exports = {
                             jsonArticle.storage = jsonArticle.storage - qty;
                             updateArray.push("article:" + id);
                             updateArray.push(JSON.stringify(jsonArticle));
+                            ids.push(id);
                         }
                     }
                     redisClient.mset(updateArray, function (err) {
@@ -112,7 +114,7 @@ module.exports = {
                             throw err;
                         }
                     });
-                    redisClient.lrem("cart:" + req.params.id, 0, obj);
+                    redisClient.hdel("cart:" + req.params.id, ids);
                     res.status(200);
                     res.setHeader('Content-Type', 'application/json');
                     res.write('Checked Out.');
@@ -144,7 +146,7 @@ module.exports = {
         json.qty = parseInt(json.qty);
         if (!isNaN(parseInt(json.qty))) {
             console.log(JSON.stringify(json));
-            redisClient.rpush("cart:" + req.params.id, JSON.stringify(json));
+            redisClient.hset("cart:" + req.params.id, json.id ,json.qty);
             res.write('Item added.');
             res.end();
 
@@ -160,22 +162,17 @@ module.exports = {
      * @param [int] index
      */
     deleteItem: function (req, res, next) {
-        var itemindex = req.query.index;
+        var itemid = req.query.itemid;
 
-        redisClient.lindex("cart:" + req.params.id, itemindex, function (err, obj) {
+        redisClient.HDEL("cart:" + req.params.id, itemid, function (err) {
 
             if (err) {
                 res.status(500);
-            }
-            if (obj !== null) {
+            }else{
                 res.status(200);
-                redisClient.lrem("cart:" + req.params.id, 0, obj);
-                res.write('Item deleted.');
-            } else {
-                res.status(400);
-                res.write('Item not found.');
             }
             res.end();
+
         });
     },
 
