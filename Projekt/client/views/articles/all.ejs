@@ -17,6 +17,36 @@
 
             <div class="col-md-9">
 
+                <div class="row carousel-holder">
+
+                    <div class="col-md-12">
+                        <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+                            <ol class="carousel-indicators">
+                                <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
+                                <li data-target="#carousel-example-generic" data-slide-to="1"></li>
+                                <li data-target="#carousel-example-generic" data-slide-to="2"></li>
+                            </ol>
+                            <div class="carousel-inner">
+                                <div class="item active">
+                                    <img class="slide-image" src="http://placehold.it/800x300" alt="">
+                                </div>
+                                <div class="item">
+                                    <img class="slide-image" src="http://placehold.it/800x300" alt="">
+                                </div>
+                                <div class="item">
+                                    <img class="slide-image" src="http://placehold.it/800x300" alt="">
+                                </div>
+                            </div>
+                            <a class="left carousel-control" href="#carousel-example-generic" data-slide="prev">
+                                <span class="glyphicon glyphicon-chevron-left"></span>
+                            </a>
+                            <a class="right carousel-control" href="#carousel-example-generic" data-slide="next">
+                                <span class="glyphicon glyphicon-chevron-right"></span>
+                            </a>
+                        </div>
+                    </div>
+
+                </div>
 
                 <div class="row">
                     <% if (articles.length > 0) { %>
@@ -31,11 +61,11 @@
 
 
                                         $.getJSON("http://api.flickr.com/services/feeds/photos_public.gne?jsoncallback=?", {
-                                                tags: keyword,
-                                                tagmode: "any",
-                                                format: "json"
-                                            },
-                                            function(data) {
+                                                tags: keyword
+                                                , tagmode: "any"
+                                                , format: "json"
+                                            }
+                                            , function (data) {
                                                 var rnd = Math.floor(Math.random() * data.items.length);
                                                 var image_src = data.items[rnd].media.m.replace("_m", "_b");
 
@@ -80,13 +110,13 @@
                                 </div>
                             </div>
                             <% } %>
-                        <% } else { %>
-                          <div class="col-sm-12 col-lg-12 col-md-12">
-                            <div class="thumbnail">
-                                <h4 style="margin:1%;">Keine Artikel verfügbar!</h4>
-                            </div>
-                          </div>
-                          <% } %>
+                                <% } else { %>
+                                    <div class="col-sm-12 col-lg-12 col-md-12">
+                                        <div class="thumbnail">
+                                            <h4 style="margin:1%;">Keine Artikel verfügbar!</h4>
+                                        </div>
+                                    </div>
+                                    <% } %>
 
 
                 </div>
@@ -104,22 +134,22 @@
     <%- include ../foot %>
 
         <script>
-            $(".add").click(function() {
+            $(".add").click(function () {
                 if (!$(this).hasClass("disabled")) {
                     $.post("/cart", {
-                            id: $(this).attr("data-id"),
-                            qty: "1"
-                        },
-                        function(data) {
+                            id: $(this).attr("data-id")
+                            , qty: "1"
+                        }
+                        , function (data) {
                             BootstrapDialog.show({
-                                message: 'Produkt zum Warenkorb hinzugefügt!',
-                                title: 'Warenkorb',
-                                type: BootstrapDialog.TYPE_WARNING, // <-- Default value is BootstrapDialog.TYPE_PRIMARY
+                                message: 'Produkt zum Warenkorb hinzugefügt!'
+                                , title: 'Warenkorb'
+                                , type: BootstrapDialog.TYPE_WARNING, // <-- Default value is BootstrapDialog.TYPE_PRIMARY
                                 closable: true, // <-- Default value is false
                                 draggable: true, // <-- Default value is false
                                 buttons: [{
-                                    label: 'OK',
-                                    action: function(dialogItself) {
+                                    label: 'OK'
+                                    , action: function (dialogItself) {
                                         dialogItself.close();
                                     }
                                 }]

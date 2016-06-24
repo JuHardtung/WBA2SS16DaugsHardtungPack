@@ -9,8 +9,8 @@ var ImpressumController = require("./controllers/ImpressumController.js");
 
 router.route('/cart')
     .get(CartController.getCart)
-    .post(CartController.addItem);
-
+    .post(CartController.addItem)
+    .patch(CartController.deleteItem);
 
 
 router.route('/')
