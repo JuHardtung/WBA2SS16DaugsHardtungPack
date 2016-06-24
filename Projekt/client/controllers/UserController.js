@@ -66,6 +66,7 @@ module.exports = {
         var user = req.body.userName;
         var passwd = req.body.password;
         var remember = req.body.remember;
+        console.log(user+passwd+remember);
         var options = {
             uri: 'http://127.0.0.1:3000/login',
             method: 'POST',
@@ -96,11 +97,7 @@ module.exports = {
                 res.redirect('/');
             })
             .catch(function(err) {
-                var data = {
-                    message: "Artikel konnten nicht angezeigt werden!",
-                    code: res.statusCode
-                };
-                res.render('error', err);
+                res.send("Fail");
             });
     }
 };

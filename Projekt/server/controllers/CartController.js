@@ -31,6 +31,11 @@ module.exports = {
                     articles[item] = "article:" + jsonObj.cart[item].id;
                 }
 
+                var qty = [];
+                for (var nr in jsonObj.cart) {
+                    qty[nr] = jsonObj.cart[nr].qty;
+                }
+
                 redisClient.mget(articles, function (err, obj) {
                     if (err) {
                         res.status(500);
@@ -38,14 +43,17 @@ module.exports = {
                     }
                     var cart;
                     for (var j in obj) {
+                        var article = JSON.parse(obj[j]);
+                        article.qty=qty[nr];
+                        article=JSON.stringify(article);
                         if (j == 0 && obj.length == 1) {
-                            cart = obj[j];
+                            cart = article;
                         } else if (j == 0) {
-                            cart = obj[j] + ", ";
+                            cart = article + ", ";
                         } else if (j < obj.length - 1) {
-                            cart = cart + obj[j] + ", ";
+                            cart = cart + article + ", ";
                         } else {
-                            cart = cart + obj[j];
+                            cart = cart + article;
                         }
                     }
 
