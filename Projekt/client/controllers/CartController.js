@@ -43,15 +43,22 @@ module.exports = {
     },
 
     addItem: function(req, res, next) {
-        console.log(req.body);
+        var id = req.body.id;
+        var qty = req.body.qty;
         var options = {
-            uri: 'http://127.0.0.1:3000/cart/1',
+            uri: 'http://127.0.0.1:3000/cart/'+req.session.userId,
             method: 'POST',
             headers: {
-                'User-Agent': 'Request-Promise'
+                'User-Agent': 'Request-Promise',
+                'Content-Type': 'application/json; charset=utf-8',
+                'Content-Length': {
+                    "id": id,
+                    "qty": qty,
+                }.length
             },
             body: {
-              some: req.body
+                "id": id,
+                "qty": qty,
             },
             json: true // Automatically parses the JSON string in the response
         };
@@ -64,17 +71,11 @@ module.exports = {
                     session: req.session
                 };
 
-                res.render('articles/cart', data);
+                res.send("OK");
 
             })
             .catch(function(err) {
-                var data = {
-                    message: "Artikel konnten nicht angezeigt werden!",
-                    code: res.statusCode,
-                    validation: res.validation
-                };
-                res.render('error', err);
-                console.log(err);
+                res.send("Fail");
             });
 
 

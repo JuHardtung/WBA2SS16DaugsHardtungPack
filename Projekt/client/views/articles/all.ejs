@@ -54,20 +54,29 @@
                                         </p>
                                     </div>
                                     <% if (session.userName) { %>
-                                    <div class="ctrl">
-                                        <button class="btn btn-warning btn-sm sharp add" id="<%= articles[i].id %>">Add to Cart</button>
-                                    </div>
-                                    <% } %>
-                                    <div class="ratings">
-                                        <p class="pull-right">15 reviews</p>
-                                        <p>
-                                            <span class="glyphicon glyphicon-star"></span>
-                                            <span class="glyphicon glyphicon-star"></span>
-                                            <span class="glyphicon glyphicon-star"></span>
-                                            <span class="glyphicon glyphicon-star"></span>
-                                            <span class="glyphicon glyphicon-star"></span>
-                                        </p>
-                                    </div>
+                                        <div class="ctrl">
+                                            <form class="form" role="form" action="/cart" method="post" accept-charset="UTF-8" id="login-nav">
+                                                <div class="form-group">
+                                                    <input type="hidden" value="<%= articles[i].id %>" name="id">
+                                                    <% if (articles[i].storage<=0) { %>
+                                                        <button type="submit" class="btn btn-warning btn-sm sharp add disabled" data-id="<%= articles[i].id %>">Nicht verfügbar</button>
+                                                        <% } else { %>
+                                                            <button type="submit" class="btn btn-warning btn-sm sharp add" data-id="<%= articles[i].id %>">Add to Cart</button>
+                                                            <% } %>
+                                                </div>
+                                            </form>
+                                        </div>
+                                        <% } %>
+                                            <div class="ratings">
+                                                <p class="pull-right">15 reviews</p>
+                                                <p>
+                                                    <span class="glyphicon glyphicon-star"></span>
+                                                    <span class="glyphicon glyphicon-star"></span>
+                                                    <span class="glyphicon glyphicon-star"></span>
+                                                    <span class="glyphicon glyphicon-star"></span>
+                                                    <span class="glyphicon glyphicon-star"></span>
+                                                </p>
+                                            </div>
                                 </div>
                             </div>
                             <% } %>
@@ -87,3 +96,29 @@
 
 
     <%- include ../foot %>
+
+        <script>
+            $(".add").click(function() {
+                if (!$(this).hasClass("disabled")) {
+                    $.post("/cart", {
+                            id: $(this).attr("data-id"),
+                            qty: "1"
+                        },
+                        function(data) {
+                            BootstrapDialog.show({
+                                message: 'Produkt zum Warenkorb hinzugefügt!',
+                                title:'Warenkorb',
+                                type: BootstrapDialog.TYPE_WARNING, // <-- Default value is BootstrapDialog.TYPE_PRIMARY
+                                closable: true, // <-- Default value is false
+                                draggable: true, // <-- Default value is false
+                                buttons: [{
+                                    label: 'OK',
+                                    action: function(dialogItself) {
+                                        dialogItself.close();
+                                    }
+                                }]
+                            });
+                        });
+                }
+            });
+        </script>

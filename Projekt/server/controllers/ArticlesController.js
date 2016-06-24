@@ -118,8 +118,6 @@ module.exports = {
     //TODO ArtikelID muss bis jetzt noch mit im Body angegeben werden,
     //damit die id mit in den Artikelinfos gespeichert wird
     addArticle: function(req, res, next) {
-        console.log("afaf");
-        req.checkBody('id', 'Invalid ArticleID').notEmpty().isInt();
         req.checkBody('name', 'Invalid ArticleName').notEmpty();
         req.checkBody('description', 'Invalid ArticleDescription').notEmpty();
         req.checkBody('price', 'Invalid ArticlePrice').notEmpty().isFloat();
@@ -135,7 +133,9 @@ module.exports = {
                 if(err){
                   console.log(err);
                 }
+
                 var newArticle = req.body;
+                newArticle.id=next;
 
                 redisClient.rpush(ARTICLES, next, function(err, reply) {
                     if (err) {

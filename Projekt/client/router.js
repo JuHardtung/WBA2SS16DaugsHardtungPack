@@ -8,10 +8,10 @@ var UserController = require("./controllers/UserController.js");
 
 
 router.route('/cart')
-    .get(CartController.getCart);
-
-router.route('/cart/1')
+    .get(CartController.getCart)
     .post(CartController.addItem);
+
+
 
 router.route('/')
     .get(ArticleController.getAll);

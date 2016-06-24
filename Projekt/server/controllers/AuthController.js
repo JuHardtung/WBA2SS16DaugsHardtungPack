@@ -97,6 +97,7 @@ module.exports = {
                 throw err;
             }
 
+
             client.hget("users", user, function(err, id) {
                 if (err) {
                     return res.redirect('/login/fehler');
@@ -105,8 +106,6 @@ module.exports = {
                     if (err) {
                         return res.redirect('/login/fehler');
                     }
-
-
                     if (passwd !== dbpasswd) {
 
                         return res.status(401).send({
