@@ -94,7 +94,7 @@ module.exports = {
                 if (remember == "on") {
                     req.session.cookie.maxAge = 365 * 24 * 60 * 60 * 1000;
                 }
-                res.redirect('/');
+                res.send("OK");
             })
             .catch(function(err) {
                 res.send("Fail");

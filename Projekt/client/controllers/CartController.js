@@ -67,17 +67,13 @@ module.exports = {
 
         rp(options)
             .then(function (response) {
-                var data = {
-                    title: 'Warenkorb'
-                    , articles: response
-                    , session: req.session
-                };
-                console.log(response);
+                console.log(response.status);
+                console.log("ok");
                 res.send("OK");
 
             })
             .catch(function (err) {
-                res.send("Fail");
+              res.end();
             });
 
 
@@ -87,17 +83,16 @@ module.exports = {
         var itemid = req.query.id;
         var options = {
 
-            uri: 'http://127.0.0.1:3000/cart/' + req.session.userId +'?itemid='+itemid
-            , method: 'PATCH'
-            , headers: {
-                'User-Agent': 'Request-Promise'
-            , }
-            , json: true // Automatically parses the JSON string in the response
+            uri: 'http://127.0.0.1:3000/cart/' + req.session.userId +'?itemid='+itemid,
+            method: 'PATCH', headers: {
+                'User-Agent': 'Request-Promise',
+              },
+              json: true // Automatically parses the JSON string in the response
         };
 
         rp(options)
             .then(function (response) {
-                res.send("Item deleted.");
+                res.redirect('/cart');
 
             })
             .catch(function (err) {

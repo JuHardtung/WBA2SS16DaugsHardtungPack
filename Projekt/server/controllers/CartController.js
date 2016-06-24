@@ -147,10 +147,12 @@ module.exports = {
         if (!isNaN(parseInt(json.qty))) {
             console.log(JSON.stringify(json));
             redisClient.hset("cart:" + req.params.id, json.id ,json.qty);
+            res.status(200);
             res.write('Item added.');
             res.end();
 
         } else {
+            res.status(400);
             res.write('JSON Format Error');
             res.end();
         }

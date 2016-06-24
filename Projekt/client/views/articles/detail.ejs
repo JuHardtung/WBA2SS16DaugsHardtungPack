@@ -64,10 +64,12 @@
                                 <%= article.storage %> auf Lager.
                     </div>
                     <hr>
+                    <% if (session.userName) { %>
                     <div class="ctrl">
-                        <button class="btn btn-warning btn-sm sharp add" href="/cart/1" id="<%= article.id %>">Add to Cart</button>
+                        <button class="btn btn-warning btn-sm sharp add" href="/cart/1" data-id="<%= article.id %>">Add to Cart</button>
                         <input type="number" style="width: 60px" min="0" max="<%= article.storage %>" id="quantity">Anz</input>
                     </div>
+                    <% } %>
                 </div>
             </div>
         </div>
