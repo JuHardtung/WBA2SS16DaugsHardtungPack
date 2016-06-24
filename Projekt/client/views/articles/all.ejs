@@ -35,13 +35,11 @@
                                                 tagmode: "any",
                                                 format: "json"
                                             },
-                                            function(data) {
+                                            function (data) {
                                                 var rnd = Math.floor(Math.random() * data.items.length);
                                                 var image_src = data.items[rnd].media.m.replace("_m", "_b");
 
                                                 document.getElementById('<%= articles[i].name %>_image').setAttribute("src", image_src);
-
-
 
                                             });
                                     </script>
@@ -49,6 +47,9 @@
                                         <h4 class="pull-right"><%= articles[i].price %>,- €</h4>
                                         <h4><a href="./article?id=<%= articles[i].id %>"><%= articles[i].name %></a>
                                 </h4>
+                                        <h6 class="text-muted"> Produkt-id:
+                                            <%= articles[i].id %>
+                                        </h6>
                                         <p>
                                             <%= articles[i].description %>
                                         </p>
@@ -95,6 +96,7 @@
 
 
 
+
     <%- include ../foot %>
 
         <script>
@@ -122,3 +124,4 @@
                 }
             });
         </script>
+

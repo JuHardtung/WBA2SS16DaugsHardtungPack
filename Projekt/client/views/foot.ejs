@@ -5,13 +5,16 @@
 
     <hr>
 
-<footer>
-    <div class="row">
-        <div class="col-lg-12">
-            <p>Impressum</p>
+    <footer>
+        <div class="row">
+            <div class="col-lg-4">
+                <a href="/impressum">Impressum</a>
+            </div>
+            <div class="col-lg-8">
+                <p>@2016 by Weltraum Betrachter Agentur</p>
+            </div>
         </div>
-    </div>
-</footer>
+    </footer>
 
 </div>
 <!-- /.container -->
@@ -24,16 +27,19 @@
 <script src="js/bootstrap-dialog.min.js"></script>
 
 <script>
-    $('.add').click(function(e) {
+    $('.add').click(function (e) {
         e.preventDefault();
         $.ajax({
             url: '/cart/1',
             type: 'post',
-            data: JSON.stringify({"id": $(this).attr('id'),  "quantity":"1"}),
+            data: JSON.stringify({
+                "id": $(this).attr('id'),
+                "quantity": "1"
+            }),
             contentType: "application/json; charset=utf-8",
             dataType: "json",
-            success: function(data, textStatus, jQxhr) {
-            alert(data);
+            success: function (data, textStatus, jQxhr) {
+                alert(data);
             }
         });
     });

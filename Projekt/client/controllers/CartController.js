@@ -7,11 +7,10 @@ var rp = require('request-promise');
 module.exports = {
 
 
-    getCart: function(req, res, next) {
-
+    getCart: function (req, res, next) {
 
         var options = {
-            uri: 'http://127.0.0.1:3000/cart/'+req.session.userId,
+            uri: 'http://127.0.0.1:3000/cart/' + req.session.userId,
             headers: {
                 'User-Agent': 'Request-Promise'
             },
@@ -19,7 +18,7 @@ module.exports = {
         };
 
         rp(options)
-            .then(function(response) {
+            .then(function (response) {
                 var data = {
                     title: 'Warenkorb',
                     articles: response,
@@ -29,7 +28,7 @@ module.exports = {
                 res.render('articles/cart', data);
 
             })
-            .catch(function(err) {
+            .catch(function (err) {
                 var data = {
                     message: "Artikel konnten nicht angezeigt werden!",
                     code: res.statusCode,
@@ -41,6 +40,7 @@ module.exports = {
 
 
     },
+
 
     addItem: function(req, res, next) {
         var id = req.body.id;
@@ -58,13 +58,13 @@ module.exports = {
             },
             body: {
                 "id": id,
-                "qty": qty,
+                "qty": qty,r
             },
             json: true // Automatically parses the JSON string in the response
         };
 
         rp(options)
-            .then(function(response) {
+            .then(function (response) {
                 var data = {
                     title: 'Warenkorb',
                     articles: response,
