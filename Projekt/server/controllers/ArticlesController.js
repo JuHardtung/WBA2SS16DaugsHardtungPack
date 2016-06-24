@@ -30,9 +30,14 @@ module.exports = {
     getArticles: function (req, res, next) {
 
         redisClient.lrange(ARTICLES, 0, -1, function (err, obj) {
+          if (err) {
+              res.status(500);
+              res.end();
+          }
             if (obj.length === 0) {
-                res.status(500);
-                res.write("ArtikelListe ist leer");
+                res.status(200);
+                res.setHeader('Content-Type', 'application/json');
+                res.write('[]');
                 res.end();
             } else {
 
@@ -45,7 +50,7 @@ module.exports = {
                     if (err) {
                         res.status(500);
                         res.write("Fehler beim Bekommen von Artikeln");
-                        res.end;
+                        res.end();
                     }
                     var list;
 

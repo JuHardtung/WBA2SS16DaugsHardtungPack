@@ -58,7 +58,7 @@ module.exports = {
             },
             body: {
                 "id": id,
-                "qty": qty,r
+                "qty": qty
             },
             json: true // Automatically parses the JSON string in the response
         };
@@ -70,7 +70,7 @@ module.exports = {
                     articles: response,
                     session: req.session
                 };
-
+                console.log(response);
                 res.send("OK");
 
             })

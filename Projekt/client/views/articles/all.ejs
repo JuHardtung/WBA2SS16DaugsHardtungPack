@@ -35,7 +35,7 @@
                                                 tagmode: "any",
                                                 format: "json"
                                             },
-                                            function (data) {
+                                            function(data) {
                                                 var rnd = Math.floor(Math.random() * data.items.length);
                                                 var image_src = data.items[rnd].media.m.replace("_m", "_b");
 
@@ -45,8 +45,7 @@
                                     </script>
                                     <div class="caption">
                                         <h4 class="pull-right"><%= articles[i].price %>,- €</h4>
-                                        <h4><a href="./article?id=<%= articles[i].id %>"><%= articles[i].name %></a>
-                                </h4>
+                                        <h4><a href="./article?id=<%= articles[i].id %>"><%= articles[i].name %></a></h4>
                                         <h6 class="text-muted"> Produkt-id:
                                             <%= articles[i].id %>
                                         </h6>
@@ -81,8 +80,13 @@
                                 </div>
                             </div>
                             <% } %>
-                                <% } else { %>Es sind zur Zeit leider keine Artikel verfügbar.
-                                    <% } %>
+                        <% } else { %>
+                          <div class="col-sm-12 col-lg-12 col-md-12">
+                            <div class="thumbnail">
+                                <h4 style="margin:1%;">Keine Artikel verfügbar!</h4>
+                            </div>
+                          </div>
+                          <% } %>
 
 
                 </div>
@@ -109,7 +113,7 @@
                         function(data) {
                             BootstrapDialog.show({
                                 message: 'Produkt zum Warenkorb hinzugefügt!',
-                                title:'Warenkorb',
+                                title: 'Warenkorb',
                                 type: BootstrapDialog.TYPE_WARNING, // <-- Default value is BootstrapDialog.TYPE_PRIMARY
                                 closable: true, // <-- Default value is false
                                 draggable: true, // <-- Default value is false
@@ -124,4 +128,3 @@
                 }
             });
         </script>
-

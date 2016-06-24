@@ -8,7 +8,6 @@ module.exports = {
 
 
     getAll: function(req, res, next) {
-        console.log(req.session.userName);
 
         var options = {
             uri: 'http://127.0.0.1:3000/article',
