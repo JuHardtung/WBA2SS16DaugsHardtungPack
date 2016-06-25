@@ -1,10 +1,12 @@
 var redis = require('redis');
 var redisClient = redis.createClient();
 var expressValidator = require('express-validator');
+var Faye         = require('faye');
+
 
 var ARTICLES = 'articles'; //die DB-Liste mit den IDs aller Artikel
 //Artikel einzeln als key unter article:*id* gespeichert (Inhalt in JSON-Format)
-
+var client = new Faye.Client("http://localhost:10000/faye");
 /*
  * check if article with given ID exists
  * @param {array} articleList
@@ -22,6 +24,24 @@ function articleIdExists(articleList, id) {
 }
 
 module.exports = {
+    push: function (req, res, next) {
+      var publishMsg = client.publish('/news',{
+          "author": "S. LEM",
+          "content": "Der Unbesiegbare <a href='#'>nö</a>"
+        })
+        .then(
+        function(){ console.log("pub.published");
+        res.sendStatus(200);
+        },
+        function(error){console.log("fehler");
+        res.sendStatus(500);
+        }
+
+
+        );
+
+
+    },
 
     /**
      * return all articles from database

@@ -46,12 +46,11 @@
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right">
+                    <% if (session.userName=='admin') { %>
                     <li>
-                        <a href="#"><b>About</b></a>
+                        <a href="#"><b>Admin</b></a>
                     </li>
-                    <li>
-                        <a href="#"><b>Services</b></a>
-                    </li>
+                    <% } %>
                     <% if (session.userName) { %>
                         <li>
                             <a href="/cart"><span class="glyphicon glyphicon-shopping-cart" ></span> Cart</a>

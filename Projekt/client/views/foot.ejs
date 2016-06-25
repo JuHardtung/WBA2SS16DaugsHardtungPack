@@ -24,6 +24,7 @@
 <!-- Bootstrap Core JavaScript -->
 <script src="js/bootstrap.min.js"></script>
 <script src="js/bootstrap-dialog.min.js"></script>
+<script type="text/javascript" src="http://localhost:10000/faye/client.js"></script>
 <script>
     $(document).ready(function() {
 
@@ -56,6 +57,27 @@
                 }
             });
     });
+
+
+
+        var client = new Faye.Client("http://localhost:10000/faye");
+        var subscription = client.subscribe('/news', function(msg){
+          var msg_alert = "Nachricht von &nbsp; <b>" + msg.author +  "</b>:&nbsp;" + msg.content;
+          BootstrapDialog.show({
+              message: msg_alert
+              , title: 'INFO'
+              , type: BootstrapDialog.TYPE_INFO, // <-- Default value is BootstrapDialog.TYPE_PRIMARY
+              closable: true, // <-- Default value is false
+              draggable: true, // <-- Default value is false
+              buttons: [{
+                  label: 'OK'
+                  , action: function (dialogItself) {
+                      dialogItself.close();
+                  }
+              }]
+          });
+        });
+
     });
 
 </script>

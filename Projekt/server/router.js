@@ -32,7 +32,6 @@ router.route('/login')
     .post(AuthController.login);
 
 
-
 //Shopping Cart
 router.route('/cart/:id')
     .get(CartController.getCart)
@@ -53,6 +52,10 @@ router.route('/user/:id')
     .put(UserController.updatePWD);
 
 //Articles
+
+router.route('/push')
+    .get(ArticleController.push);
+
 router.route('/article/')
     .get(ArticleController.getArticles)
     .post(ArticleController.addArticle);

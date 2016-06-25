@@ -5,6 +5,7 @@ var bodyParser   = require('body-parser');
 var Validator    = require('express-validator');
 var Response     = require('./helper/ResponseHelper');
 var http         = require('http');
+var Faye         = require('faye');
 
 
 
@@ -87,3 +88,58 @@ app.use(function (req, res, next) {
 // =========================================================
 app.listen(__port);
 console.log("Server started on Port: "+__port);
+
+
+// FAYE
+// =========================================================
+
+var server = http.createServer();
+
+var bayeux = new Faye.NodeAdapter({
+  mount: '/faye',
+  //timeout: 45
+});
+
+
+bayeux.attach(server);
+
+var client = new Faye.Client("http://localhost:10000/faye");
+
+var endpoint = "http://localhost:10000/faye";
+console.log(endpoint);
+var sub = new Faye.Client(endpoint);
+var pub = new Faye.Client(endpoint);
+
+bayeux.on('handshake', function(clientId){
+  console.log('handshake: '  + clientId);
+});
+bayeux.on('subscribe', function(clientId, channel){
+  console.log(clientId + ' to ' + channel);
+});
+bayeux.on('publish', function(clientId, channel, data){
+  console.log(clientId + ', ' + channel + ', ' + data);
+});
+
+
+/*
+var publishMsg = function(pub, m){
+  console.log(m);
+  var publication = pub.publish('/news',{
+    "author": "S. LEM",
+    "content": "Der Unbesiegbare <a href='#'>nö</a>"
+  })
+  .then(function(){ console.log("pub.published"); } );
+};
+
+var subscribeMsg = function(sub, m){
+  console.log(m);
+  var subscription = sub.subscribe("/news", function(msg){
+    console.log("faye sub ::  Name: " + msg.author + " Nachricht: " + msg.content);
+  })
+  .then(function(){ console.log('sub.subscribed') });
+};
+*/
+
+server.listen(10000, function(){
+  console.log("Server horcht auf port: 10000");
+});
