@@ -20,26 +20,47 @@ $(".rmitem").click(function () {
             summe();
         });
 });
+
 $(".upitem").click(function () {
+
     var myid = $(this).attr('id').split("upbtn_")[1];
     $.post("/cart", {
-        id: myid
-        , qty: $('#qtyin_' + myid).val()
-    });
-    summe();
-    BootstrapDialog.show({
-        message: 'Produkt geändert.'
-        , title: 'Warenkorb'
-        , type: BootstrapDialog.TYPE_WARNING, // <-- Default value is BootstrapDialog.TYPE_PRIMARY
-        closable: true, // <-- Default value is false
-        draggable: true, // <-- Default value is false
-        buttons: [{
-            label: 'OK'
-            , action: function (dialogItself) {
-                dialogItself.close();
-            }
+            id: myid
+            , qty: $('#qtyin_' + myid).val()
+
+        }
+        , function (data) {
+            if (data == "OK") {
+                BootstrapDialog.show({
+                    message: 'Produkt aktualisiert!'
+                    , title: 'Warenkorb'
+                    , type: BootstrapDialog.TYPE_WARNING, // <-- Default value is BootstrapDialog.TYPE_PRIMARY
+                    closable: true, // <-- Default value is false
+                    draggable: true, // <-- Default value is false
+                    buttons: [{
+                        label: 'OK'
+                        , action: function (dialogItself) {
+                            dialogItself.close();
+                        }
                         }]
-    });
+                });
+            } else {
+                BootstrapDialog.show({
+                    message: 'Beim aktualisieren ist ein Fehler aufgetreten.'
+                    , title: 'Warenkorb'
+                    , type: BootstrapDialog.TYPE_DANGER, // <-- Default value is BootstrapDialog.TYPE_PRIMARY
+                    closable: true, // <-- Default value is false
+                    draggable: true, // <-- Default value is false
+                    buttons: [{
+                        label: 'OK'
+                        , action: function (dialogItself) {
+                            dialogItself.close();
+                        }
+                        }]
+                });
+            }
+        });
+summe();
 });
 
 function summe() {

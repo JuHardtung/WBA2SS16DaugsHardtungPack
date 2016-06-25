@@ -144,6 +144,7 @@ module.exports = {
 
         var json = req.body;
         json.qty = parseInt(json.qty);
+        if (!isNaN(parseInt(json.qty)) && 0 < parseInt(json.qty)) {
             redisClient.hset("cart:" + req.params.id, json.id ,json.qty);
             res.status(200);
             res.write('Item added.');
