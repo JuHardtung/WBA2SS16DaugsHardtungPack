@@ -27,39 +27,6 @@
 <script type="text/javascript" src="http://localhost:10000/faye/client.js"></script>
 <script>
     $(document).ready(function() {
-
-    $('#login').click(function() {
-        var user = $("#inputUser").val();
-        var password = $("#inputPassword").val();
-        var remember = $("#remember").val();
-        $.post("/login", {
-                userName: user,
-                password: password,
-                remember: remember
-            },
-            function(data, status) {
-                if(data=="OK"){
-                  location.reload();
-                }else{
-                  BootstrapDialog.show({
-                      message: 'Falscher Username oder Passwort!'
-                      , title: 'Login Fehler'
-                      , type: BootstrapDialog.TYPE_DANGER, // <-- Default value is BootstrapDialog.TYPE_PRIMARY
-                      closable: true, // <-- Default value is false
-                      draggable: true, // <-- Default value is false
-                      buttons: [{
-                          label: 'OK'
-                          , action: function (dialogItself) {
-                              dialogItself.close();
-                          }
-                      }]
-                  });
-                }
-            });
-    });
-
-
-
         var client = new Faye.Client("http://localhost:10000/faye");
         var subscription = client.subscribe('/news', function(msg){
           var msg_alert = "Nachricht von &nbsp; <b>" + msg.author +  "</b>:&nbsp;" + msg.content;
@@ -81,47 +48,9 @@
     });
 
 </script>
-<script>
-    $(".add").click(function () {
-        if (!$(this).hasClass("disabled")) {
-            $.post("/cart", {
-                    id: $(this).attr("data-id"),
-                    qty: 1
-                }
-                , function (data) {
-                    if(data=="OK"){
-                    BootstrapDialog.show({
-                        message: 'Produkt zum Warenkorb hinzugefügt!'
-                        , title: 'Warenkorb'
-                        , type: BootstrapDialog.TYPE_WARNING, // <-- Default value is BootstrapDialog.TYPE_PRIMARY
-                        closable: true, // <-- Default value is false
-                        draggable: true, // <-- Default value is false
-                        buttons: [{
-                            label: 'OK'
-                            , action: function (dialogItself) {
-                                dialogItself.close();
-                            }
-                        }]
-                    });
-                  }else{
-                    BootstrapDialog.show({
-                        message: 'Beim hinzufügen zum Warenkorb ist ein Fehler aufgetreten! Sorry :*'
-                        , title: 'Warenkorb'
-                        , type: BootstrapDialog.TYPE_DANGER, // <-- Default value is BootstrapDialog.TYPE_PRIMARY
-                        closable: true, // <-- Default value is false
-                        draggable: true, // <-- Default value is false
-                        buttons: [{
-                            label: 'OK'
-                            , action: function (dialogItself) {
-                                dialogItself.close();
-                            }
-                        }]
-                    });
-                  }
-                });
-        }
-    });
-</script>
+
+<script src="js/loginbox.js"></script>
+
 
 </body>
 

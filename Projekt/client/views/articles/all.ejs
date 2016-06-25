@@ -54,25 +54,6 @@
                             <div class="col-sm-4 col-lg-4 col-md-4">
                                 <div class="thumbnail">
                                     <div class="bild"><img id="<%= articles[i].name %>_image" src="http://placehold.it/320x150" alt=""></div>
-                                    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-                                    <script type="text/javascript">
-                                        var keyword = "<%= articles[i].name %>";
-
-
-
-                                        $.getJSON("http://api.flickr.com/services/feeds/photos_public.gne?jsoncallback=?", {
-                                                tags: keyword
-                                                , tagmode: "any"
-                                                , format: "json"
-                                            }
-                                            , function (data) {
-                                                var rnd = Math.floor(Math.random() * data.items.length);
-                                                var image_src = data.items[rnd].media.m.replace("_m", "_b");
-
-                                                document.getElementById('<%= articles[i].name %>_image').setAttribute("src", image_src);
-
-                                            });
-                                    </script>
                                     <div class="caption">
                                         <h4 class="pull-right"><%= articles[i].price %>,- €</h4>
                                         <h4><a href="./article?id=<%= articles[i].id %>"><%= articles[i].name %></a></h4>
@@ -86,14 +67,14 @@
                                     <% if (session.userName) { %>
                                         <div class="ctrl">
 
-                                                <div class="form-group">
-                                                    <input type="hidden" value="<%= articles[i].id %>" name="id">
-                                                    <% if (articles[i].storage<=0) { %>
-                                                        <button type="submit" class="btn btn-warning btn-sm sharp add disabled" data-id="<%= articles[i].id %>">Nicht verfügbar</button>
-                                                        <% } else { %>
-                                                            <button type="submit" class="btn btn-warning btn-sm sharp add" data-id="<%= articles[i].id %>">Add to Cart</button>
-                                                            <% } %>
-                                                </div>
+                                            <div class="form-group">
+                                                <input type="hidden" value="<%= articles[i].id %>" name="id">
+                                                <% if (articles[i].storage<=0) { %>
+                                                    <button type="submit" class="btn btn-warning btn-sm sharp add disabled" data-id="<%= articles[i].id %>">Nicht verfügbar</button>
+                                                    <% } else { %>
+                                                        <button type="submit" class="btn btn-warning btn-sm sharp add" data-id="<%= articles[i].id %>">Add to Cart</button>
+                                                        <% } %>
+                                            </div>
 
                                         </div>
                                         <% } %>
@@ -120,17 +101,12 @@
 
 
                 </div>
-
             </div>
-
         </div>
-
     </div>
-
-
+    <script src="js/jquery.js"></script>
+    <script src="js/allArticle.js"></script>
 
 
 
     <%- include ../foot %>
-
-        
