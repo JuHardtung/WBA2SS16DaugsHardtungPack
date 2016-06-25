@@ -3,14 +3,11 @@ var rp = require('request-promise');
 module.exports = {
 
     push: function(req, res) {
-        if (req.session.userName == 'admin') {
+
             var data = {
                 session: req.session
             };
-            res.render('admin/push', data);
-        } else {
-            res.redirect('/404');
-        }
+            res.render('admin/push', data);      
     },
 
     logout: function(req, res) {
@@ -113,16 +110,15 @@ module.exports = {
 
 
     settings: function(req, res) {
-        if (req.session.userName) {
+
 
             var data = {
                 title: 'Einstellungen',
                 session: req.session
             };
             res.render('settings', data);
-        } else {
-            res.redirect('/404');
-        }
+
+
 
     },
 

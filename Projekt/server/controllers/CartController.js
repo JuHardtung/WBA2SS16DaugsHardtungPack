@@ -108,11 +108,12 @@ module.exports = {
                 var articles = [];
                 var quantity = [];
                 for (var item in obj) {
+                    if(obj!==null){
                     articles[i] = "article:" + item;
                     quantity[i] = obj[item];
                     i++;
+                  }
                 }
-
 
                 redisClient.mget(articles, function(err, obj) {
                   var reply = [];

@@ -29,10 +29,11 @@
     $(document).ready(function() {
         var client = new Faye.Client("http://localhost:10000/faye");
         var subscription = client.subscribe('/news', function(msg){
-          var msg_alert = "Nachricht von &nbsp; <b>" + msg.author +  "</b>:&nbsp;" + msg.content;
+          var titel = "Nachricht von &nbsp;<b>" + msg.author;
+          var msg =  msg.content;
           BootstrapDialog.show({
-              message: msg_alert
-              , title: 'INFO'
+              message: msg
+              , title: titel
               , type: BootstrapDialog.TYPE_INFO, // <-- Default value is BootstrapDialog.TYPE_PRIMARY
               closable: true, // <-- Default value is false
               draggable: true, // <-- Default value is false

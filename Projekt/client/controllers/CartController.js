@@ -6,6 +6,31 @@ var rp = require('request-promise');
 
 module.exports = {
 
+  checkout: function (req, res, next) {
+    console.log("hallo");
+    var options = {
+
+        uri: 'http://127.0.0.1:3000/cart/'+req.session.userId+'/checkout',
+        method: 'GET', headers: {
+            'User-Agent': 'Request-Promise',
+          },
+          json: true // Automatically parses the JSON string in the response
+    };
+
+    rp(options)
+        .then(function (response) {
+            res.status(200);
+            res.send('ok');
+            console.log('checkout');
+
+        })
+        .catch(function (err) {
+            res.status(500);
+            res.send("Fail");
+            console.log(err);
+        });
+    },
+
 
     getCart: function (req, res, next) {
 

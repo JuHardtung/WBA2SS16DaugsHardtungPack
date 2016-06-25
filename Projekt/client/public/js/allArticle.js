@@ -49,7 +49,13 @@
            id: $(this).attr("data-id")
          }
        }).success(function (data) {
-          obj.closest('.thumbnail').parent().fadeOut();
+          obj.closest('.thumbnail').parent().fadeOut( "slow", function() {
+            obj.closest('.thumbnail').parent().remove();
+            if($('.ratings').length==0){
+              $('.errormsg').removeClass('hide');
+            }
+            });
+
           BootstrapDialog.show({
               message: data
               , title: 'Artikel'

@@ -6,18 +6,45 @@ var ArticleController = require("./controllers/ArticleController.js");
 var UserController = require("./controllers/UserController.js");
 var ImpressumController = require("./controllers/ImpressumController.js");
 
+// Eigene Middleware
+// =========================================================
+var isLoggedIn = function (req, res, next) {
+  if(req.session.userName){
+    next();
+  }else{
+    var data = {
+        session: req.session
+    };
+    res.status(401);
+    res.render('401', data);
+  }
+};
+
+var isAdmin = function (req, res, next) {
+  if(req.session.userName=="admin"){
+    next();
+  }else{
+    var data = {
+        session: req.session
+    };
+    res.status(401);
+    res.render('401', data);
+  }
+};
 
 router.route('/cart')
-    .get(CartController.getCart)
+    .get(isLoggedIn ,CartController.getCart)
     .post(CartController.addItem)
     .patch(CartController.deleteItem);
 
+router.route('/cart/checkout')
+    .get(isLoggedIn ,CartController.checkout);
 
 router.route('/')
     .get(ArticleController.getAll);
 
 router.route('/push')
-    .get(UserController.push);
+    .get(isAdmin,UserController.push);
 
 router.route('/login')
     .post(UserController.login);
@@ -27,17 +54,17 @@ router.route('/article')
     .delete(ArticleController.deleteArticle);
 
 router.route('/articleedit')
-    .get(ArticleController.addArticle);
+    .get(isAdmin,ArticleController.addArticle);
 
 router.route('/signup')
     .get(UserController.signup)
     .post(UserController.signuppost);
 
 router.route('/logout')
-    .get(UserController.logout);
+    .get(isLoggedIn, UserController.logout);
 
 router.route('/settings')
-    .get(UserController.settings)
+    .get(isLoggedIn, UserController.settings)
     .post(UserController.changePwd);
 
 router.route('/impressum')

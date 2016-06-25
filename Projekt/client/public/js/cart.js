@@ -63,6 +63,28 @@ $(".upitem").click(function () {
 summe();
 });
 
+$(".checkout").click(function () {
+$.get( "/cart/checkout", function() {
+      $('tbody').hide();
+      $('.errormsg').removeClass('hide');
+
+}).fail(function(){
+  BootstrapDialog.show({
+      message: 'Checkout konnte nicht durchgeführt werden!'
+      , title: 'Fehler'
+      , type: BootstrapDialog.TYPE_DANGER, // <-- Default value is BootstrapDialog.TYPE_PRIMARY
+      closable: true, // <-- Default value is false
+      draggable: true, // <-- Default value is false
+      buttons: [{
+          label: 'OK'
+          , action: function (dialogItself) {
+              dialogItself.close();
+          }
+          }]
+  });
+});
+});
+
 function summe() {
     var foo = document.getElementsByClassName('articlePrice');
     var bar = 0;

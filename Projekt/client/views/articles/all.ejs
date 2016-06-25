@@ -50,6 +50,11 @@
 
                 <div class="row">
                     <% if (articles.length > 0) { %>
+                      <div class="col-sm-12 col-lg-12 col-md-12">
+                          <div class="thumbnail errormsg hide">
+                              <h4 style="margin:1%;">Keine Artikel verfügbar!</h4>
+                          </div>
+                      </div>
                         <% for(var i = 0; i < articles.length; i++) { %>
                             <div class="col-sm-4 col-lg-4 col-md-4">
                                 <div class="thumbnail">
@@ -96,7 +101,7 @@
                             <% } %>
                                 <% } else { %>
                                     <div class="col-sm-12 col-lg-12 col-md-12">
-                                        <div class="thumbnail">
+                                        <div class="thumbnail errormsg">
                                             <h4 style="margin:1%;">Keine Artikel verfügbar!</h4>
                                         </div>
                                     </div>
