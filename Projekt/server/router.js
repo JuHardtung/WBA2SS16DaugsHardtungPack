@@ -49,7 +49,8 @@ router.route('/user')
 
 router.route('/user/:id')
     .get(UserController.getUser)
-    .delete(UserController.delete);
+    .delete(UserController.delete)
+    .put(UserController.updatePWD);
 
 //Articles
 router.route('/article/')

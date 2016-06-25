@@ -2,6 +2,7 @@ var redis = require('redis');
 var redisClient = redis.createClient();
 var Response = require('../helper/ResponseHelper');
 var expressValidator = require('express-validator');
+var util = require('util');
 
 var USERS = 'users'; //die DB-Liste mit den IDs aller Benutzer
 //Benutzer einzeln als key unter user:*id* gespeichert (Inhalt in JSON-Format)
@@ -167,5 +168,67 @@ module.exports = {
                 });
             }
         });
+    },
+
+    updatePWD: function (req, res) {
+
+        req.checkBody('passwd', 'Invalid PWD').notEmpty();
+
+        var errors = req.validationErrors();
+        if (errors) {
+            res.status(400).send('There habe been validation errors: ' + util.inspect(errors));
+            return;
+        }
+
+        var currentUser = 'user:' + req.query.id;
+        var newPwd = req.body.passwd;
+        //console.log("USER: " + currentUser + "neues PWD: " + newPwd);
+
+        redisClient.hset(currentUser, "passwd", newPwd, function (err, resp) {
+            if (err) {
+                console.log("Failed to change " + currentUser + "ID to: " + newPwd);
+                res.status(500);
+                res.write("password change failed");
+                res.end();
+            } else {
+
+                console.log("Changed " + currentUser + " ID to: " + newPwd);
+                res.status(200);
+                res.write("password change successful");
+                res.end();
+            }
+
+
+        });
     }
+
+    /* updateMail: function (req, res) {
+
+         req.checkBody('id', 'Invalid ID').notEmpty().isInt();
+         req.checkBody('mail', 'Invalid MAIL').notEmpty();
+
+         var errors = req.validationErrors();
+         if (errors) {
+             res.status(400).send('There habe been validation errors: ' + util.inspect(errors));
+             return;
+         }
+
+         var currentUser = 'user:' + req.body.id;
+         var newMail = req.body.mail;
+
+         redisClient.hset(currentUser, "mail", newMail, function (err, resp) {
+             if (err) {
+                 res.status(500);
+                 res.write("Mail ändern fehlgeschlagen");
+                 res.end();
+             } else {
+
+                 res.status(200);
+                 res.write("Mail erfolgreich geändert");
+                 res.end();
+             }
+
+
+         });
+     }*/
 };

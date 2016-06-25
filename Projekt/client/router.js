@@ -26,12 +26,17 @@ router.route('/signup')
     .get(UserController.signup)
     .post(UserController.signuppost);
 
-
 router.route('/logout')
     .get(UserController.logout);
 
+router.route('/settings')
+    .get(UserController.settings)
+    .post(UserController.changePwd);
+
 router.route('/impressum')
     .get(ImpressumController.impressum);
+
+
 
 //
 // Finally export the router
