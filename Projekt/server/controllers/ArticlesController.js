@@ -1,7 +1,7 @@
 var redis = require('redis');
 var redisClient = redis.createClient();
 var expressValidator = require('express-validator');
-var Faye         = require('faye');
+var Faye = require('faye');
 
 
 var ARTICLES = 'articles'; //die DB-Liste mit den IDs aller Artikel
@@ -25,20 +25,22 @@ function articleIdExists(articleList, id) {
 
 module.exports = {
     push: function (req, res, next) {
-      var publishMsg = client.publish('/news',{
-          "author": "S. LEM",
-          "content": "Der Unbesiegbare <a href='#'>nö</a>"
-        })
-        .then(
-        function(){ console.log("pub.published");
-        res.sendStatus(200);
-        },
-        function(error){console.log("fehler");
-        res.sendStatus(500);
-        }
+        var publishMsg = client.publish('/news', {
+                "author": "S. LEM",
+                "content": "Der Unbesiegbare <a href='#'>nö</a>"
+            })
+            .then(
+                function () {
+                    console.log("pub.published");
+                    res.sendStatus(200);
+                },
+                function (error) {
+                    console.log("fehler");
+                    res.sendStatus(500);
+                }
 
 
-        );
+            );
 
 
     },
@@ -50,10 +52,10 @@ module.exports = {
     getArticles: function (req, res, next) {
 
         redisClient.lrange(ARTICLES, 0, -1, function (err, obj) {
-          if (err) {
-              res.status(500);
-              res.end();
-          }
+            if (err) {
+                res.status(500);
+                res.end();
+            }
             if (obj.length === 0) {
                 res.status(200);
                 res.setHeader('Content-Type', 'application/json');
@@ -142,11 +144,12 @@ module.exports = {
     //TODO ArtikelID muss bis jetzt noch mit im Body angegeben werden,
     //damit die id mit in den Artikelinfos gespeichert wird
 
-    addArticle: function(req, res, next) {
+    addArticle: function (req, res, next) {
         req.checkBody('name', 'Invalid ArticleName').notEmpty();
         req.checkBody('description', 'Invalid ArticleDescription').notEmpty();
         req.checkBody('price', 'Invalid ArticlePrice').notEmpty().isFloat();
         req.checkBody('storage', 'Invalid ArticleStorage').notEmpty().isInt();
+
         var errors = req.validationErrors();
         if (errors) {
             console.log(errors);
@@ -154,29 +157,37 @@ module.exports = {
             res.end();
         } else {
 
+
             redisClient.get("next_article_id", function (err, next) {
                 if (err) {
                     console.log(err);
                 }
 
                 var newArticle = req.body;
-                newArticle.id=next;
+                if (next == undefined) {
+                    newArticle.id = 1;
+                    redisClient.incr("next_article_id");
+                } else {
+                    newArticle.id = next;
+                }
+                redisClient.incr("next_article_id");
 
-                redisClient.rpush(ARTICLES, next, function (err, reply) {
+                redisClient.rpush(ARTICLES, newArticle.id, function (err, reply) {
                     if (err) {
                         console.log(err);
                         res.status(500);
+                        res.write("add article failed");
                         res.end();
                     }
 
-                    var article = "article:" + next;
+                    var article = "article:" + newArticle.id;
                     redisClient.set(article, JSON.stringify(newArticle), function (err, reply) {
-                        console.log("Neuen Artikel mit ID " + next + " erstellt.");
+                        console.log("Neuen Artikel mit ID " + newArticle.id + " erstellt.");
                         res.status(200).json(newArticle);
                         res.end();
                     });
                 });
-                redisClient.incr("next_article_id");
+
             });
         }
     },

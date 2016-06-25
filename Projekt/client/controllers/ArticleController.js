@@ -6,48 +6,97 @@ var rp = require('request-promise');
 
 module.exports = {
 
-    addArticle: function(req, res, next) {
-      if(req.session.userName=='admin'){
-        var data = {
-            title: 'Artikel',
-            session: req.session
-        };
-        res.render('articles/detailedit', data);
-      }else{
-      res.redirect('/404');
-    }
-    },
+    addArticle: function (req, res, next) {
+        if (req.session.userName == 'admin') {
 
-    deleteArticle: function(req, res, next) {
-      if(req.session.userName=='admin'){
-        var options = {
-            method: 'DELETE',
-            uri: 'http://127.0.0.1:3000/article/'+req.body.id,
-            headers: {
-                'User-Agent': 'Request-Promise'
-            },
-            json: true // Automatically parses the JSON string in the response
-        };
+            var name = req.body.name;
+            var descr = req.body.descr;
+            var price = req.body.price;
+            var storage = req.body.storage;
+
+            console.log("NAME: " + name + " DESCR: " + descr + " PRICE: " + price + " STORAGE: " +
+                storage);
+
+            var options = {
+                uri: 'http://127.0.0.1:3000/article',
+                method: 'POST',
+                headers: {
+                    'User-Agent': 'Request-Promise',
+                    'Content-Type': 'application/json; charset=utf-8',
+                    'Content-Length': {
+                        "name": name,
+                        "description": descr,
+                        "price": price,
+                        "storage": storage
+                    }.length
+                },
+                body: {
+                    "name": name,
+                    "description": descr,
+                    "price": price,
+                    "storage": storage
+                },
+                json: true // Automatically parses the JSON string in the response
+            };
+        }
 
         rp(options)
-            .then(function(response) {
-                res.status(200);
-                res.send('Artikel wurde gelöscht!');
-                return;
+            .then(function (response) {
+                req.session.userName = user;
+                req.session.userId = response.id;
+                if (remember == "on") {
+                    req.session.cookie.maxAge = 365 * 24 * 60 * 60 * 1000;
+                }
+                res.send("OK");
             })
-            .catch(function(err) {
-              res.status(200);
-              res.send('Es ist ein Fheler aufgetreten!');
-              return;
+            .catch(function (err) {
+                res.send("Fail");
             });
 
-      }else{
-            res.staus(200);
-            res.send('Keine Berechtigung!');
-    }
     },
 
-    getAll: function(req, res, next) {
+    editArticle: function (req, res) {
+        if (req.session.userName == 'admin') {
+            var data = {
+                title: 'Artikel',
+                session: req.session
+            };
+            res.render('articles/detailedit', data);
+        } else {
+            res.redirect('/404');
+        }
+    },
+
+    deleteArticle: function (req, res, next) {
+        if (req.session.userName == 'admin') {
+            var options = {
+                method: 'DELETE',
+                uri: 'http://127.0.0.1:3000/article/' + req.body.id,
+                headers: {
+                    'User-Agent': 'Request-Promise'
+                },
+                json: true // Automatically parses the JSON string in the response
+            };
+
+            rp(options)
+                .then(function (response) {
+                    res.status(200);
+                    res.send('Artikel wurde gelöscht!');
+                    return;
+                })
+                .catch(function (err) {
+                    res.status(200);
+                    res.send('Es ist ein Fheler aufgetreten!');
+                    return;
+                });
+
+        } else {
+            res.staus(200);
+            res.send('Keine Berechtigung!');
+        }
+    },
+
+    getAll: function (req, res, next) {
 
         var options = {
             uri: 'http://127.0.0.1:3000/article',
@@ -58,7 +107,7 @@ module.exports = {
         };
 
         rp(options)
-            .then(function(response) {
+            .then(function (response) {
                 var data = {
                     title: 'Artikel',
                     articles: response,
@@ -68,7 +117,7 @@ module.exports = {
                 res.render('articles/all', data);
 
             })
-            .catch(function(err) {
+            .catch(function (err) {
                 var data = {
                     message: "Artikel konnten nicht angezeigt werden!",
                     code: res.statusCode,
@@ -92,11 +141,11 @@ module.exports = {
         };
         rp(options)
             .then(function (response) {
-                    console.log(response);
+                console.log(response);
                 var data = {
-                     title: 'Artikel',
-                     article: response,
-                     session: req.session
+                    title: 'Artikel',
+                    article: response,
+                    session: req.session
                 };
 
                 res.render('articles/detail', data);

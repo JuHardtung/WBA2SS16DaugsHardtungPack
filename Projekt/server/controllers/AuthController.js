@@ -6,7 +6,7 @@ var util = require('util');
 module.exports = {
 
 
-    checksid: function(req, res, next) {
+    checksid: function (req, res, next) {
         console.log(req.session);
         //client.hexists("auths", req.session, function(err, exits) {
         //    if (err) throw (err);
@@ -14,20 +14,20 @@ module.exports = {
         //});
     },
 
-    namefromtoken: function(req, res, next) {
-        client.hget("auths", req.session, function(err, id) {
+    namefromtoken: function (req, res, next) {
+        client.hget("auths", req.session, function (err, id) {
             if (err) throw (err);
-            client.hget("user:" + id, "name", function(err, name) {
+            client.hget("user:" + id, "name", function (err, name) {
                 if (err) throw (err);
 
             });
         });
     },
 
-    logout: function(req, res, next) {
-        client.hexists("auths", req.session, function(err, exits) {
+    logout: function (req, res, next) {
+        client.hexists("auths", req.session, function (err, exits) {
             if (exits == 1) {
-                client.hget("auths", req.session, function(err, id) {
+                client.hget("auths", req.session, function (err, id) {
                     if (err) throw (err);
                     client.hdel("user:" + id, "auths");
                     client.hdel("auths", req.session);
@@ -40,7 +40,7 @@ module.exports = {
     },
 
 
-    signup: function(req, res, next) {
+    signup: function (req, res, next) {
         req.checkBody('user', 'Invalid Username').notEmpty();
         req.checkBody('passwd', 'Invalid Password').notEmpty();
         req.checkBody('mail', 'Invalid Mail').notEmpty();
@@ -50,16 +50,26 @@ module.exports = {
             return;
         }
 
-        client.hget("users", req.body.user, function(err, resp) {
+        client.hget("users", req.body.user, function (err, resp) {
             if (resp) {
                 res.status(200);
                 res.write("username taken");
             } else {
 
 
-                client.get("next_user_id", function(err, next) {
-                    client.hmset(["user:" + next, "name", req.body.user, "passwd", req.body.passwd, "mail", req.body.mail], function(err, res) {});
-                    client.hset("users", req.body.user, next);
+                client.get("next_user_id", function (err, next) {
+
+                    var newUserId;
+
+                    if (next == undefined) {
+                        newUserId = 1;
+                        client.incr("next_user_id");
+                    } else {
+                        newUserId = next;
+                    }
+
+                    client.hmset(["user:" + newUserId, "name", req.body.user, "passwd", req.body.passwd, "mail", req.body.mail], function (err, res) {});
+                    client.hset("users", req.body.user, newUserId);
                 });
                 // create reusable transporter object using the default SMTP transport
                 var transporter = nodemailer.createTransport('smtps://awesomeshop.noreply%40gmail.com:awesomeshop69@smtp.gmail.com');
@@ -74,7 +84,7 @@ module.exports = {
                 };
 
                 // send mail with defined transport object
-                transporter.sendMail(mailOptions, function(error, info) {
+                transporter.sendMail(mailOptions, function (error, info) {
                     if (error) {
                         return console.log(error);
                     }
@@ -87,22 +97,22 @@ module.exports = {
         });
     },
 
-    login: function(req, res, next) {
+    login: function (req, res, next) {
         console.log(req.body.user);
         console.log(req.body.passwd);
         var user = req.body.user;
         var passwd = req.body.passwd;
-        client.hexists("users", user, function(err, exits) {
+        client.hexists("users", user, function (err, exits) {
             if (err) {
                 throw err;
             }
 
 
-            client.hget("users", user, function(err, id) {
+            client.hget("users", user, function (err, id) {
                 if (err) {
                     return res.redirect('/login/fehler');
                 }
-                client.hget("user:" + id, "passwd", function(err, dbpasswd) {
+                client.hget("user:" + id, "passwd", function (err, dbpasswd) {
                     if (err) {
                         return res.redirect('/login/fehler');
                     }

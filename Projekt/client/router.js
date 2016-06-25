@@ -9,52 +9,53 @@ var ImpressumController = require("./controllers/ImpressumController.js");
 // Eigene Middleware
 // =========================================================
 var isLoggedIn = function (req, res, next) {
-  if(req.session.userName){
-    next();
-  }else{
-    var data = {
-        session: req.session
-    };
-    res.status(401);
-    res.render('401', data);
-  }
+    if (req.session.userName) {
+        next();
+    } else {
+        var data = {
+            session: req.session
+        };
+        res.status(401);
+        res.render('401', data);
+    }
 };
 
 var isAdmin = function (req, res, next) {
-  if(req.session.userName=="admin"){
-    next();
-  }else{
-    var data = {
-        session: req.session
-    };
-    res.status(401);
-    res.render('401', data);
-  }
+    if (req.session.userName == "admin") {
+        next();
+    } else {
+        var data = {
+            session: req.session
+        };
+        res.status(401);
+        res.render('401', data);
+    }
 };
 
 router.route('/cart')
-    .get(isLoggedIn ,CartController.getCart)
+    .get(isLoggedIn, CartController.getCart)
     .post(CartController.addItem)
     .patch(CartController.deleteItem);
 
 router.route('/cart/checkout')
-    .get(isLoggedIn ,CartController.checkout);
+    .get(isLoggedIn, CartController.checkout);
 
 router.route('/')
     .get(ArticleController.getAll);
 
 router.route('/push')
-    .get(isAdmin,UserController.push);
+    .get(isAdmin, UserController.push);
 
 router.route('/login')
     .post(UserController.login);
 
 router.route('/article')
     .get(ArticleController.getArticle)
-    .delete(ArticleController.deleteArticle);
+    .delete(ArticleController.deleteArticle)
+    .post(ArticleController.addArticle);
 
 router.route('/articleedit')
-    .get(isAdmin,ArticleController.addArticle);
+    .get(isAdmin, ArticleController.editArticle);
 
 router.route('/signup')
     .get(UserController.signup)
