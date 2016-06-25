@@ -6,6 +6,14 @@ var rp = require('request-promise');
 
 module.exports = {
 
+    addArticle: function(req, res, next) {
+      var data = {
+          title: 'Artikel',
+          session: req.session
+      };
+
+      res.render('articles/detailedit', data);
+    },
 
     getAll: function(req, res, next) {
 

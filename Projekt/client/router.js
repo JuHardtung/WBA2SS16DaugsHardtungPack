@@ -22,6 +22,9 @@ router.route('/login')
 router.route('/article')
     .get(ArticleController.getArticle);
 
+router.route('/articleedit')
+    .get(ArticleController.addArticle);
+
 router.route('/signup')
     .get(UserController.signup)
     .post(UserController.signuppost);
