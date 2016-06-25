@@ -1,3 +1,5 @@
+ $(document).ready(function () {
+
  $(".add").click(function () {
      if (!$(this).hasClass("disabled")) {
          $.post("/cart", {
@@ -37,7 +39,36 @@
              });
      }
  });
- $(document).ready(function () {
+
+ $(".delete").click(function () {
+    var obj = $(this);
+     $.ajax({
+         url: '/article',
+         type: 'DELETE',
+         data: {
+           id: $(this).attr("data-id")
+         }
+       }).success(function (data) {
+          obj.closest('.thumbnail').parent().fadeOut();
+          BootstrapDialog.show({
+              message: data
+              , title: 'Artikel'
+              , type: BootstrapDialog.TYPE_WARNING, // <-- Default value is BootstrapDialog.TYPE_PRIMARY
+              closable: true, // <-- Default value is false
+              draggable: true, // <-- Default value is false
+              buttons: [{
+                  label: 'OK'
+                  , action: function (dialogItself) {
+                      dialogItself.close();
+                  }
+             }]
+
+          });
+          });
+ });
+
+
+
      var foopics = document.getElementsByClassName('bild');
      for (var i = 0; i < foopics.length; i++) {
          var bar = foopics[i].firstChild;

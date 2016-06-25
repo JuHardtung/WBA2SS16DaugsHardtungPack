@@ -7,12 +7,44 @@ var rp = require('request-promise');
 module.exports = {
 
     addArticle: function(req, res, next) {
-      var data = {
-          title: 'Artikel',
-          session: req.session
-      };
+      if(req.session.userName=='admin'){
+        var data = {
+            title: 'Artikel',
+            session: req.session
+        };
+        res.render('articles/detailedit', data);
+      }else{
+      res.redirect('/404');
+    }
+    },
 
-      res.render('articles/detailedit', data);
+    deleteArticle: function(req, res, next) {
+      if(req.session.userName=='admin'){
+        var options = {
+            method: 'DELETE',
+            uri: 'http://127.0.0.1:3000/article/'+req.body.id,
+            headers: {
+                'User-Agent': 'Request-Promise'
+            },
+            json: true // Automatically parses the JSON string in the response
+        };
+
+        rp(options)
+            .then(function(response) {
+                res.status(200);
+                res.send('Artikel wurde gelöscht!');
+                return;
+            })
+            .catch(function(err) {
+              res.status(200);
+              res.send('Es ist ein Fheler aufgetreten!');
+              return;
+            });
+
+      }else{
+            res.staus(200);
+            res.send('Keine Berechtigung!');
+    }
     },
 
     getAll: function(req, res, next) {

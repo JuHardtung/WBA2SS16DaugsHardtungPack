@@ -48,7 +48,10 @@
                 <ul class="nav navbar-nav navbar-right">
                     <% if (session.userName=='admin') { %>
                     <li>
-                        <a href="#"><b>Admin</b></a>
+                        <a href="/push"><b>Push</b></a>
+                    </li>
+                    <li>
+                        <a href="/articleedit"><b>Artikel einstellen</b></a>
                     </li>
                     <% } %>
                     <% if (session.userName) { %>

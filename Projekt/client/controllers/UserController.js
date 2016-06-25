@@ -2,15 +2,25 @@ var rp = require('request-promise');
 
 module.exports = {
 
+    push: function(req, res) {
+        if (req.session.userName == 'admin') {
+            var data = {
+                session: req.session
+            };
+            res.render('admin/push', data);
+        } else {
+            res.redirect('/404');
+        }
+    },
 
-    logout: function (req, res) {
+    logout: function(req, res) {
         req.session.destroy();
         res.redirect('/');
     },
 
 
 
-    signup: function (req, res) {
+    signup: function(req, res) {
         var data = {
             session: req.session
         };
@@ -18,7 +28,7 @@ module.exports = {
     },
 
 
-    signuppost: function (req, res) {
+    signuppost: function(req, res) {
         var user = req.body.userName;
         var passwd = req.body.password;
         var mail = req.body.mail;
@@ -45,7 +55,7 @@ module.exports = {
         };
 
         rp(options)
-            .then(function (response) {
+            .then(function(response) {
                 console.log(response);
                 if (response == "username taken") {
                     res.send("username taken");
@@ -53,7 +63,7 @@ module.exports = {
                 res.redirect('/');
 
             })
-            .catch(function (err) {
+            .catch(function(err) {
                 var data = {
                     message: "Feler beim Account erstellen",
                     code: err.statusCode
@@ -62,7 +72,7 @@ module.exports = {
             });
     },
 
-    login: function (req, res) {
+    login: function(req, res) {
         var user = req.body.userName;
         var passwd = req.body.password;
         var remember = req.body.remember;
@@ -88,7 +98,7 @@ module.exports = {
         };
 
         rp(options)
-            .then(function (response) {
+            .then(function(response) {
                 req.session.userName = user;
                 req.session.userId = response.id;
                 if (remember == "on") {
@@ -96,21 +106,27 @@ module.exports = {
                 }
                 res.send("OK");
             })
-            .catch(function (err) {
+            .catch(function(err) {
                 res.send("Fail");
             });
     },
 
 
-    settings: function (req, res) {
-        var data = {
-            title: 'Einstellungen',
-            session: req.session
-        };
-        res.render('settings', data);
+    settings: function(req, res) {
+        if (req.session.userName) {
+
+            var data = {
+                title: 'Einstellungen',
+                session: req.session
+            };
+            res.render('settings', data);
+        } else {
+            res.redirect('/404');
+        }
+
     },
 
-    changePwd: function (req, res) {
+    changePwd: function(req, res) {
         var password = req.body.password;
         var options = {
             uri: 'http://127.0.0.1:3000/user/id?id=' + req.session.userId,
@@ -128,7 +144,7 @@ module.exports = {
             json: true // Automatically parses the JSON string in the response
         };
         rp(options)
-            .then(function (response) {
+            .then(function(response) {
                 req.session.userName = user;
                 req.session.userId = response.id;
                 if (remember == "on") {
@@ -136,7 +152,7 @@ module.exports = {
                 }
                 res.send("OK");
             })
-            .catch(function (err) {
+            .catch(function(err) {
                 res.send("Fail");
             });
     }

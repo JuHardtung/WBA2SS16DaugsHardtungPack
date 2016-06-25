@@ -7,7 +7,7 @@
         <div class="row">
 
             <div class="col-md-3">
-                <p class="lead">Shop Name</p>
+                <p class="lead">Awesome Shop</p>
                 <div class="list-group">
                     <a href="#" class="list-group-item">Category 1</a>
                     <a href="#" class="list-group-item">Category 2</a>
@@ -74,6 +74,9 @@
                                                     <% } else { %>
                                                         <button type="submit" class="btn btn-warning btn-sm sharp add" data-id="<%= articles[i].id %>">Add to Cart</button>
                                                         <% } %>
+                                                        <% if (session.userName=='admin') { %>
+                                                <button type="submit" class="btn btn-danger btn-sm sharp delete" data-id="<%= articles[i].id %>">Artikel löschen</button>
+                                                          <% } %>
                                             </div>
 
                                         </div>

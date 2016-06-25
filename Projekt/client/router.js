@@ -16,11 +16,15 @@ router.route('/cart')
 router.route('/')
     .get(ArticleController.getAll);
 
+router.route('/push')
+    .get(UserController.push);
+
 router.route('/login')
     .post(UserController.login);
 
 router.route('/article')
-    .get(ArticleController.getArticle);
+    .get(ArticleController.getArticle)
+    .delete(ArticleController.deleteArticle);
 
 router.route('/articleedit')
     .get(ArticleController.addArticle);
