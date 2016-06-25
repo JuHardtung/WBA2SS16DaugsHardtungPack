@@ -7,27 +7,6 @@
                     <div class="product col-md-3">
                         <center>
                             <div id="bild"><img id="<%= article.name %>_image" src="http://placehold.it/320x150" class="img-responsive" alt=""></div>
-                            <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-                            <script type="text/javascript">
-                                var keyword = "<%= article.name %>";
-
-
-
-                                $.getJSON("http://api.flickr.com/services/feeds/photos_public.gne?jsoncallback=?", {
-                                        tags: keyword,
-                                        tagmode: "any",
-                                        format: "json"
-                                    },
-                                    function (data) {
-                                        var rnd = Math.floor(Math.random() * data.items.length);
-                                        var image_src = data.items[rnd].media.m.replace("_m", "_b");
-
-                                        document.getElementById('<%= article.name %>_image').setAttribute("src", image_src);
-
-
-
-                                    });
-                            </script>
                         </center>
                     </div>
                 </div>
@@ -65,15 +44,20 @@
                     </div>
                     <hr>
                     <% if (session.userName) { %>
-                    <div class="ctrl">
-                        <button class="btn btn-warning btn-sm sharp add" href="/cart/1" data-id="<%= article.id %>">Add to Cart</button>
-                        <input type="number" style="width: 60px" min="0" max="<%= article.storage %>" id="quantity">Anz</input>
-                    </div>
-                    <% } %>
+                        <div class="row">
+                            <div class="col-md-2">
+                                <button class="btn btn-warning btn-sm sharp add" href="/cart/1" data-id="<%= article.id %>">Add to Cart</button>
+                            </div>
+                            <div class="col-md-2">
+                                <input type="number" class="form-control text-center" style="width: 120px" placeholder="Anzahl" value="1" min="1" max="<%= article.storage %>" id="quantity">
+                            </div>
+                        </div>
+                        <% } %>
                 </div>
             </div>
         </div>
     </div>
-
+    <script src="js/jquery.js"></script>
+    <script src="js/detailpage.js"></script>
 
     <%- include ../foot %>
