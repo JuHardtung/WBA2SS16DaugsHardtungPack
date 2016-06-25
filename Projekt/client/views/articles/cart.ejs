@@ -66,65 +66,14 @@
                                 <tr>
                                     <td><a href="http://127.0.0.1:3001" class="btn btn-warning"><i class="fa fa-angle-left"></i> Weiter einkaufen</a></td>
                                     <td colspan="2" class="hidden-xs"></td>
-                                    <td class="hidden-xs text-center" id="insgesamtTD">Insgesamt $1.99</strong>
+                                    <td class="hidden-xs text-center" id="insgesamtTD">Insgesamt 0 -€</strong>
                                     </td>
                                     <td><a href="#" class="btn btn-success btn-block">Checkout <i class="fa fa-angle-right"></i></a></td>
-                                    <script type="text/javascript">
-                                        var foo = document.getElementsByClassName('articlePrice');
-                                        var bar = 0;
-                                        for (var i = 0; i < foo.length; i++) {
-                                            bar += parseFloat(foo[i].innerHTML.split(' €')[0]);
-                                        }
-                                        document.getElementById('insgesamtTD').innerHTML = '<strong>Insgesamt: ' + bar + " €</strong>";
-                                    </script>
                                 </tr>
                             </tfoot>
             </table>
         </div>
+    <script src="js/jquery.js"></script>
+    <script src="js/cart.js"></script>
 
         <%- include ../foot %>
-
-            <script>
-                summe();
-                $(".rmitem").click(function () {
-
-                    $.ajax({
-                        url: '/cart?id=' + $(this).attr('id').split("rmbtn_")[1]
-                        , type: 'PATCH'
-                        , function (data) {
-
-                        }
-                    });
-                    $(this).closest('tr')
-                        .children('td')
-                        .animate({
-                            padding: 0
-                        })
-                        .wrapInner('<div />')
-                        .children()
-                        .slideUp(function () {
-                            $(this).closest('tr').remove();
-                            summe();
-                        });
-
-
-                });
-                $(".upitem").click(function () {
-                    var myid = $(this).attr('id').split("upbtn_")[1];
-                    $.post("/cart", {
-                        id: myid
-                        , qty: $('#qtyin_' + myid).val()
-                    });
-
-                });
-
-                function summe() {
-                    var foo = document.getElementsByClassName('articlePrice');
-                    var bar = 0;
-                    for (var i = 0; i < foo.length; i++) {
-                        bar += parseFloat(foo[i].innerHTML.split(' €')[0]);
-                    }
-                    document.getElementById('insgesamtTD').innerHTML = '<strong>Insgesamt: ' + bar + " €</strong>";
-                    return;
-                }
-            </script>
