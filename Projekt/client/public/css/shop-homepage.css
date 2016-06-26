@@ -115,7 +115,7 @@ footer {
 
 #bild > img{
     overflow:hidden;
-	max-width: 300px;
+	  max-width: 80%;
 }
 
 .product-rating{
