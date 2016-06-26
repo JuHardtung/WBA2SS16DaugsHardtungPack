@@ -7,7 +7,7 @@ var rp = require('request-promise');
 module.exports = {
 
     addArticle: function (req, res, next) {
-        if (req.session.userName == 'admin') {
+
 
             var name = req.body.name;
             var descr = req.body.descr;
@@ -38,15 +38,10 @@ module.exports = {
                 },
                 json: true // Automatically parses the JSON string in the response
             };
-        }
+
 
         rp(options)
             .then(function (response) {
-                req.session.userName = user;
-                req.session.userId = response.id;
-                if (remember == "on") {
-                    req.session.cookie.maxAge = 365 * 24 * 60 * 60 * 1000;
-                }
                 res.send("OK");
             })
             .catch(function (err) {

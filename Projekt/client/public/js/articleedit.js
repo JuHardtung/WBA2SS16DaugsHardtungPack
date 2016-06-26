@@ -1,10 +1,7 @@
 $("#abort").click(function () {
                 console.log("abort wird weqrf");
-                $.get("/", {
-                    function (data) {
+                window.location.href = "/";
 
-                    }
-                });
             });
 
             $("#saveArticle").click(function () {
@@ -37,13 +34,26 @@ $("#abort").click(function () {
                         storage: storage
                     },
                     function (data) {
-                        if (data == 'add article failed') {
+                        if (data == 'Fail') {
                             $('#nameInput').css("border", "2px solid red");
                             $('#nameInput').css("box-shadow", "0 0 3px red");
-                            $('#nameInput').after('<p class="user">Artikel hinzufügen nicht erfolgreich!</p>');
-
+                            //$('#nameInput').after('<p class="user">Artikel hinzufügen nicht erfolgreich!</p>');
+                            BootstrapDialog.show({
+                                message: 'Artikle konnte nicht hinzugefügt werden!'
+                                , title: 'Artikel'
+                                , type: BootstrapDialog.TYPE_DANGER, // <-- Default value is BootstrapDialog.TYPE_PRIMARY
+                                closable: true, // <-- Default value is false
+                                draggable: true, // <-- Default value is false
+                                buttons: [{
+                                    label: 'OK'
+                                    , action: function (dialogItself) {
+                                        dialogItself.close();
+                                    }
+                               }]
+                            });
                         } else {
                             $('#nameInput').after('<p class="signup">Artikel hinzufügen erfolgreich!</p>');
+                            window.location.href = "/";
                         }
                     });
             });

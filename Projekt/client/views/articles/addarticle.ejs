@@ -3,7 +3,7 @@
     <div class="row">
         <div class="container-fluid">
             <div class="container">
-                <!--<div class="col-md-4">
+                <div class="col-md-5">
                     <div class="product col-md-3">
                         <center>
                             <div id="bild"><img src="http://placehold.it/320x150" class="img-responsive" alt=""></div>
@@ -11,26 +11,30 @@
 
                         </center>
                     </div>
-                </div>-->
+                </div>
 
-                <div class="col-lg-5 col-lg-offset-4">
-                    <div class="product-title">
-                        <input class="form-control" type="text" style="width: 150px" id="nameInput" placeholder="Produktname"></input>
+                <div class="col-md-7 form-group">
+                    <div class="title">
+                        <h4><label for="nameInput">Produktname:</label></h4>
+                        <input type="text" class="form-control" id="nameInput"></input>
                     </div>
-                    <div class="product-desc">
-                        <textarea class="form-control" type="text" rows="3" class="form-control" id="descrInput" placeholder="Beschreibung"></textarea>
+                    <div class="desc">
+                        <h4><label for="descrInput">Produktbeschreibung:</label></h4>
+                        <textarea type="text" rows="5" maxlength="150" class="form-control" id="descrInput"></textarea>
                     </div>
                     <hr>
-                    <div class="product-price">
-                        <input class="form-control" type="number" style="width: 150px" id="priceInput" placeholder="Preis"></input>
+                    <div class="price">
+                        <h4><label for="priceInput">Preis:</label></h4>
+                        <input type="number" style="width: 100px" class="form-control" id="priceInput"></input>
                     </div>
-                    <div class="product-stock" style="color:#00FF26">
-                        <input class="form-control" type="number" style="width: 150px" id="storageInput" placeholder="Lagerbestand"></input>
+                    <div class="stock">
+                        <h4><label for="storageInput">Lagerbestand:</label></h4>
+                        <input type="number" style="width: 100px" class="form-control" id="storageInput"></input>
                     </div>
                     <hr>
                     <div class="ctrl">
-                        <button class="btn btn-primary btn-sm sharp add" id="saveArticle" href="/article">Speichern</button>
-                        <button class="btn btn-danger btn-sm sharp add" id="abort">Abbrechen</button>
+                        <button class="btn btn-primary sharp" id="saveArticle" href="/article">Speichern</button>
+                        <button class="btn btn-danger sharp" id="abort">Abbrechen</button>
                     </div>
                 </div>
             </div>

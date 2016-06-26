@@ -131,6 +131,11 @@ footer {
 	font-size: 14px;
 }
 
+#desc{
+	height:50px;
+  max-width: 100%;
+}
+
 .product-price{
 	font-size: 22px;
 }
