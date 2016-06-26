@@ -18,7 +18,9 @@ $(".rmitem").click(function () {
         .slideUp(function () {
             $(this).closest('tr').remove();
             summe();
-            $('.errormsg').removeClass('hide');
+            if($('.rmitem').length==0){
+              $('.errormsg').removeClass('hide');
+            }
         });
 });
 
