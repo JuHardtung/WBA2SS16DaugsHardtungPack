@@ -50,11 +50,11 @@
 
                 <div class="row">
                     <% if (articles.length > 0) { %>
-                      <div class="col-sm-12 col-lg-12 col-md-12">
-                          <div class="thumbnail errormsg hide">
-                              <h4 style="margin:1%;">Keine Artikel verfügbar!</h4>
-                          </div>
-                      </div>
+                        <div class="col-sm-12 col-lg-12 col-md-12">
+                            <div class="thumbnail errormsg hide">
+                                <h4 style="margin:1%;">Keine Artikel verfügbar!</h4>
+                            </div>
+                        </div>
                         <% for(var i = 0; i < articles.length; i++) { %>
                             <div class="col-sm-4 col-lg-4 col-md-4">
                                 <div class="thumbnail">
@@ -79,9 +79,9 @@
                                                     <% } else { %>
                                                         <button type="submit" class="btn btn-warning btn-sm sharp add" data-id="<%= articles[i].id %>">Add to Cart</button>
                                                         <% } %>
-                                                        <% if (session.userName=='admin') { %>
-                                                <button type="submit" class="btn btn-danger btn-sm sharp delete" data-id="<%= articles[i].id %>">Artikel löschen</button>
-                                                          <% } %>
+                                                            <% if (session.userName=='admin') { %>
+                                                                <button type="submit" class="btn btn-danger btn-sm sharp delete" data-id="<%= articles[i].id %>">Artikel löschen</button>
+                                                                <% } %>
                                             </div>
 
                                         </div>
@@ -106,8 +106,6 @@
                                         </div>
                                     </div>
                                     <% } %>
-
-
                 </div>
             </div>
         </div>

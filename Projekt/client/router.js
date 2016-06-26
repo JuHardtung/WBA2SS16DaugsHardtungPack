@@ -66,7 +66,7 @@ router.route('/logout')
 
 router.route('/settings')
     .get(isLoggedIn, UserController.settings)
-    .post(UserController.changePwd);
+    .post(UserController.changeData);
 
 router.route('/impressum')
     .get(ImpressumController.impressum);

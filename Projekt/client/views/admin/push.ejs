@@ -6,10 +6,10 @@
 
             <div class="row">
 
-                    <h3 class="text-center">Nachricht senden</h3>
-                    <label class="sr-only" for="msg">Nachricht</label>
-                    <textarea type="text" rows="10" class="form-control" id="msg" placeholder="Nachricht" name="msg"></textarea>
-                    <button id="push" class="btn btn-lg btn-primary btn-block" type="submit">Nachricht senden</button>
+                <h3 class="text-center">Nachricht senden</h3>
+                <label class="sr-only" for="msg">Nachricht</label>
+                <textarea type="text" rows="10" class="form-control" id="msg" placeholder="Nachricht" name="msg"></textarea>
+                <button id="push" class="btn btn-lg btn-primary btn-block" type="submit">Nachricht senden</button>
 
 
             </div>
@@ -21,12 +21,12 @@
             padding: 15px;
             margin: 5% auto;
         }
-
+        
         .form-signin .form-signin-heading,
         .form-signin .checkbox {
             margin-bottom: 10px;
         }
-
+        
         .form-signin .form-control {
             position: relative;
             height: auto;
@@ -36,34 +36,34 @@
             padding: 10px;
             font-size: 16px;
         }
-
+        
         .form-signin .form-control:focus {
             z-index: 2;
         }
-
+        
         .form-signin input[type="password"] {
             margin-bottom: 10px;
             border-top-left-radius: 0;
             border-top-right-radius: 0;
         }
-
+        
         @media (min-width: 767px) {
             input,
             button {
                 margin-top: 2%;
             }
         }
-
+        
         p.user {
             margin-top: 1%;
             color: red;
         }
-
+        
         p.email {
             margin-top: 1%;
             color: red;
         }
-
+        
         p.signup {
             margin-top: 1%;
             color: green;
@@ -72,24 +72,4 @@
 
     <%- include ../foot %>
 
-        <script>
-            $("#push").click(function() {
-                var msg = $('#msg').val();
-                var client = new Faye.Client("http://localhost:10000/faye");
-                var publishMsg = client.publish('/news', {
-                        "author": "Admin",
-                        "content": msg
-                    })
-                    .then(
-                        function() {
-
-                        },
-                        function(error) {
-
-                        }
-
-
-                    );
-
-            });
-        </script>
+        <script src="js/push.js"></script>

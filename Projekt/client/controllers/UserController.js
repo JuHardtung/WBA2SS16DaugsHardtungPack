@@ -118,35 +118,83 @@ module.exports = {
         res.render('settings', data);
     },
 
-    changePwd: function (req, res) {
-        var password = req.body.password;
-        var options = {
-            uri: 'http://127.0.0.1:3000/user/id?id=' + req.session.userId,
-            method: 'PUT',
-            headers: {
-                'User-Agent': 'Request-Promise',
-                'Content-Type': 'application/json; charset=utf-8',
-                'Content-Length': {
-                    "passwd": password
-                }.length
-            },
-            body: {
-                "passwd": password
-            },
-            json: true // Automatically parses the JSON string in the response
-        };
-        rp(options)
-            .then(function (response) {
-                req.session.userName = user;
-                req.session.userId = response.id;
-                if (remember == "on") {
-                    req.session.cookie.maxAge = 365 * 24 * 60 * 60 * 1000;
-                }
-                res.send("OK");
-            })
-            .catch(function (err) {
-                res.send("Fail");
-            });
+    changeData: function (req, res) {
+
+        if ((req.body.password != undefined) && (req.body.mail == undefined)) {
+
+            var password = req.body.password;
+            var id = req.session.userId;
+
+            var options = {
+                uri: 'http://127.0.0.1:3000/changepwd',
+                method: 'PUT',
+                headers: {
+                    'User-Agent': 'Request-Promise',
+                    'Content-Type': 'application/json; charset=utf-8',
+                    'Content-Length': {
+                        "passwd": password,
+                        "id": id
+                    }.length
+                },
+                body: {
+                    "passwd": password,
+                    "id": id
+                },
+                json: true // Automatically parses the JSON string in the response
+            };
+            rp(options)
+                .then(function (response) {
+                    req.session.userName = user;
+                    req.session.userId = response.id;
+                    if (remember == "on") {
+                        req.session.cookie.maxAge = 365 * 24 * 60 * 60 * 1000;
+                    }
+                    res.send("OK");
+                })
+                .catch(function (err) {
+                    res.send("Fail");
+                });
+
+        } else if ((req.body.password == undefined) && (req.body.mail != undefined)) {
+
+            var mail = req.body.mail;
+            var id = req.session.userId;
+
+            var options = {
+                uri: 'http://127.0.0.1:3000/changemail',
+                method: 'PUT',
+                headers: {
+                    'User-Agent': 'Request-Promise',
+                    'Content-Type': 'application/json; charset=utf-8',
+                    'Content-Length': {
+                        "mail": mail,
+                        "id": id
+                    }.length
+                },
+                body: {
+                    "mail": mail,
+                    "id": id
+                },
+                json: true // Automatically parses the JSON string in the response
+            };
+            rp(options)
+                .then(function (response) {
+                    req.session.userName = user;
+                    req.session.userId = response.id;
+                    if (remember == "on") {
+                        req.session.cookie.maxAge = 365 * 24 * 60 * 60 * 1000;
+                    }
+                    res.send("OK");
+                })
+                .catch(function (err) {
+                    res.send("Fail");
+                });
+        } else {
+            console.log("ES HAT ALLET JEFAILED");
+        }
+
+
+
     }
 
 

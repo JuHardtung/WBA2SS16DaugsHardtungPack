@@ -14,7 +14,7 @@
                 </div>
                 <div class="col-lg-5">
                     <h3 class="text-center">E-Mail ändern</h3>
-                    <input id="mail" class="form-control" placeholder="neue E-Mail" required="" type="email" name="mail"></input>
+                    <input id="inputMail" class="form-control" placeholder="neue E-Mail" required="" type="email" name="mail"></input>
                     <button id="changeMail" class="btn btn-lg btn-primary btn-block" type="submit">E-Mail-Adresse ändern</button>
 
                 </div>
@@ -78,26 +78,4 @@
 
     <%- include foot %>
 
-        <script>
-            $("#changePwd").click(function () {
-                var password = $("#inputPassword").val();
-                if (password == '') {
-                    $('#inputPassword').css("border", "2px solid red");
-                    $('#inputPassword').css("box-shadow", "0 0 3px red");
-                }
-                $.post("/settings", {
-
-                        password: password,
-                    },
-                    function (data) {
-                        if (data == 'password change failed') {
-                            $('#password').css("border", "2px solid red");
-                            $('#password').css("box-shadow", "0 0 3px red");
-                            $('#password').after('<p class="user">Password wechseln nicht erfolgreich!</p>');
-
-                        } else {
-                            $('#changePwd').after('<p class="signup">Password ändern erfolgreich!</p>');
-                        }
-                    });
-            });
-        </script>
+        <script src=/js/changeUserData.js></script>

@@ -1,0 +1,43 @@
+<%- include ../head %>
+
+    <div class="row">
+        <div class="container-fluid">
+            <div class="container">
+                <!--<div class="col-md-4">
+                    <div class="product col-md-3">
+                        <center>
+                            <div id="bild"><img src="http://placehold.it/320x150" class="img-responsive" alt=""></div>
+                            <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
+                        </center>
+                    </div>
+                </div>-->
+
+                <div class="col-lg-5 col-lg-offset-4">
+                    <div class="product-title">
+                        <input class="form-control" type="text" style="width: 150px" id="nameInput" placeholder="Produktname"></input>
+                    </div>
+                    <div class="product-desc">
+                        <textarea class="form-control" type="text" rows="3" class="form-control" id="descrInput" placeholder="Beschreibung"></textarea>
+                    </div>
+                    <hr>
+                    <div class="product-price">
+                        <input class="form-control" type="number" style="width: 150px" id="priceInput" placeholder="Preis"></input>
+                    </div>
+                    <div class="product-stock" style="color:#00FF26">
+                        <input class="form-control" type="number" style="width: 150px" id="storageInput" placeholder="Lagerbestand"></input>
+                    </div>
+                    <hr>
+                    <div class="ctrl">
+                        <button class="btn btn-primary btn-sm sharp add" id="saveArticle" href="/article">Speichern</button>
+                        <button class="btn btn-danger btn-sm sharp add" id="abort">Abbrechen</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <%- include ../foot %>
+
+        <script src="js/articleedit.js"></script>

@@ -14,7 +14,7 @@ module.exports = {
             var price = req.body.price;
             var storage = req.body.storage;
 
-            console.log("NAME: " + name + " DESCR: " + descr + " PRICE: " + price + " STORAGE: " +
+            console.log("Name: " + name + " Descr: " + descr + " Price: " + price + " Storage: " +
                 storage);
 
             var options = {
@@ -61,7 +61,7 @@ module.exports = {
                 title: 'Artikel',
                 session: req.session
             };
-            res.render('articles/detailedit', data);
+            res.render('articles/addarticle', data);
         } else {
             res.redirect('/404');
         }

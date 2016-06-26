@@ -173,6 +173,7 @@ module.exports = {
     updatePWD: function (req, res) {
 
         req.checkBody('passwd', 'Invalid PWD').notEmpty();
+        req.checkBody('id', 'Invalid ID').notEmpty().isInt();
 
         var errors = req.validationErrors();
         if (errors) {
@@ -180,19 +181,19 @@ module.exports = {
             return;
         }
 
-        var currentUser = 'user:' + req.query.id;
+        var currentUser = 'user:' + req.body.id;
         var newPwd = req.body.passwd;
         //console.log("USER: " + currentUser + "neues PWD: " + newPwd);
 
         redisClient.hset(currentUser, "passwd", newPwd, function (err, resp) {
             if (err) {
-                console.log("Failed to change " + currentUser + "ID to: " + newPwd);
+                console.log("Failed to change " + currentUser + "PWD to: " + newPwd);
                 res.status(500);
                 res.write("password change failed");
                 res.end();
             } else {
 
-                console.log("Changed " + currentUser + " ID to: " + newPwd);
+                console.log("Changed " + currentUser + " PWD to: " + newPwd);
                 res.status(200);
                 res.write("password change successful");
                 res.end();
@@ -200,35 +201,36 @@ module.exports = {
 
 
         });
+    },
+
+    updateMail: function (req, res) {
+
+        req.checkBody('mail', 'Invalid Mail').notEmpty();
+        req.checkBody('id', 'Invalid ID').notEmpty().isInt();
+
+        var errors = req.validationErrors();
+        if (errors) {
+            res.status(400).send('There habe been validation errors: ' + util.inspect(errors));
+            return;
+        }
+
+        var currentUser = 'user:' + req.body.id;
+        var newMail = req.body.mail;
+        //console.log("USER: " + currentUser + "neue MAIL: " + newMail);
+
+        redisClient.hset(currentUser, "mail", newMail, function (err, resp) {
+            if (err) {
+                console.log("Failed to change " + currentUser + "Mail to: " + newMail);
+                res.status(500);
+                res.write("mail change failed");
+                res.end();
+            } else {
+
+                console.log("Changed " + currentUser + " ID to: " + newMail);
+                res.status(200);
+                res.write("mail change successful");
+                res.end();
+            }
+        });
     }
-
-    /* updateMail: function (req, res) {
-
-         req.checkBody('id', 'Invalid ID').notEmpty().isInt();
-         req.checkBody('mail', 'Invalid MAIL').notEmpty();
-
-         var errors = req.validationErrors();
-         if (errors) {
-             res.status(400).send('There habe been validation errors: ' + util.inspect(errors));
-             return;
-         }
-
-         var currentUser = 'user:' + req.body.id;
-         var newMail = req.body.mail;
-
-         redisClient.hset(currentUser, "mail", newMail, function (err, resp) {
-             if (err) {
-                 res.status(500);
-                 res.write("Mail ändern fehlgeschlagen");
-                 res.end();
-             } else {
-
-                 res.status(200);
-                 res.write("Mail erfolgreich geändert");
-                 res.end();
-             }
-
-
-         });
-     }*/
 };

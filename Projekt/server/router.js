@@ -38,6 +38,7 @@ router.route('/cart/:id')
     .post(CartController.addItem)
     .patch(CartController.deleteItem)
     .delete(CartController.deleteCart);
+
 router.route('/cart/:id/checkout')
     .get(CartController.checkoutCart);
 
@@ -49,7 +50,12 @@ router.route('/user')
 router.route('/user/:id')
     .get(UserController.getUser)
     .delete(UserController.delete)
+
+router.route('/changepwd')
     .put(UserController.updatePWD);
+
+router.route('/changemail')
+    .put(UserController.updateMail);
 
 //Articles
 
