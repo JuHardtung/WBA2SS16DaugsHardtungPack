@@ -18,6 +18,7 @@ $(".rmitem").click(function () {
         .slideUp(function () {
             $(this).closest('tr').remove();
             summe();
+            $('.errormsg').removeClass('hide');
         });
 });
 
