@@ -5,55 +5,22 @@ var util = require('util');
 
 module.exports = {
 
-
-    checksid: function (req, res, next) {
-        console.log(req.session);
-        //client.hexists("auths", req.session, function(err, exits) {
-        //    if (err) throw (err);
-        //    callback(null, exits);
-        //});
-    },
-
-    namefromtoken: function (req, res, next) {
-        client.hget("auths", req.session, function (err, id) {
-            if (err) throw (err);
-            client.hget("user:" + id, "name", function (err, name) {
-                if (err) throw (err);
-
-            });
-        });
-    },
-
-    logout: function (req, res, next) {
-        client.hexists("auths", req.session, function (err, exits) {
-            if (exits == 1) {
-                client.hget("auths", req.session, function (err, id) {
-                    if (err) throw (err);
-                    client.hdel("user:" + id, "auths");
-                    client.hdel("auths", req.session);
-                    callback(null, 1);
-                });
-            } else {
-                callback("Kein Cookie gefunden", 0);
-            }
-        });
-    },
-
-
     signup: function (req, res, next) {
         req.checkBody('user', 'Invalid Username').notEmpty();
         req.checkBody('passwd', 'Invalid Password').notEmpty();
         req.checkBody('mail', 'Invalid Mail').notEmpty();
         var errors = req.validationErrors();
         if (errors) {
-            res.status(400).send('There have been validation errors: ' + util.inspect(errors));
+            res.status(400).setHeader('Content-Type', 'application/json');
+            res.send({"code":400, "msg":"Es sind Validierungsfehler aufgetreten:"+util.inspect(errors), "type":"err"});
             return;
         }
 
         client.hget("users", req.body.user, function (err, resp) {
             if (resp) {
-                res.status(200);
-                res.write("username taken");
+                res.status(200).setHeader('Content-Type', 'application/json');
+                res.send({"code":200, "msg":"Benutzername bereits vergeben!", "type":"err"});
+                return;
             } else {
 
 
@@ -91,41 +58,53 @@ module.exports = {
                     console.log('Message sent: ' + info.response);
                 });
                 client.incr("next_user_id");
-                res.sendStatus(200);
+                res.status(201).setHeader('Content-Type', 'application/json');
+                res.send({"code":201, "msg":"Benutzer erfoldgreich erstellt!", "type":"ok"});
             }
             res.end();
         });
     },
 
     login: function (req, res, next) {
-        console.log(req.body.user);
-        console.log(req.body.passwd);
+      req.checkBody('user', 'Invalid Username').notEmpty();
+      req.checkBody('passwd', 'Invalid Password').notEmpty();
+      var errors = req.validationErrors();
+      if (errors) {
+          res.status(400).setHeader('Content-Type', 'application/json');
+          res.send({"code":400, "msg":"Es sind Validierungsfehler aufgetreten:"+util.inspect(errors), "type":"err"});
+          return;
+      }
+
         var user = req.body.user;
         var passwd = req.body.passwd;
         client.hexists("users", user, function (err, exits) {
             if (err) {
-                throw err;
+              res.status(200).setHeader('Content-Type', 'application/json');
+              res.send({"code":200, "msg":"User nicht vorhanden" , "type":"err"});
+              return;
             }
 
 
             client.hget("users", user, function (err, id) {
                 if (err) {
-                    return res.redirect('/login/fehler');
+                  res.status(500).setHeader('Content-Type', 'application/json');
+                  res.send({"code":500, "msg":"Es ist ein Fehler aufgetreten!", "type":"err"});
+                  return;
                 }
                 client.hget("user:" + id, "passwd", function (err, dbpasswd) {
                     if (err) {
-                        return res.redirect('/login/fehler');
+                      res.status(500).setHeader('Content-Type', 'application/json');
+                      res.send({"code":500, "msg":"Es ist ein Fehler aufgetreten!", "type":"err"});
+                      return;
                     }
                     if (passwd !== dbpasswd) {
-
-                        return res.status(401).send({
-                            "id": id,
-                            "message": "Username oder passwort falsch!"
-                        });
+                      res.status(500).setHeader('Content-Type', 'application/json');
+                      res.send({"code":200, "msg":"Passwort falsch", "type":"err"});
+                      return;
                     } else {
                         res.status(200).send({
                             "id": id,
-                            "message": "Successfully logged in!"
+                            "msg": "Successfully logged in!"
                         });
                     }
                 });

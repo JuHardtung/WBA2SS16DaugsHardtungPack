@@ -24,27 +24,6 @@ function articleIdExists(articleList, id) {
 }
 
 module.exports = {
-    push: function (req, res, next) {
-        var publishMsg = client.publish('/news', {
-                "author": "S. LEM",
-                "content": "Der Unbesiegbare <a href='#'>nö</a>"
-            })
-            .then(
-                function () {
-                    console.log("pub.published");
-                    res.sendStatus(200);
-                },
-                function (error) {
-                    console.log("fehler");
-                    res.sendStatus(500);
-                }
-
-
-            );
-
-
-    },
-
     /**
      * return all articles from database
      * @return {application/json} Article
@@ -70,9 +49,8 @@ module.exports = {
 
                 redisClient.mget(articles, function (err, obj) {
                     if (err) {
-                        res.status(500);
-                        res.write("Fehler beim Bekommen von Artikeln");
-                        res.end();
+                      res.status(500).setHeader('Content-Type', 'application/json');
+                      res.send({"code":500, "msg":"Fehler beim auslesen der Artikel!", "type":"err"});
                     }
                     var list;
 

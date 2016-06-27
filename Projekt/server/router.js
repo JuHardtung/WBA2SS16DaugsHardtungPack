@@ -48,21 +48,11 @@ router.route('/cart/:id')
 router.route('/cart/:id/checkout')
     .get(CartController.checkoutCart);
 
-//User
-router.route('/user')
-    .get(UserController.getAll)
-    .post(UserController.add);
-
-router.route('/user/:id')
-    .get(UserController.getUser)
-    .delete(UserController.delete);
 
 
 
 //Articles
 
-router.route('/push')
-    .get(ArticleController.push);
 
 router.route('/article/')
     .get(ArticleController.getArticles)

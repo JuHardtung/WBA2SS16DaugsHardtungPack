@@ -53,19 +53,13 @@ module.exports = {
 
         rp(options)
             .then(function (response) {
-                console.log(response);
-                if (response == "username taken") {
-                    res.send("username taken");
-                }
-                res.redirect('/');
 
+                res.status(200);
+                res.send(response);
+                
             })
-            .catch(function (err) {
-                var data = {
-                    message: "Feler beim Account erstellen",
-                    code: err.statusCode
-                };
-                res.render('error', err);
+            .catch( function (err) {
+                res.send(err.response.body);
             });
     },
 
@@ -73,7 +67,6 @@ module.exports = {
         var user = req.body.userName;
         var passwd = req.body.password;
         var remember = req.body.remember;
-        console.log(user + passwd + remember);
         var options = {
             uri: 'http://127.0.0.1:3000/user',
             method: 'POST',
@@ -96,12 +89,17 @@ module.exports = {
 
         rp(options)
             .then(function (response) {
+              console.log(response);
+              if(response.type=="err"){
+                res.send("Fail");
+              }else{
                 req.session.userName = user;
                 req.session.userId = response.id;
                 if (remember == "on") {
                     req.session.cookie.maxAge = 365 * 24 * 60 * 60 * 1000;
                 }
                 res.send("OK");
+                }
             })
             .catch(function (err) {
                 res.send("Fail");
