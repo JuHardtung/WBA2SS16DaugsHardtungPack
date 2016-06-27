@@ -18,8 +18,8 @@ $(".rmitem").click(function () {
         .slideUp(function () {
             $(this).closest('tr').remove();
             summe();
-            if($('.rmitem').length==0){
-              $('.errormsg').removeClass('hide');
+            if ($('.rmitem').length == 0) {
+                $('.errormsg').removeClass('hide');
             }
         });
 });
@@ -63,29 +63,33 @@ $(".upitem").click(function () {
                 });
             }
         });
-summe();
+    summe();
 });
 
 $(".checkout").click(function () {
-$.get( "/cart/checkout", function() {
-      $('tbody').hide();
-      $('.errormsg').removeClass('hide');
-
-}).fail(function(){
-  BootstrapDialog.show({
-      message: 'Checkout konnte nicht durchgeführt werden!'
-      , title: 'Fehler'
-      , type: BootstrapDialog.TYPE_DANGER, // <-- Default value is BootstrapDialog.TYPE_PRIMARY
-      closable: true, // <-- Default value is false
-      draggable: true, // <-- Default value is false
-      buttons: [{
-          label: 'OK'
-          , action: function (dialogItself) {
-              dialogItself.close();
-          }
+    $.get("/cart/checkout", function (data) {
+       alert(data.msg);  
+    })
+        .done(function (data) {
+                $('tbody').hide();
+                $('.errormsg').removeClass('hide');
+            })
+            .fail(function (data) {
+                alert(data);
+                BootstrapDialog.show({
+                    message: data.msg
+                    , title: 'Fehler: ' + data.code
+                    , type: BootstrapDialog.TYPE_DANGER, // <-- Default value is BootstrapDialog.TYPE_PRIMARY
+                    closable: true, // <-- Default value is false
+                    draggable: true, // <-- Default value is false
+                    buttons: [{
+                        label: 'OK'
+                        , action: function (dialogItself) {
+                            dialogItself.close();
+                        }
           }]
-  });
-});
+                });
+            });
 });
 
 function summe() {
