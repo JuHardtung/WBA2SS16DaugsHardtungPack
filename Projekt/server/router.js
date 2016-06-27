@@ -12,24 +12,30 @@ var UserController = require('./controllers/UserController');
 var OtherController = require('./controllers/OtherController');
 
 router.route('/*')
-    .trace(function (req, res, next) {
+    .trace(function(req, res, next) {
         res.send(Response.successfull(200, req.body, null, null));
     })
-    .options(function (req, res, next) {
+    .options(function(req, res, next) {
         res.send(Response.successfull(100));
     });
 
 
 // Other
-router.route('/resetdb')
+router.route('/db')
     .get(OtherController.resetDB);
 
-// Articles
-router.route('/signup')
+// User
+router.route('/user/new')
     .post(AuthController.signup);
 
-router.route('/login')
+router.route('/user')
     .post(AuthController.login);
+
+router.route('/user/password')
+    .patch(UserController.updatePWD);
+
+router.route('/user/mail')
+    .patch(UserController.updateMail);
 
 
 //Shopping Cart
@@ -49,13 +55,9 @@ router.route('/user')
 
 router.route('/user/:id')
     .get(UserController.getUser)
-    .delete(UserController.delete)
+    .delete(UserController.delete);
 
-router.route('/changepwd')
-    .put(UserController.updatePWD);
 
-router.route('/changemail')
-    .put(UserController.updateMail);
 
 //Articles
 
@@ -70,11 +72,6 @@ router.route('/article/:id')
     .get(ArticleController.getArticleById)
     .delete(ArticleController.delArticle);
 
-router.route('/signup')
-    .post(AuthController.signup);
-
-router.route('/login')
-    .post(AuthController.login);
 
 // Finally export the router
 module.exports = router;

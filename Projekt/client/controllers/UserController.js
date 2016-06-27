@@ -30,7 +30,7 @@ module.exports = {
         var passwd = req.body.password;
         var mail = req.body.mail;
         var options = {
-            uri: 'http://127.0.0.1:3000/signup',
+            uri: 'http://127.0.0.1:3000/user/new',
             method: 'POST',
             headers: {
                 'User-Agent': 'Request-Promise',
@@ -75,7 +75,7 @@ module.exports = {
         var remember = req.body.remember;
         console.log(user + passwd + remember);
         var options = {
-            uri: 'http://127.0.0.1:3000/login',
+            uri: 'http://127.0.0.1:3000/user',
             method: 'POST',
             headers: {
                 'User-Agent': 'Request-Promise',
@@ -126,8 +126,8 @@ module.exports = {
             var id = req.session.userId;
 
             var options = {
-                uri: 'http://127.0.0.1:3000/changepwd',
-                method: 'PUT',
+                uri: 'http://127.0.0.1:3000/user/password',
+                method: 'PATCH',
                 headers: {
                     'User-Agent': 'Request-Promise',
                     'Content-Type': 'application/json; charset=utf-8',
@@ -161,8 +161,8 @@ module.exports = {
             var id = req.session.userId;
 
             var options = {
-                uri: 'http://127.0.0.1:3000/changemail',
-                method: 'PUT',
+                uri: 'http://127.0.0.1:3000/user/mail',
+                method: 'PATCH',
                 headers: {
                     'User-Agent': 'Request-Promise',
                     'Content-Type': 'application/json; charset=utf-8',
