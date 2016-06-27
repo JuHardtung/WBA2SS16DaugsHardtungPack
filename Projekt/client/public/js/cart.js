@@ -68,17 +68,16 @@ $(".upitem").click(function () {
 
 $(".checkout").click(function () {
     $.get("/cart/checkout", function (data) {
-       alert(data.msg);  
     })
         .done(function (data) {
                 $('tbody').hide();
                 $('.errormsg').removeClass('hide');
             })
             .fail(function (data) {
-                alert(data);
+                var res= JSON.parse(data.responseText);
                 BootstrapDialog.show({
-                    message: data.msg
-                    , title: 'Fehler: ' + data.code
+                    message: res.msg
+                    , title: 'Fehler: ' + res.code
                     , type: BootstrapDialog.TYPE_DANGER, // <-- Default value is BootstrapDialog.TYPE_PRIMARY
                     closable: true, // <-- Default value is false
                     draggable: true, // <-- Default value is false

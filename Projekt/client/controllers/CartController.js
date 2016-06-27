@@ -12,6 +12,7 @@ module.exports = {
         uri: 'http://127.0.0.1:3000/cart/'+req.session.userId+'/checkout'
         , headers: {
             'User-Agent': 'Request-Promise',
+            'Content-Type': 'application/json; charset=utf-8'
           },
           json: true // Automatically parses the JSON string in the response
     };
@@ -23,10 +24,11 @@ module.exports = {
 
         })
         .catch(function (err) {
-        console.log(err.response.body);
+            console.log(err.response.body.msg);
             res.status(500);
             res.send(err.response.body);
         });
+
     },
 
 
