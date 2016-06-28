@@ -9,9 +9,9 @@
             <div class="col-md-3">
                 <p class="lead">Awesome Shop</p>
                 <div class="list-group">
-                    <a href="#" class="list-group-item">Category 1</a>
-                    <a href="#" class="list-group-item">Category 2</a>
-                    <a href="#" class="list-group-item">Category 3</a>
+                    <a href="#" class="list-group-item">Kategorie 1</a>
+                    <a href="#" class="list-group-item">Kategorie 2</a>
+                    <a href="#" class="list-group-item">Kategorie 3</a>
                 </div>
             </div>
 
@@ -62,7 +62,7 @@
                                     <div class="caption">
                                         <h4 class="pull-right"><%= articles[i].price %>,- €</h4>
                                         <h4><a href="./article?id=<%= articles[i].id %>"><%= articles[i].name %></a></h4>
-                                        <h6 class="text-muted"> Produkt-id:
+                                        <h6 class="text-muted"> Produkt-ID:
                                             <%= articles[i].id %>
                                         </h6>
                                         <p id="desc">
@@ -77,7 +77,7 @@
                                                 <% if (articles[i].storage<=0) { %>
                                                     <button type="submit" class="btn btn-warning btn-sm sharp add disabled" data-id="<%= articles[i].id %>">Nicht verfügbar</button>
                                                     <% } else { %>
-                                                        <button type="submit" class="btn btn-warning btn-sm sharp add" data-id="<%= articles[i].id %>">Add to Cart</button>
+                                                        <button type="submit" class="btn btn-warning btn-sm sharp add" data-id="<%= articles[i].id %>">In den Warenkorb</button>
                                                         <% } %>
                                                             <% if (session.userName=='admin') { %>
                                                                 <button type="submit" class="btn btn-danger btn-sm sharp delete" data-id="<%= articles[i].id %>">Artikel löschen</button>
@@ -87,7 +87,7 @@
                                         </div>
                                         <% } %>
                                             <div class="ratings">
-                                                <p class="pull-right">15 reviews</p>
+                                                <p class="pull-right">15 Rezensionen</p>
                                                 <p>
                                                     <span class="glyphicon glyphicon-star"></span>
                                                     <span class="glyphicon glyphicon-star"></span>

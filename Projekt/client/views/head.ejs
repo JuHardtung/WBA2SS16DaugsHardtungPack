@@ -47,71 +47,71 @@
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right">
                     <% if (session.userName=='admin') { %>
-                    <li>
-                        <a href="/push"><b>Push</b></a>
-                    </li>
-                    <li>
-                        <a href="/articleedit"><b>Artikel einstellen</b></a>
-                    </li>
-                    <% } %>
-                    <% if (session.userName) { %>
                         <li>
-                            <a href="/cart"><span class="glyphicon glyphicon-shopping-cart" ></span> Cart</a>
+                            <a href="/push"><b>Push</b></a>
                         </li>
-                        <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><b><%= session.userName %></b><span class="caret"></span></a>
-                            <ul id="login-dp" class="dropdown-menu">
+                        <li>
+                            <a href="/articleedit"><b>Artikel einstellen</b></a>
+                        </li>
+                        <% } %>
+                            <% if (session.userName) { %>
                                 <li>
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <form class="form" role="form" action="/logout" method="get" accept-charset="UTF-8" id="login-nav">
-                                                <div class="form-group">
-                                                    <button type="submit" class="btn btn-primary btn-block">Abmelden</button>
-                                                </div>
-                                            </form>
-                                        </div>
-                                        <div class="bottom text-center">
-                                            <a href="/settings"><span class= "glyphicon glyphicon-cog"></span> Accounteinstellungen</a>
-                                        </div>
-                                    </div>
+                                    <a href="/cart"><span class="glyphicon glyphicon-shopping-cart" ></span> Warenkorb</a>
                                 </li>
-                                <% } else { %>
-
-
-                                    <li class="dropdown">
-                                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><b>Login</b> <span class="caret"></span></a>
-                                        <ul id="login-dp" class="dropdown-menu">
-                                            <li>
-                                                <div class="row">
-                                                    <div class="col-md-12">
-
+                                <li class="dropdown">
+                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><b><%= session.userName %></b><span class="caret"></span></a>
+                                    <ul id="login-dp" class="dropdown-menu">
+                                        <li>
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <form class="form" role="form" action="/logout" method="get" accept-charset="UTF-8" id="login-nav">
                                                         <div class="form-group">
-                                                            <label class="sr-only" for="inputUser">Username</label>
-                                                            <input type="text" class="form-control" id="inputUser" placeholder="Benutzername" name="userName">
+                                                            <button type="submit" class="btn btn-primary btn-block">Abmelden</button>
                                                         </div>
-                                                        <div class="form-group">
-                                                            <label class="sr-only" for="inputPassword">Passwort</label>
-                                                            <input type="password" class="form-control" id="inputPassword" placeholder="Passwort" name="password">
-                                                            <div class="help-block text-right"><a href="">Passwort vergessen?</a></div>
-                                                        </div>
-
-                                                        <div class="checkbox">
-                                                            <label>
-                                                                <input type="checkbox" id="remember" name="remember"> angemeldet bleiben
-                                                            </label>
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <button id="login" type="submit" class="btn btn-primary btn-block">Anmelden</button>
-                                                        </div>
-
-                                                    </div>
-                                                    <div class="bottom text-center">
-                                                        Neu hier ? <a href="/signup"><b>Registieren</b></a>
-                                                    </div>
+                                                    </form>
                                                 </div>
-                                            </li>
-                                            <% } %>
-                                        </ul>
+                                                <div class="bottom text-center">
+                                                    <a href="/settings"><span class= "glyphicon glyphicon-cog"></span> Accounteinstellungen</a>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <% } else { %>
+
+
+                                            <li class="dropdown">
+                                                <a href="#" class="dropdown-toggle" data-toggle="dropdown"><b>Login</b> <span class="caret"></span></a>
+                                                <ul id="login-dp" class="dropdown-menu">
+                                                    <li>
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+
+                                                                <div class="form-group">
+                                                                    <label class="sr-only" for="inputUser">Username</label>
+                                                                    <input type="text" class="form-control" id="inputUser" placeholder="Benutzername" name="userName">
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label class="sr-only" for="inputPassword">Passwort</label>
+                                                                    <input type="password" class="form-control" id="inputPassword" placeholder="Passwort" name="password">
+                                                                    <div class="help-block text-right"><a href="">Passwort vergessen?</a></div>
+                                                                </div>
+
+                                                                <div class="checkbox">
+                                                                    <label>
+                                                                        <input type="checkbox" id="remember" name="remember"> angemeldet bleiben
+                                                                    </label>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <button id="login" type="submit" class="btn btn-primary btn-block">Anmelden</button>
+                                                                </div>
+
+                                                            </div>
+                                                            <div class="bottom text-center">
+                                                                Neu hier ? <a href="/signup"><b>Registieren</b></a>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                    <% } %>
+                                                </ul>
             </div>
 
             <!-- /.navbar-collapse -->

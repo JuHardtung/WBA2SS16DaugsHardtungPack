@@ -18,11 +18,11 @@
                     </tr>
                 </thead>
                 <% if (articles.length > 0) { %>
-                  <div class="col-sm-12 col-lg-12 col-md-12">
-                      <div class="thumbnail errormsg hide">
-                          <h4 style="margin:1%;">Der Warenkorb ist leer!</h4>
-                      </div>
-                  </div>
+                    <div class="col-sm-12 col-lg-12 col-md-12">
+                        <div class="thumbnail errormsg hide">
+                            <h4 style="margin:1%;">Der Warenkorb ist leer!</h4>
+                        </div>
+                    </div>
                     <tbody>
                         <% for(var i = 0; i < articles.length; i++) { %>
 
@@ -73,12 +73,12 @@
                                     <td colspan="2" class="hidden-xs"></td>
                                     <td class="hidden-xs text-center" id="insgesamtTD">Insgesamt 0 -€</strong>
                                     </td>
-                                    <td><a href="#" class="btn btn-success btn-block checkout">Checkout <i class="fa fa-angle-right"></i></a></td>
+                                    <td><a href="#" class="btn btn-success btn-block checkout">Bezahlen <i class="fa fa-angle-right"></i></a></td>
                                 </tr>
                             </tfoot>
             </table>
         </div>
-    <script src="js/jquery.js"></script>
-    <script src="js/cart.js"></script>
+        <script src="js/jquery.js"></script>
+        <script src="js/cart.js"></script>
 
         <%- include ../foot %>
