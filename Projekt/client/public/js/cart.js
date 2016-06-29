@@ -1,13 +1,11 @@
 summe();
 $(".rmitem").click(function () {
-
     $.ajax({
-            url: '/cart?id=' + $(this).attr('id').split("rmbtn_")[1]
+            url: '/cart?id=' + $(".rmitem").attr('id').split("rmbtn_")[1]
             , type: 'PATCH'
-            , function (data) {}
         })
         .done(function (data) {
-            $(this).closest('tr')
+           $(".rmitem").closest('tr')
                 .children('td')
                 .animate({
                     padding: 0
@@ -15,27 +13,28 @@ $(".rmitem").click(function () {
                 .wrapInner('<div />')
                 .children()
                 .slideUp(function () {
-                    $(this).closest('tr').remove();
+                    $(".rmitem").closest('tr').remove();
                     summe();
                     if ($('.rmitem').length == 0) {
                         $('.errormsg').removeClass('hide');
                     }
                 });
-        });
-    .fail(function (data) {
-        var res = JSON.parse(data.responseText);
-        BootstrapDialog.show({
-            message: res.msg
-            , title: 'Fehler: ' + res.code
-            , type: BootstrapDialog.TYPE_DANGER
-            , buttons: [{
-                label: 'OK'
-                , action: function (dialogItself) {
-                    dialogItself.close();
-                }
+        })
+        .fail(function (data) {
+            console.log(data.responseText);
+            var res = JSON.parse(data.responseText);
+            BootstrapDialog.show({
+                message: res.msg
+                , title: 'Fehler: ' + res.code
+                , type: BootstrapDialog.TYPE_DANGER
+                , buttons: [{
+                    label: 'OK'
+                    , action: function (dialogItself) {
+                        dialogItself.close();
+                    }
                         }]
+            });
         });
-    });
 });
 
 

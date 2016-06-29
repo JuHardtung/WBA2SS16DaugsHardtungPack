@@ -96,14 +96,18 @@ module.exports = {
      * TODO: FIX IF CART IS EMPTY
      */
     checkoutCart: function (req, res, next) {
-        req.checkParams('id', 'Invalid UrlParam').notEmpty().isInt();
+        req.checkParams('id', 'ArtikelID ist kein Integer').isInt();
         var errors = req.validationErrors();
         var updateArray = [];
         if (errors) {
             res.status(400).setHeader('Content-Type', 'application/json');
+            var errstr = "";
+            for (par in errors) {
+                errstr = errstr + errors[par].message + "\n";
+            }
             res.send({
                 "code": 400
-                , "msg": util.inspect(errors)
+                , "msg": errstr
             });
             return;
         }
@@ -182,14 +186,18 @@ module.exports = {
      * @sample {"id":1,"qty":2}
      */
     addItem: function (req, res, next) {
-        req.checkBody('id', 'Invalid ArticleID').notEmpty().isInt();
-        req.checkBody('qty', 'Invalid qty').notEmpty().isInt();
+        req.checkBody('id', 'ArtikelID ist kein Integer').notEmpty().isInt();
+        req.checkBody('qty', 'Menge ist kein Integer').isInt();
         var errors = req.validationErrors();
         if (errors) {
             res.status(400).setHeader('Content-Type', 'application/json');
+            var errstr = "";
+            for (par in errors) {
+                errstr = errstr + errors[par].message + "\n";
+            }
             res.send({
                 "code": 400
-                , "msg": util.inspect(errors)
+                , "msg": errstr
             });
             return;
         }
@@ -200,7 +208,7 @@ module.exports = {
             redisClient.hset("cart:" + req.params.id, json.id, json.qty);
             redisClient.expire("cart:" + req.params.id, 3600);
             res.status(200);
-             res.write('{"msg":"Item added."}');
+            res.write('{"msg":"Item added."}');
             res.end();
 
         } else {
@@ -231,7 +239,8 @@ module.exports = {
                 });
                 return;
             } else {
-                res.status(200);
+                res.status(200).setHeader('Content-Type', 'application/json');
+                res.write('{"msg":"Cart deleted"}');
             }
             res.end();
 
@@ -253,8 +262,8 @@ module.exports = {
                 });
                 return;
             } else {
-                res.status(200);
-                 res.write('{"msg":"Cart deleted"}');
+                res.status(200).setHeader('Content-Type', 'application/json');
+                res.write('{"msg":"Cart deleted"}');
             }
             res.end();
 

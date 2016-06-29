@@ -39,32 +39,46 @@
      $(".delete").click(function () {
          var obj = $(this);
          $.ajax({
-             url: '/article'
-             , type: 'DELETE'
-             , data: {
-                 id: $(this).attr("data-id")
-             }
-         }).success(function (data) {
-             obj.closest('.thumbnail').parent().fadeOut("slow", function () {
-                 obj.closest('.thumbnail').parent().remove();
-                 if ($('.ratings').length == 0) {
-                     $('.errormsg').removeClass('hide');
+                 url: '/article'
+                 , type: 'DELETE'
+                 , data: {
+                     id: $(this).attr("data-id")
                  }
-             });
-
-             BootstrapDialog.show({
-                 message: data
-                 , title: 'Artikel'
-                 , type: BootstrapDialog.TYPE_WARNING
-                 , buttons: [{
-                     label: 'OK'
-                     , action: function (dialogItself) {
-                         dialogItself.close();
+             }).success(function (data) {
+                 obj.closest('.thumbnail').parent().fadeOut("slow", function () {
+                     obj.closest('.thumbnail').parent().remove();
+                     if ($('.ratings').length == 0) {
+                         $('.errormsg').removeClass('hide');
                      }
+                 });
+
+                 BootstrapDialog.show({
+                     message: data.msg
+                     , title: 'Artikel'
+                     , type: BootstrapDialog.TYPE_WARNING
+                     , buttons: [{
+                         label: 'OK'
+                         , action: function (dialogItself) {
+                             dialogItself.close();
+                         }
              }]
 
+                 });
+             })
+             .fail(function (data) {
+                 var res = JSON.parse(data.responseText);
+                 BootstrapDialog.show({
+                     message: res.msg
+                     , title: 'Fehler: ' + res.code
+                     , type: BootstrapDialog.TYPE_DANGER
+                     , buttons: [{
+                         label: 'OK'
+                         , action: function (dialogItself) {
+                             dialogItself.close();
+                         }
+                        }]
+                 });
              });
-         });
      });
 
 
