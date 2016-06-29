@@ -113,7 +113,7 @@ module.exports = {
         rp(options)
             .then(function (response) {
                 res.status(200);
-                res.redirect('/cart');
+                res.send(response.body);
 
             })
             .catch(function (err) {

@@ -1,5 +1,7 @@
 
 var expressValidator = require('express-validator');
+var Faye = require('faye');
+var util = require('util');
 //var Faye = require('faye');
 
 
@@ -32,7 +34,6 @@ module.exports = {
      * @return {application/json} Article
      */
     getArticles: function (req, res, next) {
-  
         redisClient.lrange(ARTICLES, 0, -1, function (err, obj) {
             if (err) {
                 res.status(500);
@@ -52,8 +53,12 @@ module.exports = {
 
                 redisClient.mget(articles, function (err, obj) {
                     if (err) {
-                      res.status(500).setHeader('Content-Type', 'application/json');
-                      res.send({"code":500, "msg":"Fehler beim auslesen der Artikel!", "type":"err"});
+                        res.status(500).setHeader('Content-Type', 'application/json');
+                        res.send({
+                            "code": 500
+                            , "msg": "Fehler beim auslesen der Artikel!"
+                            , "type": "err"
+                        });
                     }
                     var list;
 
@@ -90,23 +95,32 @@ module.exports = {
         redisClient.lrange(ARTICLES, 0, -1, function (err, reply) {
             console.log("Bekomme Artikel mit der ID " + _id);
             if (err) {
-                console.log(err);
-                res.status(500);
-                res.end();
+                res.status(500).setHeader('Content-Type', 'application/json');
+                res.send({
+                    "code": 500
+                    , "msg": "Fehler beim auslesen des Artikels!"
+                    , "type": "err"
+                });
             }
 
             var _articleID = articleIdExists(reply, _id);
             if (_articleID === null) {
-                console.log("Es existiert kein Artikel mit ID: " + _id);
-                res.status(404);
-                res.end();
+                res.status(400).setHeader('Content-Type', 'application/json');
+                res.send({
+                    "code": 400
+                    , "msg": "Kein Artikel mit der gesuchten ID gefunden."
+                    , "type": "err"
+                });
             } else {
                 var _articleById = 'article:' + _articleID;
                 redisClient.get(_articleById, function (err, reply) {
                     if (err) {
-                        console.log(err);
-                        res.status(500);
-                        res.end();
+                        res.status(500).setHeader('Content-Type', 'application/json');
+                        res.send({
+                            "code": 500
+                            , "msg": "Fehler beim auslesen des Artikels!"
+                            , "type": "err"
+                        });
                     }
                     res.status(200).json(JSON.parse(reply));
                 });
@@ -126,22 +140,30 @@ module.exports = {
     //damit die id mit in den Artikelinfos gespeichert wird
 
     addArticle: function (req, res, next) {
-        req.checkBody('name', 'Invalid ArticleName').notEmpty();
-        req.checkBody('description', 'Invalid ArticleDescription').notEmpty();
-        req.checkBody('price', 'Invalid ArticlePrice').notEmpty().validPrice();
-        req.checkBody('storage', 'Invalid ArticleStorage').notEmpty().isInt();
+        req.checkBody('name', '-Ungültiger Artikelname').notEmpty();
+        req.checkBody('description', '-Ungültiger Artikelbeschreibung').notEmpty();
+        req.checkBody('price', '-Ungültiger Artikelpreis').isFloat();
+        req.checkBody('storage', '-Ungültige Artikelmenge').isInt();
 
         var errors = req.validationErrors();
         if (errors) {
-            console.log(errors);
-            res.status(400).write('There have been validation errors!');
-            res.end();
-        } else {
+            res.status(500).setHeader('Content-Type', 'application/json');
+            var errstr="";
+            for (par in errors) {
+                errstr = errstr + errors[par].message + "\n";
+            }
+            res.send({
+                "code": 500
+                , "msg": errstr
+            });
+            return;
+        }
 
 
             redisClient.get("next_article_id", function (err, next) {
                 if (err) {
-                    console.log(err);
+                    res.status(500).setHeader('Content-Type', 'application/json');
+                res.send({"code":500, "msg":"Fehler beim auslesen des Artikelzählers!", "type":"err"});
                 }
 
                 var newArticle = req.body;
@@ -155,10 +177,8 @@ module.exports = {
 
                 redisClient.rpush(ARTICLES, newArticle.id, function (err, reply) {
                     if (err) {
-                        console.log(err);
-                        res.status(500);
-                        res.write("add article failed");
-                        res.end();
+                         res.status(500).setHeader('Content-Type', 'application/json');
+                res.send({"code":500, "msg":"Fehler beim hinzufügen des Artikels!", "type":"err"});
                     }
 
                     var article = "article:" + newArticle.id;
@@ -170,7 +190,6 @@ module.exports = {
                 });
 
             });
-        }
     },
 
     /**
@@ -184,28 +203,30 @@ module.exports = {
         redisClient.lrange(ARTICLES, 0, -1, function (err, reply) {
             console.log("Lösche Artikel mit der ID " + _id);
             if (err) {
-                res.status(500);
-                res.end();
+                res.status(500).setHeader('Content-Type', 'application/json');
+                res.send({"code":500, "msg":"Fehler beim löschen des Artikels!", "type":"err"});
             }
             var _articleID = articleIdExists(reply, _id);
             if (_articleID === null) {
-                res.status(404);
-                res.write("Artikel existiert nicht");
-                res.end();
+                res.status(500).setHeader('Content-Type', 'application/json');
+                res.send({"code":500, "msg":"Zu löschender Artikel existiert nicht.", "type":"err"});
             } else {
                 var _articleById = 'article:' + _articleID;
                 redisClient.lrem(ARTICLES, 0, _articleID, function (err) {
                     if (err) {
-                        res.status(500);
-                        res.end();
+                        res.status(500).setHeader('Content-Type', 'application/json');
+                res.send({"code":500, "msg":"Fehler beim Löschen des Artikels!", "type":"err"});
                     }
                 });
                 redisClient.del(_articleById, function (err, reply) {
                     if (err) {
-                        res.status(500);
-                        res.end();
+                       res.status(500).setHeader('Content-Type', 'application/json');
+                res.send({"code":500, "msg":"Fehler beim Löschen des Artikels!", "type":"err"});
                     }
-                    res.status(200).json(reply);
+                    res.status(200);
+                    res.setHeader('Content-Type', 'application/json');
+                    res.write('{"msg":"Artikel gelöscht."}');
+                    res.end();
                 });
             }
         });
