@@ -1,7 +1,8 @@
-var redis = require('redis');
-var redisClient = redis.createClient();
+
+
 var expressValidator = require('express-validator');
 var util = require('util');
+
 
 
 module.exports = {

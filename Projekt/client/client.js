@@ -59,7 +59,6 @@ app.use(function (err, req, res, next) {
             res.render('error', err);
         }
     } else {
-        // No error occured so we proceed with the actual response \o/
         next();
     }
 });

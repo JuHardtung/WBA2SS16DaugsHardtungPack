@@ -1,8 +1,9 @@
-var redis = require('redis');
-var redisClient = redis.createClient();
-var Response = require('../helper/ResponseHelper');
+
+
 var expressValidator = require('express-validator');
 var util = require('util');
+
+
 
 var USERS = 'users'; //die DB-Liste mit den IDs aller Benutzer
 //Benutzer einzeln als key unter user:*id* gespeichert (Inhalt in JSON-Format)

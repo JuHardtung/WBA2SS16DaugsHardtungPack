@@ -1,7 +1,8 @@
-var redis = require('redis');
-var client = redis.createClient();
+
 var nodemailer = require('nodemailer');
 var util = require('util');
+
+
 
 module.exports = {
 
@@ -16,7 +17,7 @@ module.exports = {
             return;
         }
 
-        client.hget("users", req.body.user, function (err, resp) {
+        redisClient.hget("users", req.body.user, function (err, resp) {
             if (resp) {
                 res.status(200).setHeader('Content-Type', 'application/json');
                 res.send({"code":200, "msg":"Benutzername bereits vergeben!", "type":"err"});
@@ -24,19 +25,19 @@ module.exports = {
             } else {
 
 
-                client.get("next_user_id", function (err, next) {
+                redisClient.get("next_user_id", function (err, next) {
 
                     var newUserId;
 
                     if (next == undefined) {
                         newUserId = 1;
-                        client.incr("next_user_id");
+                        redisClient.incr("next_user_id");
                     } else {
                         newUserId = next;
                     }
 
-                    client.hmset(["user:" + newUserId, "name", req.body.user, "passwd", req.body.passwd, "mail", req.body.mail], function (err, res) {});
-                    client.hset("users", req.body.user, newUserId);
+                    redisClient.hmset(["user:" + newUserId, "name", req.body.user, "passwd", req.body.passwd, "mail", req.body.mail], function (err, res) {});
+                    redisClient.hset("users", req.body.user, newUserId);
                 });
                 // create reusable transporter object using the default SMTP transport
                 var transporter = nodemailer.createTransport('smtps://awesomeshop.noreply%40gmail.com:awesomeshop69@smtp.gmail.com');
@@ -57,7 +58,7 @@ module.exports = {
                     }
                     console.log('Message sent: ' + info.response);
                 });
-                client.incr("next_user_id");
+                redisClient.incr("next_user_id");
                 res.status(201).setHeader('Content-Type', 'application/json');
                 res.send({"code":201, "msg":"Benutzer erfoldgreich erstellt!", "type":"ok"});
             }
@@ -77,7 +78,7 @@ module.exports = {
 
         var user = req.body.user;
         var passwd = req.body.passwd;
-        client.hexists("users", user, function (err, exits) {
+        redisClient.hexists("users", user, function (err, exits) {
             if (err) {
               res.status(200).setHeader('Content-Type', 'application/json');
               res.send({"code":200, "msg":"User nicht vorhanden" , "type":"err"});
@@ -85,13 +86,13 @@ module.exports = {
             }
 
 
-            client.hget("users", user, function (err, id) {
+            redisClient.hget("users", user, function (err, id) {
                 if (err) {
                   res.status(500).setHeader('Content-Type', 'application/json');
                   res.send({"code":500, "msg":"Es ist ein Fehler aufgetreten!", "type":"err"});
                   return;
                 }
-                client.hget("user:" + id, "passwd", function (err, dbpasswd) {
+                redisClient.hget("user:" + id, "passwd", function (err, dbpasswd) {
                     if (err) {
                       res.status(500).setHeader('Content-Type', 'application/json');
                       res.send({"code":500, "msg":"Es ist ein Fehler aufgetreten!", "type":"err"});
@@ -112,5 +113,69 @@ module.exports = {
         });
 
 
+    },
+    updatePWD: function (req, res) {
+
+        req.checkBody('passwd', 'Invalid PWD').notEmpty();
+        req.checkBody('id', 'Invalid ID').notEmpty().isInt();
+
+        var errors = req.validationErrors();
+        if (errors) {
+            res.status(400).setHeader('Content-Type', 'application/json');
+            res.send({"code":400, "msg":"Es sind Validierungsfehler aufgetreten:"+util.inspect(errors), "type":"err"});
+            return;
+        }
+
+        var currentUser = 'user:' + req.body.id;
+        var newPwd = req.body.passwd;
+        //console.log("USER: " + currentUser + "neues PWD: " + newPwd);
+
+        redisClient.hset(currentUser, "passwd", newPwd, function (err, resp) {
+            if (err) {
+                console.log("Failed to change " + currentUser + "PWD to: " + newPwd);
+                res.status(500).setHeader('Content-Type', 'application/json');
+                res.send({"code":500, "msg":"Passwort ändern gescheitert", "type":"err"});
+                return;
+            } else {
+
+                console.log("Changed " + currentUser + " PWD to: " + newPwd);
+                res.status(200).setHeader('Content-Type', 'application/json');
+                res.send({"code":200, "msg":"Passwort erfolgreich geändert", "type":"ok"});
+            }
+
+
+        });
+    },
+
+
+    updateMail: function (req, res) {
+
+        req.checkBody('mail', 'Invalid Mail').notEmpty();
+        req.checkBody('id', 'Invalid ID').notEmpty().isInt();
+
+        var errors = req.validationErrors();
+        if (errors) {
+          res.status(400).setHeader('Content-Type', 'application/json');
+          res.send({"code":400, "msg":"Es sind Validierungsfehler aufgetreten:"+util.inspect(errors), "type":"err"});
+          return;
+        }
+
+        var currentUser = 'user:' + req.body.id;
+        var newMail = req.body.mail;
+        //console.log("USER: " + currentUser + "neue MAIL: " + newMail);
+
+        redisClient.hset(currentUser, "mail", newMail, function (err, resp) {
+            if (err) {
+                console.log("Failed to change " + currentUser + "Mail to: " + newMail);
+                res.status(500).setHeader('Content-Type', 'application/json');
+                res.send({"code":500, "msg":"Email ändern gescheitert", "type":"err"});
+                return;
+            } else {
+
+                console.log("Changed " + currentUser + " ID to: " + newMail);
+                res.status(200).setHeader('Content-Type', 'application/json');
+                res.send({"code":200, "msg":"Email erfolgreich geändert", "type":"ok"});
+            }
+        });
     }
 };

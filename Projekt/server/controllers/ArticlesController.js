@@ -1,12 +1,13 @@
-var redis = require('redis');
-var redisClient = redis.createClient();
+
 var expressValidator = require('express-validator');
 var Faye = require('faye');
 var util = require('util');
+//var Faye = require('faye');
+
 
 var ARTICLES = 'articles'; //die DB-Liste mit den IDs aller Artikel
 //Artikel einzeln als key unter article:*id* gespeichert (Inhalt in JSON-Format)
-var client = new Faye.Client("http://localhost:10000/faye");
+//var client = new Faye.Client("http://localhost:10000/faye");
 /*
  * check if article with given ID exists
  * @param {array} articleList
@@ -23,13 +24,16 @@ function articleIdExists(articleList, id) {
     return result;
 }
 
+
+
+
+
 module.exports = {
     /**
      * return all articles from database
      * @return {application/json} Article
      */
     getArticles: function (req, res, next) {
-
         redisClient.lrange(ARTICLES, 0, -1, function (err, obj) {
             if (err) {
                 res.status(500);

@@ -1,5 +1,4 @@
-var redis = require('redis');
-var redisClient = redis.createClient();
+
 
 var ARTICLES = 'articles'; //die DB-Liste mit den IDs aller Artikel
 //Artikel einzeln als key unter article:*id* gespeichert (Inhalt in JSON-Format)
