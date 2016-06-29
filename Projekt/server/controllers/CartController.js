@@ -27,7 +27,7 @@ module.exports = {
             if (obj === null) {
                 res.status(200);
                 res.setHeader('Content-Type', 'application/json');
-                res.write('{ "cart":[]}');
+                res.write('[]');
                 res.end();
             } else {
                 var i = 0;

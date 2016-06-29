@@ -17,10 +17,11 @@ global.__port = 3000;
 var app = express();
 app.set('port', __port);
 app.disable('x-powered-by');
-app.use(bodyParser.json()); // for parsing application/json
+app.use(bodyParser.json()); 
 app.use(bodyParser.urlencoded({
     extended: true
-})); // for parsing application/x-www-form-urlencoded
+}));
+
 // Customize the Express Validator
 app.use(Validator({
     errorFormatter: function(param, msg, value) {
