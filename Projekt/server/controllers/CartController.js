@@ -241,7 +241,7 @@ module.exports = {
                 return;
             } else {
                 res.status(200).setHeader('Content-Type', 'application/json');
-                res.write('{"msg":"Cart deleted"}');
+                res.write('{"msg":"Item deleted"}');
             }
             res.end();
 
