@@ -56,7 +56,7 @@ module.exports = {
 
                 res.status(200);
                 res.send(response);
-                
+
             })
             .catch( function (err) {
                 res.send(err.response.body);
@@ -118,7 +118,7 @@ module.exports = {
 
     changeData: function (req, res) {
 
-        if ((req.body.password != undefined) && (req.body.mail == undefined)) {
+        if ((req.body.password !== undefined) && (req.body.mail == undefined)) {
 
             var password = req.body.password;
             var id = req.session.userId;

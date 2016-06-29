@@ -69,8 +69,9 @@
                                             <%= articles[i].description %>
                                         </p>
                                     </div>
+                                      <div class="ctrl">
                                     <% if (session.userName) { %>
-                                        <div class="ctrl">
+
 
                                             <div class="form-group">
                                                 <input type="hidden" value="<%= articles[i].id %>" name="id">
@@ -84,8 +85,11 @@
                                                                 <% } %>
                                             </div>
 
-                                        </div>
+
+                                        <% }else{ %>
+                                          <button type="submit" class="btn btn-warning btn-sm sharp add disabled" data-id="<%= articles[i].id %>">Nicht eingeloggt</button>
                                         <% } %>
+                                        </div>
                                             <div class="ratings">
                                                 <p class="pull-right">15 Rezensionen</p>
                                                 <p>

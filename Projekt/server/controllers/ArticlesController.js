@@ -32,7 +32,7 @@ module.exports = {
      * @return {application/json} Article
      */
     getArticles: function (req, res, next) {
-        console.log(redisClient);
+  
         redisClient.lrange(ARTICLES, 0, -1, function (err, obj) {
             if (err) {
                 res.status(500);
