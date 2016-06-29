@@ -6,28 +6,27 @@ var rp = require('request-promise');
 
 module.exports = {
 
-  checkout: function (req, res, next) {
-    var options = {
+    checkout: function (req, res, next) {
+        var options = {
 
-        uri: 'http://127.0.0.1:3000/cart/'+req.session.userId+'/checkout'
-        , headers: {
-            'User-Agent': 'Request-Promise',
-            'Content-Type': 'application/json; charset=utf-8'
-          },
-          json: true // Automatically parses the JSON string in the response
-    };
+            uri: 'http://127.0.0.1:3000/cart/' + req.session.userId + '/checkout'
+            , headers: {
+                'User-Agent': 'Request-Promise'
+                , 'Content-Type': 'application/json; charset=utf-8'
+            }
+            , json: true // Automatically parses the JSON string in the response
+        };
 
-    rp(options)
-        .then(function (response) {
-            res.status(200);
-            res.send(response.body);
+        rp(options)
+            .then(function (response) {
+                res.status(200);
+                res.send(response.body);
 
-        })
-        .catch(function (err) {
-            console.log(err.response.body.msg);
-            res.status(500);
-            res.send(err.response.body);
-        });
+            })
+            .catch(function (err) {
+                res.status(500);
+                res.send(err.response.body);
+            });
 
     },
 
@@ -54,13 +53,8 @@ module.exports = {
 
             })
             .catch(function (err) {
-                var data = {
-                    message: "Artikel konnten nicht angezeigt werden!"
-                    , code: res.statusCode
-                    , validation: res.validation
-                };
-                res.render('error', err);
-                console.log(err);
+                res.status(500);
+                res.render('error', err.response);
             });
 
 
@@ -92,13 +86,13 @@ module.exports = {
 
         rp(options)
             .then(function (response) {
-                console.log(response.status);
-                console.log("ok");
-                res.send("OK");
+                res.status(200);
+                res.send(response.body);
 
             })
             .catch(function (err) {
-              res.end();
+                res.status(500);
+                res.send(err.response.body);
             });
 
 
@@ -108,20 +102,23 @@ module.exports = {
         var itemid = req.query.id;
         var options = {
 
-            uri: 'http://127.0.0.1:3000/cart/' + req.session.userId +'?itemid='+itemid,
-            method: 'PATCH', headers: {
-                'User-Agent': 'Request-Promise',
-              },
-              json: true // Automatically parses the JSON string in the response
+            uri: 'http://127.0.0.1:3000/cart/' + req.session.userId + '?itemid=' + itemid
+            , method: 'PATCH'
+            , headers: {
+                'User-Agent': 'Request-Promise'
+            , }
+            , json: true // Automatically parses the JSON string in the response
         };
 
         rp(options)
             .then(function (response) {
+                res.status(200);
                 res.redirect('/cart');
 
             })
             .catch(function (err) {
-                res.send("Fail");
+                res.status(500);
+                res.send(err.response.body);
             });
     }
 };

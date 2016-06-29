@@ -41,10 +41,8 @@ $("#abort").click(function () {
                             BootstrapDialog.show({
                                 message: 'Artikle konnte nicht hinzugefügt werden!'
                                 , title: 'Artikel'
-                                , type: BootstrapDialog.TYPE_DANGER, // <-- Default value is BootstrapDialog.TYPE_PRIMARY
-                                closable: true, // <-- Default value is false
-                                draggable: true, // <-- Default value is false
-                                buttons: [{
+                                , type: BootstrapDialog.TYPE_DANGER
+                                , buttons: [{
                                     label: 'OK'
                                     , action: function (dialogItself) {
                                         dialogItself.close();

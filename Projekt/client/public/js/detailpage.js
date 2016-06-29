@@ -4,40 +4,36 @@
          $.post("/cart", {
                  id: $(this).attr("data-id")
                  , qty: anzahl
-             }
-             , function (data) {
-                 if (data == "OK") {
+            }, function (data) {})
+                 .done(function (data) {
                      BootstrapDialog.show({
                          message: 'Produkt zum Warenkorb hinzugefügt!'
                          , title: 'Warenkorb'
-                         , type: BootstrapDialog.TYPE_WARNING, // <-- Default value is BootstrapDialog.TYPE_PRIMARY
-                         closable: true, // <-- Default value is false
-                         draggable: true, // <-- Default value is false
-                         buttons: [{
+                         , type: BootstrapDialog.TYPE_WARNING
+                         , buttons: [{
                              label: 'OK'
                              , action: function (dialogItself) {
                                  dialogItself.close();
                              }
                         }]
                      });
-                 } else {
+                 })
+                 .fail(function (data) {
+                     var res = JSON.parse(data.responseText);
                      BootstrapDialog.show({
-                         message: 'Beim hinzufügen zum Warenkorb ist ein Fehler aufgetreten! Sorry :*'
-                         , title: 'Warenkorb'
-                         , type: BootstrapDialog.TYPE_DANGER, // <-- Default value is BootstrapDialog.TYPE_PRIMARY
-                         closable: true, // <-- Default value is false
-                         draggable: true, // <-- Default value is false
-                         buttons: [{
+                         message: res.msg
+                         , title: 'Fehler: ' + res.code
+                         , type: BootstrapDialog.TYPE_DANGER
+                         , buttons: [{
                              label: 'OK'
                              , action: function (dialogItself) {
                                  dialogItself.close();
                              }
                         }]
                      });
-                 }
-             });
-     }
- });
+                 });
+         }
+     });
  $(document).ready(function () {
      var foopic = document.getElementById('bild');
      var bar = foopic.firstChild;

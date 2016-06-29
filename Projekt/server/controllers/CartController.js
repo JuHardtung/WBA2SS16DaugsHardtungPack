@@ -207,7 +207,7 @@ module.exports = {
             res.status(400).setHeader('Content-Type', 'application/json');
             res.send({
                 "code": 400
-                , "msg": "User nicht vorhanden"
+                , "msg": "Ungültige Anzahl."
             });
             return;
         }

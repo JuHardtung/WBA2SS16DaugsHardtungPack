@@ -2,27 +2,42 @@ summe();
 $(".rmitem").click(function () {
 
     $.ajax({
-        url: '/cart?id=' + $(this).attr('id').split("rmbtn_")[1]
-        , type: 'PATCH'
-        , function (data) {
-
-        }
-    });
-    $(this).closest('tr')
-        .children('td')
-        .animate({
-            padding: 0
+            url: '/cart?id=' + $(this).attr('id').split("rmbtn_")[1]
+            , type: 'PATCH'
+            , function (data) {}
         })
-        .wrapInner('<div />')
-        .children()
-        .slideUp(function () {
-            $(this).closest('tr').remove();
-            summe();
-            if ($('.rmitem').length == 0) {
-                $('.errormsg').removeClass('hide');
-            }
+        .done(function (data) {
+            $(this).closest('tr')
+                .children('td')
+                .animate({
+                    padding: 0
+                })
+                .wrapInner('<div />')
+                .children()
+                .slideUp(function () {
+                    $(this).closest('tr').remove();
+                    summe();
+                    if ($('.rmitem').length == 0) {
+                        $('.errormsg').removeClass('hide');
+                    }
+                });
         });
+    .fail(function (data) {
+        var res = JSON.parse(data.responseText);
+        BootstrapDialog.show({
+            message: res.msg
+            , title: 'Fehler: ' + res.code
+            , type: BootstrapDialog.TYPE_DANGER
+            , buttons: [{
+                label: 'OK'
+                , action: function (dialogItself) {
+                    dialogItself.close();
+                }
+                        }]
+        });
+    });
 });
+
 
 $(".upitem").click(function () {
 
@@ -31,64 +46,57 @@ $(".upitem").click(function () {
             id: myid
             , qty: $('#qtyin_' + myid).val()
 
-        }
-        , function (data) {
-            if (data == "OK") {
-                BootstrapDialog.show({
-                    message: 'Produkt aktualisiert!'
-                    , title: 'Warenkorb'
-                    , type: BootstrapDialog.TYPE_WARNING, // <-- Default value is BootstrapDialog.TYPE_PRIMARY
-                    closable: true, // <-- Default value is false
-                    draggable: true, // <-- Default value is false
-                    buttons: [{
-                        label: 'OK'
-                        , action: function (dialogItself) {
-                            dialogItself.close();
-                        }
+        }, function (data) {})
+        .done(function (data) {
+            BootstrapDialog.show({
+                message: 'Produkt aktualisiert!'
+                , title: 'Warenkorb'
+                , type: BootstrapDialog.TYPE_WARNING
+                , buttons: [{
+                    label: 'OK'
+                    , action: function (dialogItself) {
+                        dialogItself.close();
+                    }
                         }]
-                });
-            } else {
-                BootstrapDialog.show({
-                    message: 'Beim aktualisieren ist ein Fehler aufgetreten.'
-                    , title: 'Warenkorb'
-                    , type: BootstrapDialog.TYPE_DANGER, // <-- Default value is BootstrapDialog.TYPE_PRIMARY
-                    closable: true, // <-- Default value is false
-                    draggable: true, // <-- Default value is false
-                    buttons: [{
-                        label: 'OK'
-                        , action: function (dialogItself) {
-                            dialogItself.close();
-                        }
+            });
+            summe();
+        })
+        .fail(function (data) {
+            var res = JSON.parse(data.responseText);
+            BootstrapDialog.show({
+                message: res.msg
+                , title: 'Fehler: ' + res.code
+                , type: BootstrapDialog.TYPE_DANGER
+                , buttons: [{
+                    label: 'OK'
+                    , action: function (dialogItself) {
+                        dialogItself.close();
+                    }
                         }]
-                });
-            }
+            });
         });
-    summe();
 });
 
 $(".checkout").click(function () {
-    $.get("/cart/checkout", function (data) {
-    })
+    $.get("/cart/checkout", function (data) {})
         .done(function (data) {
-                $('tbody').hide();
-                $('.errormsg').removeClass('hide');
-            })
-            .fail(function (data) {
-                var res= JSON.parse(data.responseText);
-                BootstrapDialog.show({
-                    message: res.msg
-                    , title: 'Fehler: ' + res.code
-                    , type: BootstrapDialog.TYPE_DANGER, // <-- Default value is BootstrapDialog.TYPE_PRIMARY
-                    closable: true, // <-- Default value is false
-                    draggable: true, // <-- Default value is false
-                    buttons: [{
-                        label: 'OK'
-                        , action: function (dialogItself) {
-                            dialogItself.close();
-                        }
+            $('tbody').hide();
+            $('.errormsg').removeClass('hide');
+        })
+        .fail(function (data) {
+            var res = JSON.parse(data.responseText);
+            BootstrapDialog.show({
+                message: res.msg
+                , title: 'Fehler: ' + res.code
+                , type: BootstrapDialog.TYPE_DANGER
+                , buttons: [{
+                    label: 'OK'
+                    , action: function (dialogItself) {
+                        dialogItself.close();
+                    }
           }]
-                });
             });
+        });
 });
 
 function summe() {
