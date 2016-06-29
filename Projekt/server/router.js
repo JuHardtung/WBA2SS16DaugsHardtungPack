@@ -17,12 +17,11 @@ var OtherController = require('./controllers/OtherController');
 router.route('/db')
     .get(OtherController.resetDB);
 
+
 // User
-router.route('/user/new')
-    .post(AuthController.signup);
 
 router.route('/user')
-    .post(AuthController.login)
+    .post(AuthController.signup)
     .get(AuthController.getUser)
     .patch(AuthController.deleteUser);
 

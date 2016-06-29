@@ -87,7 +87,7 @@ module.exports = {
         var passwd = req.body.password;
         var mail = req.body.mail;
         var options = {
-            uri: 'http://127.0.0.1:3000/user/new',
+            uri: 'http://127.0.0.1:3000/user',
             method: 'POST',
             headers: {
                 'User-Agent': 'Request-Promise',
