@@ -1,0 +1,67 @@
+<%- include ../head %>
+
+
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3">
+                <p class="lead">Alle Benutzer:</p>
+            </div>
+
+            <table id="cart" class="table table-hover table-condensed">
+                <thead>
+                    <tr>
+                        <th style="width:60%">User</th>
+                        <th style="width:22%">Email</th>
+                        <th style="width:8%">ID</th>
+                        <th style="width:10%"></th>
+                    </tr>
+                </thead>
+                <% if (users.length > 0) { %>
+                    <div class="col-sm-12 col-lg-12 col-md-12">
+                        <div class="thumbnail errormsg hide">
+                            <h4 style="margin:1%;">Keine User vorhanden</h4>
+                        </div>
+                    </div>
+                    <tbody>
+                        <% for(var i = 0; i < users.length; i++) { %>
+
+                            <tr>
+
+                                <td data-th="Benutzer">
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <h4 class="nomargin"><%= users[i].name %></h4>
+
+                                        </div>
+                                    </div>
+                                </td>
+                                <td data-th="Email" class="articlePrice">
+                                    <%= users[i].mail %> </td>
+                                <td data-th="ID">
+                                    <p><%= users[i].id %></p>
+                                </td>
+
+                                <td class="actions" data-th="">
+                                    <button id="rmbtn_<%= users[i].id %>" class="btn btn-danger btn-sm rmitem"><i class="fa fa-trash-o"></i></button>
+                                </td>
+
+                            </tr>
+
+
+                            <% } %>
+                    </tbody>
+                    <% } else { %>
+                        <div class="col-sm-12 col-lg-12 col-md-12">
+                            <div class="thumbnail errormsg">
+                                <h4 style="margin:1%;">Keine user Vorhanden!</h4>
+                            </div>
+                        </div>
+                        <% } %>
+
+            </table>
+        </div>
+        <script src="js/jquery.js"></script>
+        <script src="js/users.js"></script>
+
+        <%- include ../foot %>

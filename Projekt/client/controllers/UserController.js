@@ -2,6 +2,63 @@ var rp = require('request-promise');
 
 module.exports = {
 
+
+  getUsers: function (req, res, next) {
+
+      var options = {
+          uri: 'http://127.0.0.1:3000/user/'
+          , headers: {
+              'User-Agent': 'Request-Promise'
+          }
+          , json: true // Automatically parses the JSON string in the response
+      };
+
+      rp(options)
+          .then(function (response) {
+              var data = {
+                  title: 'Warenkorb'
+                  , users: response
+                  , session: req.session
+              };
+
+              res.render('user/users', data);
+
+          })
+          .catch(function (err) {
+              res.status(500);
+              res.render('error', err.response);
+          });
+
+
+  },
+
+
+  deleteUser: function (req, res, next) {
+
+      var options = {
+          uri: 'http://127.0.0.1:3000/user?id='+req.query.id,
+          method: 'PATCH'
+          , headers: {
+              'User-Agent': 'Request-Promise'
+          }
+          , json: true // Automatically parses the JSON string in the response
+      };
+
+      rp(options)
+          .then(function (response) {
+                res.status(200);
+                res.send('OK');
+
+          })
+          .catch(function (err) {
+              res.status(500);
+              res.send('Fail');
+          });
+
+
+  },
+
+
     push: function (req, res) {
 
         var data = {
@@ -63,7 +120,7 @@ module.exports = {
             });
     },
 
-    login: function (req, res) {
+    loginalt: function (req, res) {
         var user = req.body.userName;
         var passwd = req.body.password;
         var remember = req.body.remember;
@@ -106,6 +163,36 @@ module.exports = {
             });
     },
 
+    login: function (req, res) {
+        var user = req.body.userName;
+        var passwd = req.body.password;
+        var remember = req.body.remember;
+        var options = {
+            uri: 'http://127.0.0.1:3000/user?name='+user,
+            method: 'GET',
+            headers: {
+                'User-Agent': 'Request-Promise',
+            },
+            json: true // Automatically parses the JSON string in the response
+        };
+
+        rp(options)
+            .then(function (response) {
+              console.log(response);
+              if(passwd==response.passwd){
+                req.session.userName = user;
+                req.session.userId = response.id;
+                if (remember == "on") {
+                    req.session.cookie.maxAge = 365 * 24 * 60 * 60 * 1000;
+                }
+                res.send("OK");
+                }
+            })
+            .catch(function (err) {
+                res.send("Fail");
+            });
+    },
+
 
     settings: function (req, res) {
 
@@ -134,6 +221,8 @@ module.exports = {
 
 
     },
+
+
 
     changeData: function (req, res) {
 

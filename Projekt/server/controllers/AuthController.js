@@ -43,7 +43,7 @@ module.exports = {
                         newUserId = next;
                     }
 
-                    redisClient.hmset(["user:" + newUserId, "name", req.body.user, "passwd", req.body.passwd, "mail", req.body.mail], function(err, res) {});
+                    redisClient.hmset(["user:" + newUserId, "name", req.body.user, "passwd", req.body.passwd, "mail", req.body.mail, "id", next], function(err, res) {});
                     redisClient.hset("users", req.body.user, newUserId);
                 });
                 // create reusable transporter object using the default SMTP transport
@@ -242,17 +242,114 @@ module.exports = {
 
         } else {
 
-            res.status(400).setHeader('Content-Type', 'application/json');
-            res.send({
-                "code": 400,
-                "msg": "Kein Parameter angegeben",
-                "type": "err"
+
+            redisClient.hgetall('users', function(err, obj) {
+                if (err) {
+                    res.status(500);
+                    res.end();
+                } else if (obj.length === 0) {
+                    res.status(200);
+                    res.setHeader('Content-Type', 'application/json');
+                    res.write('[]');
+                    res.end();
+                } else {
+
+                    var users = [];
+                    var i = 0;
+                    for (var item in obj) {
+                        users[i] = ["HGETALL", "user:" + obj[item]];
+                        i++;
+                    }
+
+                    redisClient.multi(users).exec(function(err, replies) {
+                        console.log(replies);
+                        if (err) {
+                            res.status(500).setHeader('Content-Type', 'application/json');
+                            res.send({
+                                "code": 500,
+                                "msg": "Fehler beim auslesen der User!",
+                                "type": "err"
+                            });
+                        }
+
+                        res.status(200);
+                        res.setHeader('Content-Type', 'application/json');
+                        res.send(replies);
+                        res.end();
+                    });
+                }
             });
 
 
 
 
         }
+    },
+
+    deleteUser: function(req, res, next) {
+        if(req.query.id){
+
+        var id = req.query.id;
+
+        redisClient.hget('user:' + id, "name", function(err, name) {
+            if (err) {
+                res.status(500).setHeader('Content-Type', 'application/json');
+                res.send({
+                    "code": 500,
+                    "msg": "Passwort ändern gescheitert",
+                    "type": "err"
+                });
+                return;
+            }
+
+            redisClient.hdel('users', name, function(err, name) {
+                if (err) {
+                    console.log(err);
+                    res.status(500).setHeader('Content-Type', 'application/json');
+                    res.send({
+                        "code": 500,
+                        "msg": "User konnte nicht gelöscht werden",
+                        "type": "err"
+                    });
+                    return;
+                }
+
+                redisClient.del('user:' + id, function(err, name) {
+                    if (err) {
+                        res.status(500).setHeader('Content-Type', 'application/json');
+                        res.send({
+                            "code": 500,
+                            "msg": "User konnte nicht gelöscht werden",
+                            "type": "err"
+                        });
+                        return;
+                    }
+
+                });
+                });
+
+                    res.status(200).setHeader('Content-Type', 'application/json');
+                    res.send({
+                        "code": 200,
+                        "msg": "User erfolgreich gelöscht",
+                        "type": "err"
+                    });
+                    return;
+
+
+
+        });
+      }else{
+        res.status(400).setHeader('Content-Type', 'application/json');
+        res.send({
+            "code": 400,
+            "msg": "Userid fehlt",
+            "type": "err"
+        });
+        return;
+      }
+
+
     },
 
     updatePWD: function(req, res) {

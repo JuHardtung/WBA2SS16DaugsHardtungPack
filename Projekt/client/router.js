@@ -71,6 +71,9 @@ router.route('/settings')
 router.route('/impressum')
     .get(ImpressumController.impressum);
 
+router.route('/user')
+    .get(isAdmin, UserController.getUsers)
+    .patch(isAdmin, UserController.deleteUser);
 
 
 //

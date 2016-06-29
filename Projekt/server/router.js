@@ -23,7 +23,8 @@ router.route('/user/new')
 
 router.route('/user')
     .post(AuthController.login)
-    .get(AuthController.getUser);
+    .get(AuthController.getUser)
+    .patch(AuthController.deleteUser);
 
 router.route('/user/password')
     .patch(AuthController.updatePWD);

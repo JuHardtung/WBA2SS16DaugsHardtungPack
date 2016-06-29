@@ -1,11 +1,12 @@
 summe();
 $(".rmitem").click(function () {
+    var obj = $(this);
     $.ajax({
             url: '/cart?id=' + $(".rmitem").attr('id').split("rmbtn_")[1]
             , type: 'PATCH'
         })
         .done(function (data) {
-           $(".rmitem").closest('tr')
+          obj.closest('tr')
                 .children('td')
                 .animate({
                     padding: 0
@@ -13,7 +14,7 @@ $(".rmitem").click(function () {
                 .wrapInner('<div />')
                 .children()
                 .slideUp(function () {
-                    $(".rmitem").closest('tr').remove();
+                    obj.closest('tr').remove();
                     summe();
                     if ($('.rmitem').length == 0) {
                         $('.errormsg').removeClass('hide');
