@@ -126,6 +126,12 @@ module.exports = {
     },
 
     getArticle: function (req, res, next) {
+      if(req.query.id==undefined){
+      var data = {
+            session: req.session
+          };
+      res.status(404);
+      res.render('404', data);}
 
         var options = {
             uri: 'http://127.0.0.1:3000/article/' + req.query.id,

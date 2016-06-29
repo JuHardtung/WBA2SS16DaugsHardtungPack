@@ -1,12 +1,11 @@
-var redis = require('redis');
-var redisClient = redis.createClient();
+
 var expressValidator = require('express-validator');
-var Faye = require('faye');
+//var Faye = require('faye');
 
 
 var ARTICLES = 'articles'; //die DB-Liste mit den IDs aller Artikel
 //Artikel einzeln als key unter article:*id* gespeichert (Inhalt in JSON-Format)
-var client = new Faye.Client("http://localhost:10000/faye");
+//var client = new Faye.Client("http://localhost:10000/faye");
 /*
  * check if article with given ID exists
  * @param {array} articleList
@@ -23,13 +22,17 @@ function articleIdExists(articleList, id) {
     return result;
 }
 
+
+
+
+
 module.exports = {
     /**
      * return all articles from database
      * @return {application/json} Article
      */
     getArticles: function (req, res, next) {
-
+        console.log(redisClient);
         redisClient.lrange(ARTICLES, 0, -1, function (err, obj) {
             if (err) {
                 res.status(500);
@@ -125,7 +128,7 @@ module.exports = {
     addArticle: function (req, res, next) {
         req.checkBody('name', 'Invalid ArticleName').notEmpty();
         req.checkBody('description', 'Invalid ArticleDescription').notEmpty();
-        req.checkBody('price', 'Invalid ArticlePrice').notEmpty().isFloat();
+        req.checkBody('price', 'Invalid ArticlePrice').notEmpty().validPrice();
         req.checkBody('storage', 'Invalid ArticleStorage').notEmpty().isInt();
 
         var errors = req.validationErrors();

@@ -1,6 +1,5 @@
 var express = require('express');
 var router = express.Router();
-var Response = require('./helper/ResponseHelper.js');
 var bodyParser = require('body-parser');
 
 var jsonParser = bodyParser.json();
@@ -11,13 +10,7 @@ var CartController = require('./controllers/CartController');
 var UserController = require('./controllers/UserController');
 var OtherController = require('./controllers/OtherController');
 
-router.route('/*')
-    .trace(function(req, res, next) {
-        res.send(Response.successfull(200, req.body, null, null));
-    })
-    .options(function(req, res, next) {
-        res.send(Response.successfull(100));
-    });
+
 
 
 // Other
@@ -32,10 +25,10 @@ router.route('/user')
     .post(AuthController.login);
 
 router.route('/user/password')
-    .patch(UserController.updatePWD);
+    .patch(AuthController.updatePWD);
 
 router.route('/user/mail')
-    .patch(UserController.updateMail);
+    .patch(AuthController.updateMail);
 
 
 //Shopping Cart
