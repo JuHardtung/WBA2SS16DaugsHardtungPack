@@ -8,11 +8,15 @@
 
             <div class="col-md-3">
                 <p class="lead">Awesome Shop</p>
+
+                  <% if (categorys.length > 0) { %>
                 <div class="list-group">
-                    <a href="#" class="list-group-item">Kategorie 1</a>
-                    <a href="#" class="list-group-item">Kategorie 2</a>
-                    <a href="#" class="list-group-item">Kategorie 3</a>
+                    <a href="/" class="list-group-item">Alles</a>
+                    <% for(var i = 0; i < categorys.length; i++) { %>
+                    <a href="/?category=<%= categorys[i] %>" class="list-group-item"><%= categorys[i] %></a>
+                    <% } %>
                 </div>
+                  <% } %>
             </div>
 
             <div class="col-md-9">

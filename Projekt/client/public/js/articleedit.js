@@ -1,6 +1,19 @@
+$.fn.toggleAttr = function(attr) {
+ return this.each(function() {
+  var $this = $(this);
+  $this.attr(attr) ? $this.removeAttr(attr) : $this.attr(attr, attr);
+ });
+};
+
+
 $("#abort").click(function () {
     window.location.href = "/";
 
+});
+
+$("#categoryCheck").change(function () {
+$("#categorySelect").toggleAttr('disabled');
+$("#categoryInput").toggleAttr('disabled');
 });
 
 $("#saveArticle").click(function () {
@@ -8,6 +21,15 @@ $("#saveArticle").click(function () {
     var descr = $("#descrInput").val();
     var price = $("#priceInput").val();
     var storage = $("#storageInput").val();
+    var category;
+    if ($("#categoryInput").attr('disabled')) {
+      category = $("#categorySelect").val();
+    }else{
+      category = $("#categoryInput").val();
+    }
+
+
+
 
     if (name == '') {
         $('#nameInput').css("border", "2px solid red");
@@ -25,11 +47,16 @@ $("#saveArticle").click(function () {
         $('#storageInput').css("border", "2px solid red");
         $('#storageInput').css("box-shadow", "0 0 3px red");
     }
+    if (category == '') {
+        $('#categorySelect').css("border", "2px solid red");
+        $('#categorySelect').css("box-shadow", "0 0 3px red");
+    }
     $.post("/article", {
             name: name
             , descr: descr
             , price: price
             , storage: storage
+            ,category :category
         }
         , function (data) {})
 

@@ -2,7 +2,10 @@ var ejs = require('ejs');
 var session = require('express-session');
 var rp = require('request-promise');
 
-
+function toTitleCase(str)
+{
+    return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+}
 
 module.exports = {
 
@@ -13,12 +16,13 @@ module.exports = {
             var descr = req.body.descr;
             var price = req.body.price;
             var storage = req.body.storage;
+            var category = req.body.category.replace(/ä/g, "ae").replace(/ö/g, "oe").replace(/ü/g, "ue").replace(/Ä/g, "Ae").replace(/Ö/g, "Oe").replace(/Ü/g, "Ue").replace(/ß/g, "ss");
 
             console.log("Name: " + name + " Descr: " + descr + " Price: " + price + " Storage: " +
                 storage);
 
             var options = {
-                uri: 'http://127.0.0.1:3000/article',
+                uri: 'http://127.0.0.1:3000/article?category='+category.toLowerCase(),
                 method: 'POST',
                 headers: {
                     'User-Agent': 'Request-Promise',
@@ -53,15 +57,32 @@ module.exports = {
     },
 
     editArticle: function (req, res) {
-        if (req.session.userName == 'admin') {
+
+      var options = {
+          uri: 'http://127.0.0.1:3000/category',
+          headers: {
+              'User-Agent': 'Request-Promise'
+          },
+          json: true // Automatically parses the JSON string in the response
+      };
+
+      rp(options)
+          .then(function (response) {
+            categorys = response;
+
+            for(var i = 0; i < categorys.length; i++){
+              categorys[i] = toTitleCase( categorys[i]);
+            }
             var data = {
                 title: 'Artikel',
-                session: req.session
+                session: req.session,
+                categorys : categorys
             };
             res.render('articles/addarticle', data);
-        } else {
-            res.redirect('/404');
-        }
+          })
+          .catch(function (err) {
+              res.render('error',  err.response);
+          });
     },
 
     deleteArticle: function (req, res, next) {
@@ -87,19 +108,47 @@ module.exports = {
     },
 
     getAll: function (req, res, next) {
+      var categorys = [];
+      var options1 = {
+          uri: 'http://127.0.0.1:3000/category',
+          headers: {
+              'User-Agent': 'Request-Promise'
+          },
+          json: true // Automatically parses the JSON string in the response
+      };
 
+      rp(options1)
+          .then(function (response) {
+            categorys = response;
+
+            for(var i = 0; i < categorys.length; i++){
+              categorys[i] = toTitleCase( categorys[i]);
+            }
+
+//============================================================================================//
+
+        var uri;
+        if(req.query.category){
+          uri = 'http://127.0.0.1:3000/article?category='+req.query.category.toLowerCase();
+          console.log('mit');
+        }else{
+          uri = 'http://127.0.0.1:3000/article';
+          console.log('ohne');
+        }
         var options = {
-            uri: 'http://127.0.0.1:3000/article',
+            uri: uri,
             headers: {
                 'User-Agent': 'Request-Promise'
             },
             json: true // Automatically parses the JSON string in the response
         };
 
+
         rp(options)
             .then(function (response) {
                 var data = {
                     title: 'Artikel',
+                    categorys : categorys,
                     articles: response,
                     session: req.session
                 };
@@ -111,7 +160,10 @@ module.exports = {
                 res.render('error',  err.response);
             });
 
-
+          })
+          .catch(function (err) {
+              res.render('error',  err.response);
+          });
     },
 
     getArticle: function (req, res, next) {

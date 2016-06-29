@@ -56,6 +56,9 @@ router.route('/article/:id')
     .get(ArticleController.getArticleById)
     .delete(ArticleController.delArticle);
 
+router.route('/category')
+    .get(ArticleController.getCategorys);
+
 
 // Finally export the router
 module.exports = router;

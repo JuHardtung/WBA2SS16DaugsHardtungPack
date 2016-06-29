@@ -32,6 +32,17 @@
                         <input type="number" style="width: 100px" class="form-control" id="storageInput"></input>
                     </div>
                     <hr>
+                    <div class="category">
+                        <h4><label for="category">Kategorie:</label></h4>
+                        <select class="form-control data-live-search="true"" id="categorySelect">
+                          <% for(var i = 0; i < categorys.length; i++) { %>
+                          <option><%= categorys[i] %></option>
+                          <% } %>
+                        </select>
+                        <h4><label class="checkbox-inline"><input type="checkbox" value="" id="categoryCheck">Eigene: (Umlaute werden konvertiert!)</label></h4>
+                        <input type="text" class="form-control" id="categoryInput" disabled></input
+                    </div>
+                    <hr>
                     <div class="ctrl">
                         <button class="btn btn-primary sharp" id="saveArticle" href="/article">Speichern</button>
                         <button class="btn btn-danger sharp" id="abort">Abbrechen</button>
