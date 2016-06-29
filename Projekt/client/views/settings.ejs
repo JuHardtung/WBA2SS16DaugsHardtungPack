@@ -3,16 +3,18 @@
 
     <div class="container">
         <div class="col-lg-10 col-lg-offset-1 col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2 col-xs-10 col-xs-offset-1">
-
+              <h2>Aktuelle Accountdaten:</h2>
+              <h4>Name: <%=userdata.name%></h4>
+              <h4>Email: <%=userdata.mail%></h4>
             <div class="row">
-                <div class="col-lg-5">
+                <div class="col-lg-6">
                     <h3 class="text-center">Passwort ändern</h3>
                     <label class="sr-only" for="inputPasswort">Neues Passwort</label>
                     <input type="password" class="form-control" id="inputPassword" placeholder="neues Passwort" name="password"></input>
                     <button id="changePwd" class="btn btn-lg btn-primary btn-block" type="submit">Passwort ändern</button>
 
                 </div>
-                <div class="col-lg-5">
+                <div class="col-lg-6">
                     <h3 class="text-center">E-Mail ändern</h3>
                     <input id="inputMail" class="form-control" placeholder="neue E-Mail" required="" type="email" name="mail"></input>
                     <button id="changeMail" class="btn btn-lg btn-primary btn-block" type="submit">E-Mail-Adresse ändern</button>
@@ -27,12 +29,12 @@
             padding: 15px;
             margin: 5% auto;
         }
-        
+
         .form-signin .form-signin-heading,
         .form-signin .checkbox {
             margin-bottom: 10px;
         }
-        
+
         .form-signin .form-control {
             position: relative;
             height: auto;
@@ -42,34 +44,34 @@
             padding: 10px;
             font-size: 16px;
         }
-        
+
         .form-signin .form-control:focus {
             z-index: 2;
         }
-        
+
         .form-signin input[type="password"] {
             margin-bottom: 10px;
             border-top-left-radius: 0;
             border-top-right-radius: 0;
         }
-        
+
         @media (min-width: 767px) {
             input,
             button {
                 margin-top: 2%;
             }
         }
-        
+
         p.user {
             margin-top: 1%;
             color: red;
         }
-        
+
         p.email {
             margin-top: 1%;
             color: red;
         }
-        
+
         p.signup {
             margin-top: 1%;
             color: green;

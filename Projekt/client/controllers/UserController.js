@@ -109,11 +109,30 @@ module.exports = {
 
     settings: function (req, res) {
 
-        var data = {
-            title: 'Einstellungen',
-            session: req.session
-        };
-        res.render('settings', data);
+      var id = req.session.userId;
+
+      var options = {
+          uri: 'http://127.0.0.1:3000/user?id='+id,
+          method: 'GET',
+          headers: {
+              'User-Agent': 'Request-Promise',
+          },
+          json: true // Automatically parses the JSON string in the response
+      };
+      rp(options)
+          .then(function (response) {
+            var data = {
+                title: 'Einstellungen',
+                session: req.session,
+                userdata: response
+            };
+            res.render('settings', data);
+          })
+          .catch(function (err) {
+              res.redirect('/404');
+          });
+
+
     },
 
     changeData: function (req, res) {
