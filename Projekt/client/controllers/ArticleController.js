@@ -130,10 +130,8 @@ module.exports = {
         var uri;
         if(req.query.category){
           uri = 'http://127.0.0.1:3000/article?category='+req.query.category.toLowerCase();
-          console.log('mit');
         }else{
           uri = 'http://127.0.0.1:3000/article';
-          console.log('ohne');
         }
         var options = {
             uri: uri,

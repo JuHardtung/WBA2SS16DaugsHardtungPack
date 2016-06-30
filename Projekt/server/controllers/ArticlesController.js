@@ -170,7 +170,7 @@ module.exports = {
 
 
 
-        redisClient.SADD('categorys', category , function(err, obj) {
+        redisClient.SADD('categorys', category, function(err, obj) {
             if (err) {
                 res.status(500).setHeader('Content-Type', 'application/json');
                 res.send({
@@ -296,7 +296,48 @@ module.exports = {
                                 "type": "err"
                             });
                         }
+
+
+                        redisClient.llen(article.category, function(err, len) {
+                            if (err) {
+                                res.status(500).setHeader('Content-Type', 'application/json');
+                                res.send({
+                                    "code": 500,
+                                    "msg": "Fehler beim Löschen des Artikels!",
+                                    "type": "err"
+                                });
+                            }
+                            if (len == 0) {
+                                redisClient.del(article.category, function(err) {
+                                    if (err) {
+                                        res.status(500).setHeader('Content-Type', 'application/json');
+                                        res.send({
+                                            "code": 500,
+                                            "msg": "Fehler beim Löschen des Artikels!",
+                                            "type": "err"
+                                        });
+                                    }
+                                });
+
+                                redisClient.srem('categorys',article.category, function(err) {
+                                    if (err) {
+                                        res.status(500).setHeader('Content-Type', 'application/json');
+                                        res.send({
+                                            "code": 500,
+                                            "msg": "Fehler beim Löschen des Artikels!",
+                                            "type": "err"
+                                        });
+                                    }
+                                });
+
+
+
+
+                            }
+                        });
+
                     });
+
 
 
                     redisClient.lrem(ARTICLES, 0, _articleID, function(err) {
@@ -336,25 +377,25 @@ module.exports = {
 
     getCategorys: function(req, res, next) {
 
-    redisClient.SMEMBERS('categorys', function(err, obj) {
-        if (err) {
-            res.status(500).setHeader('Content-Type', 'application/json');
-            res.send({
-                "code": 500,
-                "msg": "Fehler beim Speichern der Kategorie!",
-                "type": "err"
-            });
-            return;
-        }else{
+        redisClient.SMEMBERS('categorys', function(err, obj) {
+            if (err) {
+                res.status(500).setHeader('Content-Type', 'application/json');
+                res.send({
+                    "code": 500,
+                    "msg": "Fehler beim Speichern der Kategorie!",
+                    "type": "err"
+                });
+                return;
+            } else {
 
 
-        res.status(200).setHeader('Content-Type', 'application/json');
-        res.send(obj);
-        }
-    });
+                res.status(200).setHeader('Content-Type', 'application/json');
+                res.send(obj);
+            }
+        });
 
 
 
 
-  }
+    }
 };
