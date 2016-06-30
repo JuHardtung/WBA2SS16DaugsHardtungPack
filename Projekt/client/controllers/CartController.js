@@ -120,5 +120,30 @@ module.exports = {
                 res.status(500);
                 res.send(err.response.body);
             });
+    },
+    
+    
+    deleteCart: function (req, res, next) {
+          var options = {
+
+            uri: 'http://127.0.0.1:3000/cart/' + req.session.userId
+              , method: 'DELETE'
+            , headers: {
+                'User-Agent': 'Request-Promise'
+                , 'Content-Type': 'application/json; charset=utf-8'
+            }
+            , json: true // Automatically parses the JSON string in the response
+        };
+
+        rp(options)
+            .then(function (response) {
+                res.status(200);
+                res.send(response.body);
+
+            })
+            .catch(function (err) {
+                res.status(500);
+                res.send(err.response.body);
+            });   
     }
 };

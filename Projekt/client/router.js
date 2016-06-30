@@ -35,7 +35,8 @@ var isAdmin = function (req, res, next) {
 router.route('/cart')
     .get(isLoggedIn, CartController.getCart)
     .post(CartController.addItem)
-    .patch(CartController.deleteItem);
+    .patch(CartController.deleteItem)
+    .delete(CartController.deleteCart);
 
 router.route('/cart/checkout')
     .get(isLoggedIn, CartController.checkout);

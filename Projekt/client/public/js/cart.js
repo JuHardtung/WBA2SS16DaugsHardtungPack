@@ -39,6 +39,45 @@ $(".rmitem").click(function () {
 });
 
 
+$("#deleteCartBtn").click(function () {
+    $.ajax({
+            url: '/cart'
+            , type: 'DELETE'
+        })
+        .done(function (data) {
+          $(".rmitem").closest('tr')
+                .children('td')
+                .animate({
+                    padding: 0
+                })
+                .wrapInner('<div />')
+                .children()
+                .slideUp(function () {
+                    $(".rmitem").closest('tr').remove();
+                    summe();
+                    if ($('.rmitem').length == 0) {
+                        $('.errormsg').removeClass('hide');
+                    }
+                });
+        })
+        .fail(function (data) {
+            console.log(data.responseText);
+            var res = JSON.parse(data.responseText);
+            BootstrapDialog.show({
+                message: res.msg
+                , title: 'Fehler: ' + res.code
+                , type: BootstrapDialog.TYPE_DANGER
+                , buttons: [{
+                    label: 'OK'
+                    , action: function (dialogItself) {
+                        dialogItself.close();
+                    }
+                        }]
+            });
+        });
+});
+
+
 $(".upitem").click(function () {
 
     var myid = $(this).attr('id').split("upbtn_")[1];
