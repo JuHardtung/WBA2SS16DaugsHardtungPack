@@ -1,6 +1,6 @@
 ##Awesomeshop:
-1. Im Ordner client `npm install`
-2. Im Ordner server `npm install`
+1. Im Ordner Projekt/client `npm install`
+2. Im Ordner Projekt/server `npm install`
 3. Redis starten
 4. Server starten: `node server.js`
 5. Client starten: `node client.js`
