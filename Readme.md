@@ -1,4 +1,4 @@
-##Awesomeshop für Dummies:
+##Awesomeshop:
 
 1. Redis starten
 2. Server starten: `node server.js`
