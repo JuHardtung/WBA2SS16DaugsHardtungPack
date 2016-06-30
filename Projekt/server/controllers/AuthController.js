@@ -38,7 +38,6 @@ module.exports = {
 
                     if (next == undefined) {
                         newUserId = 0;
-                        redisClient.set("next_user_id",1);
                     } else {
                         newUserId = next;
                     }
