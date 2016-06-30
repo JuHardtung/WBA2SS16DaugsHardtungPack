@@ -34,56 +34,12 @@ module.exports = {
      */
     getArticles: function(req, res, next) {
 
-//=================================ID-Abfrage===================================================//
-        if(req.query.id){
-          var _id = parseInt(req.query.id);
 
-          redisClient.lrange(ARTICLES, 0, -1, function(err, reply) {
-              console.log("Bekomme Artikel mit der ID " + _id);
-              if (err) {
-                  res.status(500).setHeader('Content-Type', 'application/json');
-                  res.send({
-                      "code": 500,
-                      "msg": "Fehler beim auslesen des Artikels!",
-                      "type": "err"
-                  });
-              }
-
-              var _articleID = articleIdExists(reply, _id);
-              if (_articleID === null) {
-                  res.status(400).setHeader('Content-Type', 'application/json');
-                  res.send({
-                      "code": 400,
-                      "msg": "Kein Artikel mit der gesuchten ID gefunden.",
-                      "type": "err"
-                  });
-              } else {
-                  var _articleById = 'article:' + _articleID;
-                  redisClient.get(_articleById, function(err, reply) {
-                      if (err) {
-                          res.status(500).setHeader('Content-Type', 'application/json');
-                          res.send({
-                              "code": 500,
-                              "msg": "Fehler beim auslesen des Artikels!",
-                              "type": "err"
-                          });
-                      }
-                      res.status(200).json(JSON.parse(reply));
-                  });
-              }
-          });
-
-//=================================Kategorie-Abfrage===================================================//
+        if (req.query.category) {
+            ARTICLES = req.query.category;
         } else {
-          if (req.query.category) {
-              ARTICLES = req.query.category;
-//=================================Alle-Abfrage===================================================//
-          }else{
-              ARTICLES = 'articles';
-          }
-
-
-
+            ARTICLES = 'articles';
+        }
         redisClient.lrange(ARTICLES, 0, -1, function(err, obj) {
             if (err) {
                 res.status(500);
@@ -131,8 +87,6 @@ module.exports = {
                 });
             }
         });
-        }
-
     },
 
     /**

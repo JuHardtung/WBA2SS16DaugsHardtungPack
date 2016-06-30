@@ -173,7 +173,7 @@ module.exports = {
       res.render('404', data);}
 
         var options = {
-            uri: 'http://127.0.0.1:3000/article/?id=' + req.query.id,
+            uri: 'http://127.0.0.1:3000/article/' + req.query.id,
             headers: {
                 'User-Agent': 'Request-Promise'
             },
