@@ -37,13 +37,14 @@ module.exports = {
                     var newUserId;
 
                     if (next == undefined) {
-                        newUserId = 1;
-                        redisClient.incr("next_user_id");
+                        newUserId = 0;
+                        redisClient.set("next_user_id",1);
                     } else {
                         newUserId = next;
                     }
 
-                    redisClient.hmset(["user:" + newUserId, "name", req.body.user, "passwd", req.body.passwd, "mail", req.body.mail, "id", next], function(err, res) {});
+
+                    redisClient.hmset(["user:" + newUserId, "name", req.body.user, "passwd", req.body.passwd, "mail", req.body.mail, "id", newUserId], function(err, res) {});
                     redisClient.hset("users", req.body.user, newUserId);
                 });
                 // create reusable transporter object using the default SMTP transport
