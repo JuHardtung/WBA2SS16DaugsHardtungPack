@@ -22,13 +22,18 @@ router.route('/db')
 
 router.route('/user')
     .post(AuthController.signup)
-    .get(AuthController.getUser)
-    .patch(AuthController.deleteUser);
+    .get(AuthController.getUser);
 
-router.route('/user/password')
+
+router.route('/user/:id')
+    .get(AuthController.getUserById)
+    .delete(AuthController.deleteUser);
+
+
+router.route('/user/:id/password')
     .patch(AuthController.updatePWD);
 
-router.route('/user/mail')
+router.route('/user/:id/mail')
     .patch(AuthController.updateMail);
 
 

@@ -147,43 +147,7 @@ module.exports = {
     },
 
     getUser: function(req, res, next) {
-        if (req.query.id) {
-            var id = req.query.id;
-            redisClient.hgetall("user:" + id, function(err, userdata) {
-                if (err) {
-                    res.status(500).setHeader('Content-Type', 'application/json');
-                    res.send({
-                        "code": 500,
-                        "msg": "Es ist ein Fehler aufgetreten!",
-                        "type": "err"
-                    });
-                    return;
-                }
-
-                if (userdata == undefined) {
-                    res.status(404).setHeader('Content-Type', 'application/json');
-                    res.send({
-                        "code": 404,
-                        "msg": "User nicht vorhanden",
-                        "type": "err"
-                    });
-                    return;
-
-                } else {
-
-                    res.status(200).setHeader('Content-Type', 'application/json');
-                    res.status(200).send({
-                        "id": id,
-                        "name": userdata.name,
-                        "passwd": userdata.passwd,
-                        "mail": userdata.mail
-                    });
-                }
-
-            });
-
-
-        } else if (req.query.name) {
+        if (req.query.name) {
             var user = req.query.name;
             redisClient.hexists("users", user, function(err, exits) {
                 if (err) {
@@ -232,7 +196,8 @@ module.exports = {
                         res.status(200).send({
                             "id": id,
                             "name": userdata.name,
-                            "passwd": userdata.passwd
+                            "passwd": userdata.passwd,
+                            "mail": userdata.mail
                         });
 
                     });
@@ -286,10 +251,48 @@ module.exports = {
         }
     },
 
-    deleteUser: function(req, res, next) {
-        if(req.query.id){
 
-        var id = req.query.id;
+    getUserById: function(req, res, next) {
+
+            var id = req.params.id;
+            redisClient.hgetall("user:" + id, function(err, userdata) {
+                if (err) {
+                    res.status(500).setHeader('Content-Type', 'application/json');
+                    res.send({
+                        "code": 500,
+                        "msg": "Es ist ein Fehler aufgetreten!",
+                        "type": "err"
+                    });
+                    return;
+                }
+
+                if (userdata == undefined) {
+                    res.status(404).setHeader('Content-Type', 'application/json');
+                    res.send({
+                        "code": 404,
+                        "msg": "User nicht vorhanden",
+                        "type": "err"
+                    });
+                    return;
+
+                } else {
+
+                    res.status(200).setHeader('Content-Type', 'application/json');
+                    res.status(200).send({
+                        "id": id,
+                        "name": userdata.name,
+                        "passwd": userdata.passwd,
+                        "mail": userdata.mail
+                    });
+                }
+
+            });
+
+        },
+
+    deleteUser: function(req, res, next) {
+
+        var id = req.params.id;
 
         redisClient.hget('user:' + id, "name", function(err, name) {
             if (err) {
@@ -301,6 +304,16 @@ module.exports = {
                 });
                 return;
             }
+
+            if (name == undefined) {
+                res.status(404).setHeader('Content-Type', 'application/json');
+                res.send({
+                    "code": 404,
+                    "msg": "User nicht vorhanden",
+                    "type": "err"
+                });
+                return;
+              }
 
             redisClient.hdel('users', name, function(err, name) {
                 if (err) {
@@ -339,15 +352,7 @@ module.exports = {
 
 
         });
-      }else{
-        res.status(400).setHeader('Content-Type', 'application/json');
-        res.send({
-            "code": 400,
-            "msg": "Userid fehlt",
-            "type": "err"
-        });
-        return;
-      }
+
 
 
     },
@@ -368,7 +373,7 @@ module.exports = {
             return;
         }
 
-        var currentUser = 'user:' + req.body.id;
+        var currentUser = 'user:' + req.params.id;
         var newPwd = req.body.passwd;
         //console.log("USER: " + currentUser + "neues PWD: " + newPwd);
 
@@ -414,7 +419,7 @@ module.exports = {
             return;
         }
 
-        var currentUser = 'user:' + req.body.id;
+        var currentUser = 'user:' + req.params.id;
         var newMail = req.body.mail;
         //console.log("USER: " + currentUser + "neue MAIL: " + newMail);
 

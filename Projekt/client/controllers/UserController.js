@@ -36,8 +36,8 @@ module.exports = {
   deleteUser: function (req, res, next) {
 
       var options = {
-          uri: 'http://127.0.0.1:3000/user?id='+req.query.id,
-          method: 'PATCH'
+          uri: 'http://127.0.0.1:3000/user/'+req.query.id,
+          method: 'DELETE'
           , headers: {
               'User-Agent': 'Request-Promise'
           }
@@ -199,7 +199,7 @@ module.exports = {
       var id = req.session.userId;
 
       var options = {
-          uri: 'http://127.0.0.1:3000/user?id='+id,
+          uri: 'http://127.0.0.1:3000/user/'+id,
           method: 'GET',
           headers: {
               'User-Agent': 'Request-Promise',
@@ -232,7 +232,7 @@ module.exports = {
             var id = req.session.userId;
 
             var options = {
-                uri: 'http://127.0.0.1:3000/user/password',
+                uri: 'http://127.0.0.1:3000/user/'+id+'/password',
                 method: 'PATCH',
                 headers: {
                     'User-Agent': 'Request-Promise',
@@ -244,7 +244,6 @@ module.exports = {
                 },
                 body: {
                     "passwd": password,
-                    "id": id
                 },
                 json: true // Automatically parses the JSON string in the response
             };
@@ -267,14 +266,13 @@ module.exports = {
             var id = req.session.userId;
 
             var options = {
-                uri: 'http://127.0.0.1:3000/user/mail',
+                uri: 'http://127.0.0.1:3000/user/'+id+'/mail',
                 method: 'PATCH',
                 headers: {
                     'User-Agent': 'Request-Promise',
                     'Content-Type': 'application/json; charset=utf-8',
                     'Content-Length': {
                         "mail": mail,
-                        "id": id
                     }.length
                 },
                 body: {
