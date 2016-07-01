@@ -47,7 +47,7 @@ module.exports = {
                     redisClient.hset("users", req.body.user, newUserId);
                 });
                 // create reusable transporter object using the default SMTP transport
-                var transporter = nodemailer.createTransport('smtps://awesomeshop.noreply%40gmail.com:awesomeshop69@smtp.gmail.com');
+                var transporter = nodemailer.createTransport('smtps://awsomeshop.noreply%40gmail.com:awsomeshop69@smtp.gmail.com');
 
                 // setup e-mail data with unicode symbols
                 var mailOptions = {
